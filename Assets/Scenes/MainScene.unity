@@ -156,8 +156,18 @@ MonoBehaviour:
   - {fileID: 3113399133684136916, guid: 4d9c89b80fe286744aaa794da5d01acc, type: 3}
   - {fileID: 2651815731889515028, guid: c7e91614b1f5ef543a5550f1e050b26e, type: 3}
   - {fileID: 3213665459922966523, guid: f7f1ac272a0109b49acc3e9e073ef6a3, type: 3}
+  selectableCoords: []
+  pathOne: []
   gridHeight: 80
   gridWidth: 80
+  distance01: 0
+  distance02: 0
+  farCornerDistance: 0
+  lcm01: 0
+  lcm02: 0
+  lcm03: 0
+  combinedLCM: 0
+  spawnPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &103129383
 Transform:
   m_ObjectHideFlags: 0
