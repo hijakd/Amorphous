@@ -148,6 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853c765da52fb624ebc28ca953f89032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goalObject: {fileID: 322872540526578377, guid: 19733a7e47aeda94b9bd3576807b2240,
+    type: 3}
+  player: {fileID: 6917903557593613277, guid: 85b7df6661207c14f8a13450d55709da, type: 3}
   gridHeight: 80
   gridWidth: 80
 --- !u!4 &103129383
