@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-
 public class GameManager : MonoBehaviour {
 
     public GameObject goalObject;
@@ -42,6 +41,10 @@ public class GameManager : MonoBehaviour {
         Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
         Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
         Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
+        Gizmos.color = Color.blue;
+        for (int i = 0; i < pathOne.Count - 1; i++) {
+            Gizmos.DrawLine(pathOne[i], pathOne[i + 1]);
+        }
     }
 
     private void Awake() {
@@ -89,9 +92,9 @@ public class GameManager : MonoBehaviour {
         farthestCorner = FindFarCorner.Find(midPoint01, halfHeight, halfWidth);
         farCornerDistance = Mathf.RoundToInt(Vector3.Distance(midPoint01, farthestCorner));
         distance02 = distance01 + farCornerDistance;
-        lcm01 = LCM_GCD.Lcm(distance01, farCornerDistance);
-        lcm02 = LCM_GCD.Lcm(distance01, distance02);
-        lcm03 = LCM_GCD.Lcm(farCornerDistance, distance02);
+        lcm01 = ReduceLcm(LCM_GCD.Lcm(distance01, farCornerDistance));
+        lcm02 = ReduceLcm(LCM_GCD.Lcm(distance01, distance02));
+        lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
         
         if (lcm01 >= halfWidth) {
             ReduceLcm(lcm01);
@@ -115,7 +118,7 @@ public class GameManager : MonoBehaviour {
             int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
             Vector3 coord01 = selectableCoords[select01];
             Vector3 coord02 = selectableCoords[select02];
-            pathOne.Add(TriangulateV.Position(coord01, coord02, distance02));
+            pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
             count++;
         }
         
@@ -130,8 +133,7 @@ public class GameManager : MonoBehaviour {
         int tmpLcm = lcm;
         int tmp;
         while (tmpLcm >= halfWidth) {
-            tmp = tmpLcm;
-            tmpLcm = tmp / (halfWidth / 2);
+            tmpLcm = tmpLcm / halfWidth;
         }
 
         return tmpLcm;
