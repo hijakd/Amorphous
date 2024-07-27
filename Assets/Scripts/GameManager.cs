@@ -1,6 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,10 +7,13 @@ public class GameManager : MonoBehaviour {
 
     public GameObject goalObject;
     public GameObject player;
+    public GameObject floorTile;
+    public List<GameObject> waypoints;
     
     [SerializeField] private List<GameObject> cardinals;
     [SerializeField] private List<Vector3> selectableCoords;
     [SerializeField] private List<Vector3> pathOne;
+    private List<Vector3> shortenedPathOne;
 
     [SerializeField] private int gridHeight;
     [SerializeField] private int gridWidth;
@@ -32,7 +34,6 @@ public class GameManager : MonoBehaviour {
     private Vector3 farthestCorner;
     private Vector2 xMinMax;
     private Vector2 yMinMax;
-
 
     // visualize the corners of the grid in the Editor
     private void OnDrawGizmos() {
@@ -76,7 +77,6 @@ public class GameManager : MonoBehaviour {
         selectableCoords.Add(goalPosition);
         selectableCoords.Add(destination01);
         
-        
         distance01 = Mathf.RoundToInt(Vector3.Distance(spawnPosition, destination01));
         midPoint01 = Vector3.Lerp(spawnPosition, destination01, 0.5f);
     }
@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour {
     void Start() {
         SpawnObject.Spawn(player, spawnPosition);
         SpawnObject.Spawn(goalObject, goalPosition);
+        SpawnObject.Spawn(waypoints[0], destination01);
         
         /* begin finding Lowest Common Multiples */
         /** LCM's will be used to determine the number of intersections between two points **/
@@ -94,25 +95,13 @@ public class GameManager : MonoBehaviour {
         distance02 = distance01 + farCornerDistance;
         lcm01 = ReduceLcm(LCM_GCD.Lcm(distance01, farCornerDistance));
         lcm02 = ReduceLcm(LCM_GCD.Lcm(distance01, distance02));
-        lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
-        
-        if (lcm01 >= halfWidth) {
-            ReduceLcm(lcm01);
-        }
-
-        if (lcm02 >= halfWidth) {
-            ReduceLcm(lcm02);
-        }
-
-        if (lcm03 >= halfWidth) {
-            ReduceLcm(lcm03);
-        }
-        
+        lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));        
         
         combinedLCM = lcm01 + lcm02 + lcm03;
         /* end find LCM */
 
         count = 0;
+        pathOne.Add(spawnPosition);
         while (count < combinedLCM) {
             int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
             int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
@@ -121,7 +110,16 @@ public class GameManager : MonoBehaviour {
             pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
             count++;
         }
+        pathOne.Add(destination01);
+
+        /* remove duplicate values from pathOne */
+        shortenedPathOne = new List<Vector3>(ShortenList(pathOne));
         
+        count = 0;
+        while (count < shortenedPathOne.Count) {
+            SpawnObject.Spawn(floorTile, shortenedPathOne[count]);
+            count++;
+        }
     }
 
     // Update is called once per frame
@@ -131,7 +129,6 @@ public class GameManager : MonoBehaviour {
     /* reducing the value of LCM to ensure there is a reasonably usable number */
     private int ReduceLcm(int lcm) {
         int tmpLcm = lcm;
-        int tmp;
         while (tmpLcm >= halfWidth) {
             tmpLcm = tmpLcm / halfWidth;
         }
@@ -139,4 +136,10 @@ public class GameManager : MonoBehaviour {
         return tmpLcm;
     }
 
+    /* remove duplicate Vector3's from a List<Vector3> */
+    private List<Vector3> ShortenList(List<Vector3> pathList) {
+        HashSet<Vector3> tmpList = new HashSet<Vector3>(pathList);
+        List<Vector3> shortList = tmpList.ToList();
+        return shortList;
+    }
 }
