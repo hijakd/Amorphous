@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 103129382}
   m_Layer: 0
   m_Name: Game Manager
-  m_TagString: Untagged
+  m_TagString: Blue
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,6 +151,15 @@ MonoBehaviour:
   goalObject: {fileID: 322872540526578377, guid: 19733a7e47aeda94b9bd3576807b2240,
     type: 3}
   player: {fileID: 6917903557593613277, guid: 85b7df6661207c14f8a13450d55709da, type: 3}
+  floorTile: {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1,
+    type: 3}
+  otherPiece: {fileID: 1879861639291899805, guid: 47fc53489bafbde45a767d87ff3e67f7,
+    type: 3}
+  waypoints:
+  - {fileID: 4329182377450462915, guid: bff26bd175e17f44eac7118639ba40f7, type: 3}
+  - {fileID: 8938460807281594788, guid: a45ff90a3f2f8df4fbc1a63178e1a934, type: 3}
+  - {fileID: 322872540526578377, guid: 880e16bdba1ae0a4aa665bccdaa85c6e, type: 3}
+  - {fileID: 6906895470787378847, guid: e5f55014134b4ce409ea3c9f67b09c10, type: 3}
   cardinals:
   - {fileID: 4148244526285827355, guid: 74873c4dd0d3ce543bc9fc5afa183190, type: 3}
   - {fileID: 3113399133684136916, guid: 4d9c89b80fe286744aaa794da5d01acc, type: 3}
@@ -158,6 +167,7 @@ MonoBehaviour:
   - {fileID: 3213665459922966523, guid: f7f1ac272a0109b49acc3e9e073ef6a3, type: 3}
   selectableCoords: []
   pathOne: []
+  shortenedPathOne: []
   gridHeight: 80
   gridWidth: 80
   distance01: 0
@@ -168,6 +178,9 @@ MonoBehaviour:
   lcm03: 0
   combinedLCM: 0
   spawnPosition: {x: 0, y: 0, z: 0}
+  pyramidPos: {x: 0, y: 0, z: 0}
+  pyramidPos02: {x: 0, y: 0, z: 0}
+  vectorAngles: []
 --- !u!4 &103129383
 Transform:
   m_ObjectHideFlags: 0

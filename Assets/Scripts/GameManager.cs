@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private List<GameObject> cardinals;
     [SerializeField] private List<Vector3> selectableCoords;
     [SerializeField] private List<Vector3> pathOne;
-    private List<Vector3> shortenedPathOne;
+    [SerializeField] private List<Vector3> shortenedPathOne;
 
     [SerializeField] private int gridHeight;
     [SerializeField] private int gridWidth;
@@ -32,11 +32,13 @@ public class GameManager : MonoBehaviour {
     private Vector3 goalPosition;
     private Vector3 destination01;
     private Vector3 midPoint01;
-    private Vector3 pyramidPos;
+    [SerializeField] private Vector3 pyramidPos;
+    [SerializeField] private Vector3 pyramidPos02;
     private Vector3 farthestCorner;
     private Vector2 xMinMax;
     private Vector2 yMinMax;
     private Vector2 randomVariance;
+    public List<Vector2> vectorAngles;
 
     // visualize the corners of the grid in the Editor
     private void OnDrawGizmos() {
@@ -134,10 +136,45 @@ public class GameManager : MonoBehaviour {
         // pyramidPos = TriangulateV.Position(spawnPosition, destination01, xMinMax, yMinMax);
         // SpawnObject.Spawn(otherPiece, pyramidPos);
 
+        // float vectorAngle01 = Vector3.Angle(shortenedPathOne[0], shortenedPathOne[1]);
+        // float vectorAngle02 = Vector3.SignedAngle(shortenedPathOne[0], shortenedPathOne[1], Vector3.up);
+        // float vectorAngle03 = Vector3.Angle(shortenedPathOne[1], shortenedPathOne[2]);
+        // float vectorAngle04 = Vector3.SignedAngle(shortenedPathOne[1], shortenedPathOne[2], Vector3.up);
+        // float vectorAngle05 = Vector3.Angle(shortenedPathOne[2], shortenedPathOne[3]);
+        // float vectorAngle06 = Vector3.SignedAngle(shortenedPathOne[2], shortenedPathOne[3], Vector3.up);
+        // float vectorAngle07 = Vector3.Angle(shortenedPathOne[3], shortenedPathOne[4]);
+        // float vectorAngle08 = Vector3.SignedAngle(shortenedPathOne[3], shortenedPathOne[4], Vector3.up);
+        // float vectorAngle09 = Vector3.Angle(shortenedPathOne[4], shortenedPathOne[5]);
+        // float vectorAngle10 = Vector3.SignedAngle(shortenedPathOne[4], shortenedPathOne[5], Vector3.up);
+        // float vectorAngle11 = Vector3.Angle(shortenedPathOne[5], shortenedPathOne[6]);
+        // float vectorAngle12 = Vector3.SignedAngle(shortenedPathOne[5], shortenedPathOne[6], Vector3.up);
+        // Debug.Log("pathOne 1st vector angle: " + vectorAngle01 + '\n' + " pathOne 1st vector SignedAngle: " + vectorAngle02);
+        // Debug.Log("pathOne 2nd vector angle: " + vectorAngle03 + '\n' + " pathOne 2nd vector SignedAngle: " + vectorAngle04);
+        // Debug.Log("pathOne 3rd vector angle: " + vectorAngle05 + '\n' + " pathOne 3rd vector SignedAngle: " + vectorAngle06);
+        // Debug.Log("pathOne 4ft vector angle: " + vectorAngle07 + '\n' + " pathOne 4ft vector SignedAngle: " + vectorAngle08);
+        // Debug.Log("pathOne 5th vector angle: " + vectorAngle09 + '\n' + " pathOne 5th vector SignedAngle: " + vectorAngle10);
+        // Debug.Log("pathOne 6th vector angle: " + vectorAngle11 + '\n' + " pathOne 6th vector SignedAngle: " + vectorAngle12);
+        //
+        // vectorAngles.Add(new Vector2(vectorAngle01, vectorAngle02));
+        // vectorAngles.Add(new Vector2(vectorAngle03, vectorAngle04));
+        // vectorAngles.Add(new Vector2(vectorAngle05, vectorAngle06));
+        // vectorAngles.Add(new Vector2(vectorAngle07, vectorAngle08));
+        // vectorAngles.Add(new Vector2(vectorAngle09, vectorAngle10));
+        // vectorAngles.Add(new Vector2(vectorAngle11, vectorAngle12));
+        
+        pyramidPos = Vector3.Min(shortenedPathOne[0], shortenedPathOne[1]);
+        pyramidPos02 = Vector3.Max(shortenedPathOne[0], shortenedPathOne[1]);
+        Debug.Log("printing 'Min' of pos1 & pos2: " + pyramidPos);
+        Debug.Log("printing 'Max' of pos1 & pos2: " + pyramidPos02);
+        
+        SpawnObject.Spawn(otherPiece, pyramidPos);
+        SpawnObject.Spawn(otherPiece, pyramidPos02);
+
     }
 
     // Update is called once per frame
     void Update() {
+        
     }
 
     /* reducing the value of LCM to ensure there is a reasonably usable number */
