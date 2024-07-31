@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     public GameObject goalObject;
     public GameObject player;
     public GameObject floorTile;
+    public GameObject otherPiece;
     public List<GameObject> waypoints;
     
     [SerializeField] private List<GameObject> cardinals;
@@ -31,9 +32,11 @@ public class GameManager : MonoBehaviour {
     private Vector3 goalPosition;
     private Vector3 destination01;
     private Vector3 midPoint01;
+    private Vector3 pyramidPos;
     private Vector3 farthestCorner;
     private Vector2 xMinMax;
     private Vector2 yMinMax;
+    private Vector2 randomVariance;
 
     // visualize the corners of the grid in the Editor
     private void OnDrawGizmos() {
@@ -46,6 +49,10 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < pathOne.Count - 1; i++) {
             Gizmos.DrawLine(pathOne[i], pathOne[i + 1]);
         }
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(spawnPosition, pyramidPos);
+        Gizmos.DrawLine(pyramidPos, destination01);
     }
 
     private void Awake() {
@@ -55,6 +62,8 @@ public class GameManager : MonoBehaviour {
         xMinMax.y = halfWidth;
         yMinMax.x = -halfHeight;
         yMinMax.y = halfHeight;
+        randomVariance.x = 0.42f;
+        randomVariance.y = 0.58f;
 
         /* cardinals are the corners of the grid & used for boundary calculations */
         // cardinals.Capacity = 4;
@@ -107,7 +116,8 @@ public class GameManager : MonoBehaviour {
             int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
             Vector3 coord01 = selectableCoords[select01];
             Vector3 coord02 = selectableCoords[select02];
-            pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
+            // pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
+            pathOne.Add(TriangulateV.Position(coord01, coord02, xMinMax, yMinMax));
             count++;
         }
         pathOne.Add(destination01);
@@ -120,6 +130,10 @@ public class GameManager : MonoBehaviour {
             SpawnObject.Spawn(floorTile, shortenedPathOne[count]);
             count++;
         }
+
+        // pyramidPos = TriangulateV.Position(spawnPosition, destination01, xMinMax, yMinMax);
+        // SpawnObject.Spawn(otherPiece, pyramidPos);
+
     }
 
     // Update is called once per frame
