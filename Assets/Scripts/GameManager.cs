@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour {
     
     [SerializeField] private List<GameObject> cardinals;
     [SerializeField] private List<Vector3> selectableCoords;
-    [SerializeField] private List<Vector3> pathOne;
+    [SerializeField] private List<Vector3> pathOneLong;
     [SerializeField] private List<Vector3> shortenedPathOne;
 
     [SerializeField] private int gridHeight;
@@ -38,18 +38,20 @@ public class GameManager : MonoBehaviour {
     private Vector2 xMinMax;
     private Vector2 yMinMax;
     private Vector2 randomVariance;
-    public List<Vector2> vectorAngles;
+    // public List<Vector2> vectorAngles; // for testing Vector3.Angle/SignedAngle() to find a path direction
 
-    // visualize the corners of the grid in the Editor
+    
     private void OnDrawGizmos() {
+        // visualize the corners of the grid in the Editor
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
         Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
         Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
         Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
+        // visualize paths between 'intersections'
         Gizmos.color = Color.blue;
-        for (int i = 0; i < pathOne.Count - 1; i++) {
-            Gizmos.DrawLine(pathOne[i], pathOne[i + 1]);
+        for (int i = 0; i < pathOneLong.Count - 1; i++) {
+            Gizmos.DrawLine(pathOneLong[i], pathOneLong[i + 1]);
         }
 
         Gizmos.color = Color.green;
@@ -112,20 +114,20 @@ public class GameManager : MonoBehaviour {
         /* end find LCM */
 
         count = 0;
-        pathOne.Add(spawnPosition);
+        pathOneLong.Add(spawnPosition);
         while (count < combinedLCM) {
             int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
             int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
             Vector3 coord01 = selectableCoords[select01];
             Vector3 coord02 = selectableCoords[select02];
             // pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
-            pathOne.Add(TriangulateV.Position(coord01, coord02, xMinMax, yMinMax));
+            pathOneLong.Add(TriangulateV.Position(coord01, coord02, xMinMax, yMinMax));
             count++;
         }
-        pathOne.Add(destination01);
+        pathOneLong.Add(destination01);
 
         /* remove duplicate values from pathOne */
-        shortenedPathOne = new List<Vector3>(ShortenList(pathOne));
+        shortenedPathOne = new List<Vector3>(ShortenList(pathOneLong));
         
         count = 0;
         while (count < shortenedPathOne.Count) {
@@ -137,7 +139,7 @@ public class GameManager : MonoBehaviour {
         // SpawnObject.Spawn(otherPiece, pyramidPos);
 
         
-        
+        // currently 'pyramids' are used for testing/visualising positions
         pyramidPos = Vector3.Min(shortenedPathOne[0], shortenedPathOne[1]);
         pyramidPos02 = Vector3.Max(shortenedPathOne[0], shortenedPathOne[1]);
         Debug.Log("printing 'Min' of pos1 & pos2: " + pyramidPos);
@@ -147,6 +149,9 @@ public class GameManager : MonoBehaviour {
         SpawnObject.Spawn(otherPiece, pyramidPos02);
         
         /** TODO: write function to find horizontal/vertical direction to the next intersection to then 'draw' the path **/
+
+        CheckOrientation(shortenedPathOne[0], shortenedPathOne[1]);
+
 
     }
 
@@ -170,5 +175,52 @@ public class GameManager : MonoBehaviour {
         HashSet<Vector3> tmpList = new HashSet<Vector3>(pathList);
         List<Vector3> shortList = tmpList.ToList();
         return shortList;
+    }
+
+    private List<Vector3> CheckOrientation(Vector3 position01, Vector3 position02) {
+        List<Vector3> tmpPath;
+        bool horizAligned = false;
+        bool vertAligned = false;
+        bool isForward = false;
+        bool isRight = false;
+        int horizDistance, vertDistance;
+
+        if (position01.x == position02.x || position01.x == position02.x - 1 || position01.x == position02.x + 1) {
+            vertAligned = true;
+        }
+        
+        if (position01.z == position02.z || position01.z == position02.z - 1 || position01.z == position02.z + 1) {
+            horizAligned = true;
+        }
+
+        if (vertAligned == true) {
+            if (position01.z < position02.z) {
+                vertDistance = Mathf.RoundToInt(position02.z - position01.z);
+                isForward = true;
+            } else if (position01.z > position02.z) {
+                vertDistance = Mathf.RoundToInt(position01.z - position02.z);
+                isForward = false;
+            }
+            else {
+                vertDistance = 0;
+            }
+        }
+
+        if (horizAligned == true) {
+            if (position01.x < position02.x) {
+                horizDistance = Mathf.RoundToInt(position02.x - position01.x);
+                isRight = true;
+            } else if (position01.x > position02.x) {
+                horizDistance = Mathf.RoundToInt(position01.x - position02.x);
+                isRight = false;
+            }
+            else {
+                horizDistance = 0;
+            }
+        }
+        
+        /* TODO: populate array vector3 along horizontal/vertical axes then output result */
+        
+        return tmpPath;
     }
 }
