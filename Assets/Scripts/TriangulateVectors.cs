@@ -9,54 +9,27 @@ public class TriangulateVectors : MonoBehaviour {
     static int horizDistance, vertDistance;
     // private int distance;
     
-    /*public static Vector3 Position(Vector3 position01, Vector3 position02, int distance, Vector2 horizontalBounds,
-        Vector2 verticalBounds) {
-        int sectorSize = Mathf.RoundToInt(FindSectorSize.Sector(position01, position02));
-        backLeg = distance * Random.Range(0.42f, 0.58f);
-        frontLeg = distance - backLeg;
-        
-        position.x = Mathf.RoundToInt((position02.x - frontLeg) + (position01.x + backLeg));
-        position.y = 0f;
-        position.z = Mathf.RoundToInt((position02.z - frontLeg) + (position01.z + backLeg));
-        
-        /* check position is within the boundaries, if not clamp them in #1#
-        if (position.x <= horizontalBounds.x) {
-            position.x = horizontalBounds.x;
-        }
-        else if (position.x > horizontalBounds.y) {
-            position.x = horizontalBounds.y;
-        }
 
-        if (position.z <= verticalBounds.x) {
-            position.z = verticalBounds.x;
-        }
-        else if (position.z > verticalBounds.y) {
-            position.z = verticalBounds.y;
-        }
-
-        return position;
-    }*/
-
-    // public static Vector3 Slerping(Vector3 position01, Vector3 position02, Vector2 horizontalBounds, Vector2 verticalBounds) {
-    public static Vector3 Position(Vector3 position01, Vector3 position02, Vector2 horizontalBounds, Vector2 verticalBounds) {
-        position = Vector3.Slerp(position01, position02, Random.Range(0.42f, 0.58f));
+    public static Vector3 Position(Vector3 position01, Vector3 position02, float centreMargin) {
+        // position = Vector3.Slerp(position01, position02, Random.Range(0.42f, 0.58f));
+        position = Vector3.Slerp(position01, position02, centreMargin);
         position.x = Mathf.RoundToInt(position.x);
         position.y = 0f;
         position.z = Mathf.RoundToInt(position.z);
         
         /* check position is within the boundaries, if not clamp them in */
-        if (position.x <= horizontalBounds.x) {
-            position.x = horizontalBounds.x;
+        if (position.x <= GameManager.xMinMax.x) {
+            position.x = GameManager.xMinMax.x;
         }
-        else if (position.x > horizontalBounds.y) {
-            position.x = horizontalBounds.y;
+        else if (position.x > GameManager.xMinMax.y) {
+            position.x = GameManager.xMinMax.y;
         }
 
-        if (position.z <= verticalBounds.x) {
-            position.z = verticalBounds.x;
+        if (position.z <= GameManager.yMinMax.x) {
+            position.z = GameManager.yMinMax.x;
         }
-        else if (position.z > verticalBounds.y) {
-            position.z = verticalBounds.y;
+        else if (position.z > GameManager.yMinMax.y) {
+            position.z = GameManager.yMinMax.y;
         }
         
         return position;
@@ -64,7 +37,7 @@ public class TriangulateVectors : MonoBehaviour {
 
     /* find an intersecting vector position at right angles to two given positions */
     public static Vector3 UsingMins(Vector3 position01, Vector3 position02) {
-        Debug.Log("UsingMins, switchMinMax: " + switchMinMax);
+        // Debug.Log("UsingMins, switchMinMax: " + switchMinMax);
         position = Vector3.Min(position01, position02);
         position.x = Mathf.RoundToInt(position.x);
         position.y = 0f;
@@ -86,7 +59,7 @@ public class TriangulateVectors : MonoBehaviour {
     
     /* find an intersecting vector position at right angles to two given positions */
     public static Vector3 UsingMaxs(Vector3 position01, Vector3 position02) {
-        Debug.Log("UsingMaxs, switchMinMax: " + switchMinMax);
+        // Debug.Log("UsingMaxs, switchMinMax: " + switchMinMax);
         position = Vector3.Max(position01, position02);
         position.x = Mathf.RoundToInt(position.x);
         position.y = 0f;
