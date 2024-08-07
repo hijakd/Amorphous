@@ -6,16 +6,12 @@ public class CheckOrientation : MonoBehaviour {
 
     static int pathLength;
     static int count, xPosition = 0;
-    // static List<Vector3> path;
     private static Vector3 tmpPosition;
     static GameObject miscPiece;
 
     // public static List<Vector3> Check(Vector3 pos01, Vector3 pos02, GameObject otherPiece) {
-        // non debugging version of function signature
-        public static List<Vector3> Check(Vector3 pos01, Vector3 pos02, List<Vector3> path) {
-        /** -= begin debugging elements =- */
-        // miscPiece = otherPiece;
-        /** -= end debugging elements =- */
+    // non debugging version of function signature
+    public static void Check(Vector3 pos01, Vector3 pos02, List<Vector3> path) {
         tmpPosition = new Vector3(0, 0, 0);
         Debug.Log("Checking alignment");
         if (TriangulateVectors.HorizontalAlignment(pos01, pos02)) {
@@ -55,71 +51,64 @@ public class CheckOrientation : MonoBehaviour {
                 xPosition = 1;
             }
 
-            // /** -= begin debugging elements =- */ 
-            // miscPiece.transform.position = tmpPosition;
-            // Instantiate(miscPiece);
-            // Debug.Log("Adding a right angle position");
-            // Debug.Log("Added position is at: " + tmpPosition);
-            // /** -= end debugging elements =- */ 
 
             if (xPosition == 1) {
                 if (tmpPosition.x < pos02.x) {
                     pathLength = Mathf.RoundToInt(pos02.x - tmpPosition.x);
+                    Debug.Log("tmpPosition is smaller");
+                    Debug.Log("xPosition 1, pathLength check: " + pathLength);
+                    count = 0;
+                    // path.Add(new Vector3(pos01.x, tmpPosition.y, tmpPosition.z));
+                    while (count <= pathLength && count > GameManager.xMinMax.x || count < GameManager.xMinMax.y) {
+                        path.Add(new Vector3(tmpPosition.x + count, tmpPosition.y, tmpPosition.z));
+                        Debug.Log("populating path array: " + path[count]);
+                        count++;
+                    }
                 }
                 else {
                     pathLength = Mathf.RoundToInt(tmpPosition.x - pos02.x);
-                }
-                
-                Debug.Log("xPosition 1, pathLength check: " + pathLength);
-                path.Add(new Vector3(pos02.x, tmpPosition.y, tmpPosition.z));
-                for (int i = 0; i < pathLength; i++) {
-                    path.Add(new Vector3(pos02.x + i, tmpPosition.y, tmpPosition.z));
-                    Debug.Log("populating path array: " + path[i]);
+                    Debug.Log("tmpPosition is larger");
+                    Debug.Log("xPosition 1, pathLength check: " + pathLength);
+                    // path.Add(new Vector3(pos02.x, tmpPosition.y, tmpPosition.z));
+                    count = 0;
+                    while (count <= pathLength && count > GameManager.xMinMax.x || count < GameManager.xMinMax.y) {
+                        path.Add(new Vector3(pos02.x + count, tmpPosition.y, tmpPosition.z));
+                        Debug.Log("populating path array: " + path[count]);
+                        count++;
+                    }
                 }
             }
 
             if (xPosition == 2) {
                 if (tmpPosition.x < pos01.x) {
                     pathLength = Mathf.RoundToInt(pos01.x - tmpPosition.x);
+                    Debug.Log("tmpPosition is smaller");
+                    Debug.Log("xPosition 2, pathLength check: " + pathLength);
+                    
+                    count = 0;
+                    
+                    // path.Add(new Vector3(pos01.x, tmpPosition.y, tmpPosition.z));
+                    // while (count < Mathf.RoundToInt(pos02.x)) {
+                    while (count <= pathLength && count > GameManager.xMinMax.x || count < GameManager.xMinMax.y) {
+                        path.Add(new Vector3(pos01.x - count, tmpPosition.y, tmpPosition.z));
+                        Debug.Log("populating path array: " + path[count]);
+                        count++;
+                    }
                 }
                 else {
                     pathLength = Mathf.RoundToInt(tmpPosition.x - pos01.x);
-                }
-                
-                Debug.Log("xPosition 2, pathLength check: " + pathLength);
-                path.Add(new Vector3(pos01.x, tmpPosition.y, tmpPosition.z));
-                for (int i = 0; i < pathLength; i++) {
-                    path.Add(new Vector3(pos01.x + i, tmpPosition.y, tmpPosition.z));
-                    Debug.Log("populating path array: " + path[i]);
+                    Debug.Log("tmpPosition is larger");
+                    Debug.Log("xPosition 2, pathLength check: " + pathLength);
+                    count = 0;
+                    // path.Add(new Vector3(pos01.x, tmpPosition.y, tmpPosition.z));
+                    while (count <= pathLength && count > GameManager.xMinMax.x || count < GameManager.xMinMax.y) {
+                        path.Add(new Vector3(pos01.x + count, tmpPosition.y, tmpPosition.z));
+                        Debug.Log("populating path array: " + path[count]);
+                        count++;
+                    }
                 }
             }
-
-            // if (TriangulateVectors.IsItRight(pos01, tmpPosition)) {
-            //     pathLength = Mathf.RoundToInt(pos01.x - tmpPosition.x);
-            //     Debug.Log("1st pathLength check: " + pathLength);
-            //     Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(pos01, tmpPosition) + " Distance is: " + pathLength);
-            //     Debug.Log("2nd pathLength check: " + pathLength);
-            //     // path.Add(pos01);
-            //     for (int i = 0; i < pathLength; i++) {
-            //         path.Add(new Vector3(pos01.x + i, tmpPosition.y, tmpPosition.z));
-            //         Debug.Log("populating path array: " + path[i]);
-            //     }
-            // }
-            // else {
-            //     pathLength = Mathf.RoundToInt(tmpPosition.x - pos01.x);
-            //     Debug.Log("1st pathLength check: " + pathLength);
-            //     Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(pos01, tmpPosition) + " Distance is: " + pathLength);
-            //     Debug.Log("2nd pathLength check: " + pathLength);
-            //     // path.Add(pos01);
-            //     for (int i = 0; i < pathLength; i++) {
-            //         path.Add(new Vector3(pos01.x - i, tmpPosition.y, tmpPosition.z));
-            //         Debug.Log("populating path array: " + path[i]);
-            //     }
-            // }
         }
-
-        return path;
     }
-
 
 }

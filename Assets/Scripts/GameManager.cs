@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour {
     public GameObject player;
     public GameObject floorTile;
     public GameObject otherPiece;
-    // public static GameObject otherbit = GameObject.otherPiece;
     
     public List<GameObject> waypoints;
     
