@@ -153,9 +153,16 @@ public class GameManager : MonoBehaviour {
         
         /** TODO: write function to find horizontal/vertical direction to the next intersection to then 'draw' the path **/
         /** TODO: populate array vector3 along horizontal/vertical axes then output result **/
+        CheckOrientation.Check(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1], drawnPath);
         // drawnPath = CheckOrientation.Check(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1]);
         // debug version of function
-        drawnPath = CheckOrientation.Check(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1], otherPiece);
+        // drawnPath = CheckOrientation.Check(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1], otherPiece);
+        
+        count = 0;
+        while (count < drawnPath.Count) {
+            SpawnObject.Spawn(floorTile, drawnPath[count]);
+            count++;
+        }
 
         /*int pathLength;
         count = 0;

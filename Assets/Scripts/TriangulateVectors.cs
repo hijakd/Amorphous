@@ -142,6 +142,27 @@ public class TriangulateVectors : MonoBehaviour {
 
         return isRight;
     }
+    
+    public static int HorizontalDistance(Vector3 position01, Vector3 position02) {
+        if (horizAligned == true) {
+            if (position01.x < position02.x) {
+                horizDistance = Mathf.RoundToInt(position02.x - position01.x);
+                Debug.Log("Triangulating horizDistance: " + horizDistance);
+                isRight = true;
+                Debug.Log("Triangulating right: " + isRight);
+            } else if (position01.x > position02.x) {
+                horizDistance = Mathf.RoundToInt(position01.x - position02.x);
+                Debug.Log("Triangulating horizDistance: " + horizDistance);
+                isRight = false;
+                Debug.Log("Triangulating right: " + isRight);
+            }
+            else {
+                horizDistance = 0;
+            }
+        }
+
+        return horizDistance;
+    }
 
     /* getter function for the distance between two vector positions */
     public static int GetVerticalDistance() {
@@ -150,6 +171,7 @@ public class TriangulateVectors : MonoBehaviour {
 
     /* getter function for the distance between two vector positions */
     public static int GetHorizontalDistance() {
+        Debug.Log("Triangulate, GetHorizontalDistance: " + horizDistance);
         return horizDistance;
     }
 }
