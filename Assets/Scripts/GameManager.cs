@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour {
     public GameObject player;
     public GameObject floorTile;
     public GameObject otherPiece;
+    // public static GameObject otherbit = GameObject.otherPiece;
+    
     public List<GameObject> waypoints;
     
     [SerializeField] private List<GameObject> cardinals;
@@ -36,8 +38,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private Vector3 pyramidPos;
     [SerializeField] private Vector3 pyramidPos02;
     private Vector3 farthestCorner;
-    private Vector2 xMinMax;
-    private Vector2 yMinMax;
+    public static Vector2 xMinMax;
+    public static Vector2 yMinMax;
     private Vector2 randomVariance;
     // public List<Vector2> vectorAngles; // for testing Vector3.Angle/SignedAngle() to find a path direction
 
@@ -122,7 +124,7 @@ public class GameManager : MonoBehaviour {
             Vector3 coord01 = selectableCoords[select01];
             Vector3 coord02 = selectableCoords[select02];
             // pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
-            LegOneIntersections.Add(TriangulateVectors.Position(coord01, coord02, xMinMax, yMinMax));
+            LegOneIntersections.Add(TriangulateVectors.Position(coord01, coord02, Random.Range(0.42f, 0.58f)));
             count++;
         }
         LegOneIntersections.Add(destination01);
@@ -146,12 +148,14 @@ public class GameManager : MonoBehaviour {
         Debug.Log("printing 'Min' of pos1 & pos2: " + pyramidPos);
         Debug.Log("printing 'Max' of pos1 & pos2: " + pyramidPos02);
         
-        SpawnObject.Spawn(otherPiece, pyramidPos);
-        SpawnObject.Spawn(otherPiece, pyramidPos02);
+        // SpawnObject.Spawn(otherPiece, pyramidPos);
+        // SpawnObject.Spawn(otherPiece, pyramidPos02);
         
         /** TODO: write function to find horizontal/vertical direction to the next intersection to then 'draw' the path **/
         /** TODO: populate array vector3 along horizontal/vertical axes then output result **/
-        drawnPath = CheckOrientation.Check(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1]);
+        // drawnPath = CheckOrientation.Check(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1]);
+        // debug version of function
+        drawnPath = CheckOrientation.Check(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1], otherPiece);
 
         /*int pathLength;
         count = 0;

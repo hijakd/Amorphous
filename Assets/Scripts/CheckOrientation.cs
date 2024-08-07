@@ -8,8 +8,15 @@ public class CheckOrientation : MonoBehaviour {
     static int count = 0;
     static List<Vector3> path;
     private static Vector3 tmpPosition;
+    static GameObject miscPiece;
 
-    public static List<Vector3> Check(Vector3 pos01, Vector3 pos02) {
+    public static List<Vector3> Check(Vector3 pos01, Vector3 pos02, GameObject otherPiece) {
+    // non debugging version of function signature
+    // public static List<Vector3> Check(Vector3 pos01, Vector3 pos02) {
+        /** -= begin debugging elements =- */ 
+        miscPiece = otherPiece;
+        /** -= end debugging elements =- */ 
+        tmpPosition = new Vector3(0, 0, 0);
         Debug.Log("Checking alignment");
         if (TriangulateVectors.HorizontalAlignment(pos01, pos02)) {
             Debug.Log("Checking horizontal alignment: " + TriangulateVectors.HorizontalAlignment(pos01, pos02));
@@ -31,29 +38,21 @@ public class CheckOrientation : MonoBehaviour {
             }
         }
         else {
-            tmpPosition = TriangulateVectors.UsingMins(pos01, pos02);
+            if (pos01.z < pos02.z) {
+                tmpPosition.x = pos02.x;
+                tmpPosition.z = pos01.z;
+            }
+            else {
+                tmpPosition.x = pos01.x;
+                tmpPosition.z = pos02.z;
+            }
+
+            /** -= begin debugging elements =- */ 
+            miscPiece.transform.position = tmpPosition;
+            Instantiate(miscPiece);
             Debug.Log("Adding a right angle position");
             Debug.Log("Added position is at: " + tmpPosition);
-            if (TriangulateVectors.HorizontalAlignment(pos01, tmpPosition)) {
-                Debug.Log("Checking horizontal alignment: " + TriangulateVectors.HorizontalAlignment(pos01, tmpPosition));
-                if (TriangulateVectors.IsItRight(pos01, tmpPosition)) {
-                    pathLength = TriangulateVectors.GetHorizontalDistance();
-                    Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(pos01, tmpPosition) + " Distance is: " + pathLength);
-                    // path.Add(pos01);
-                    for (int i = 0; i < pathLength; i++) {
-                        path.Add(new Vector3(pos01.x + i, pos01.y, pos01.z));
-                    }
-                }
-                else {
-                    pathLength = TriangulateVectors.GetHorizontalDistance();
-                    Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(pos01, tmpPosition) + " Distance is: " + pathLength);
-                    // path.Add(pos01);
-                    for (int i = 0; i < pathLength; i++) {
-                        path.Add(new Vector3(pos01.x - i, pos01.y, pos01.z));
-                        
-                    }
-                }
-            }
+            /** -= end debugging elements =- */ 
         }
 
         return path;
