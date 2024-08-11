@@ -7,16 +7,18 @@ public class TriangulateVectors : MonoBehaviour {
     private static bool switchMinMax = false;
     static float backLeg, frontLeg;
     static int horizDistance, vertDistance;
-    // private int distance;
-    
 
-    public static Vector3 Position(Vector3 position01, Vector3 position02, float centreMargin) {
+    // private int distance;
+
+
+    public static Vector3 Position(Vector3 position01, Vector3 position02,
+        float centreMargin) {
         // position = Vector3.Slerp(position01, position02, Random.Range(0.42f, 0.58f));
         position = Vector3.Slerp(position01, position02, centreMargin);
         position.x = Mathf.RoundToInt(position.x);
         position.y = 0f;
         position.z = Mathf.RoundToInt(position.z);
-        
+
         /* check position is within the boundaries, if not clamp them in */
         if (position.x <= GameManager.xMinMax.x) {
             position.x = GameManager.xMinMax.x;
@@ -31,7 +33,7 @@ public class TriangulateVectors : MonoBehaviour {
         else if (position.z > GameManager.yMinMax.y) {
             position.z = GameManager.yMinMax.y;
         }
-        
+
         return position;
     }
 
@@ -42,6 +44,7 @@ public class TriangulateVectors : MonoBehaviour {
         position.x = Mathf.RoundToInt(position.x);
         position.y = 0f;
         position.z = Mathf.RoundToInt(position.z);
+
         // if (!switchMinMax) {
         //     if (position.Equals(position01)) {
         //         Debug.Log("Switching to UsingMaxs");
@@ -56,7 +59,7 @@ public class TriangulateVectors : MonoBehaviour {
 
         return position;
     }
-    
+
     /* find an intersecting vector position at right angles to two given positions */
     public static Vector3 UsingMaxs(Vector3 position01, Vector3 position02) {
         // Debug.Log("UsingMaxs, switchMinMax: " + switchMinMax);
@@ -64,6 +67,7 @@ public class TriangulateVectors : MonoBehaviour {
         position.x = Mathf.RoundToInt(position.x);
         position.y = 0f;
         position.z = Mathf.RoundToInt(position.z);
+
         // if (!switchMinMax) {
         //     if (position.Equals(position01)) {
         //         Debug.Log("Switching to UsingMins");
@@ -77,10 +81,12 @@ public class TriangulateVectors : MonoBehaviour {
         // }
         return position;
     }
-    
+
     /* are the 'X' values aligned within margin */
-    public static bool VerticalAlignment(Vector3 position01, Vector3 position02) {
-        if (position01.x == position02.x || position01.x == position02.x - 1 || position01.x == position02.x + 1) {
+    public static bool
+        VerticalAlignment(Vector3 position01, Vector3 position02) {
+        if (position01.x == position02.x || position01.x == position02.x - 1 ||
+            position01.x == position02.x + 1) {
             vertAligned = true;
             Debug.Log("Triangulating vertAligned: " + vertAligned);
         }
@@ -89,8 +95,10 @@ public class TriangulateVectors : MonoBehaviour {
     }
 
     /* are the 'Z' values aligned within margin */
-    public static bool HorizontalAlignment(Vector3 position01, Vector3 position02) {
-        if (position01.z == position02.z || position01.z == position02.z - 1 || position01.z == position02.z + 1) {
+    public static bool HorizontalAlignment(Vector3 position01,
+        Vector3 position02) {
+        if (position01.z == position02.z || position01.z == position02.z - 1 ||
+            position01.z == position02.z + 1) {
             horizAligned = true;
             Debug.Log("Triangulating horizAligned: " + horizAligned);
         }
@@ -129,7 +137,8 @@ public class TriangulateVectors : MonoBehaviour {
                 Debug.Log("Triangulating horizDistance: " + horizDistance);
                 isRight = true;
                 Debug.Log("Triangulating right: " + isRight);
-            } else if (position01.x > position02.x) {
+            }
+            else if (position01.x > position02.x) {
                 horizDistance = Mathf.RoundToInt(position01.x - position02.x);
                 Debug.Log("Triangulating horizDistance: " + horizDistance);
                 isRight = false;
@@ -142,15 +151,17 @@ public class TriangulateVectors : MonoBehaviour {
 
         return isRight;
     }
-    
-    public static int HorizontalDistance(Vector3 position01, Vector3 position02) {
+
+    public static int
+        HorizontalDistance(Vector3 position01, Vector3 position02) {
         if (horizAligned == true) {
             if (position01.x < position02.x) {
                 horizDistance = Mathf.RoundToInt(position02.x - position01.x);
                 Debug.Log("Triangulating horizDistance: " + horizDistance);
                 isRight = true;
                 Debug.Log("Triangulating right: " + isRight);
-            } else if (position01.x > position02.x) {
+            }
+            else if (position01.x > position02.x) {
                 horizDistance = Mathf.RoundToInt(position01.x - position02.x);
                 Debug.Log("Triangulating horizDistance: " + horizDistance);
                 isRight = false;
@@ -174,4 +185,5 @@ public class TriangulateVectors : MonoBehaviour {
         Debug.Log("Triangulate, GetHorizontalDistance: " + horizDistance);
         return horizDistance;
     }
+
 }

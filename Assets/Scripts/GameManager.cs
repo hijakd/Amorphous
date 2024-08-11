@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEditor;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
@@ -8,6 +9,7 @@ public class GameManager : MonoBehaviour {
     public GameObject goalObject;
     public GameObject player;
     public GameObject floorTile;
+    public GameObject floorTile2;
     public GameObject otherPiece;
     
     public List<GameObject> waypoints;
@@ -59,6 +61,8 @@ public class GameManager : MonoBehaviour {
         Gizmos.color = Color.green;
         Gizmos.DrawLine(spawnPosition, pyramidPos);
         Gizmos.DrawLine(pyramidPos, destination01);
+        
+        // Handles.Label(transform.position, "Path One: ");
     }
 
     private void Awake() {
@@ -159,7 +163,7 @@ public class GameManager : MonoBehaviour {
         
         count = 0;
         while (count < drawnPath.Count) {
-            SpawnObject.Spawn(floorTile, drawnPath[count]);
+            SpawnObject.Spawn(floorTile2, drawnPath[count]);
             count++;
         }
 

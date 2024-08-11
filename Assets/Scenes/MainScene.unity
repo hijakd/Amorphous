@@ -153,6 +153,8 @@ MonoBehaviour:
   player: {fileID: 6917903557593613277, guid: 85b7df6661207c14f8a13450d55709da, type: 3}
   floorTile: {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1,
     type: 3}
+  floorTile2: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
+    type: 3}
   otherPiece: {fileID: 1879861639291899805, guid: 47fc53489bafbde45a767d87ff3e67f7,
     type: 3}
   waypoints:
