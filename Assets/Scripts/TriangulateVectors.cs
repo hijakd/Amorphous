@@ -62,7 +62,7 @@ public class TriangulateVectors : MonoBehaviour {
         if (position01.x == position02.x || position01.x == position02.x - 1 ||
             position01.x == position02.x + 1) {
             vertAligned = true;
-            Debug.Log("Triangulating vertAligned: " + vertAligned);
+            // Debug.Log("Triangulating vertAligned: " + vertAligned);
         }
 
         return vertAligned;
@@ -73,7 +73,7 @@ public class TriangulateVectors : MonoBehaviour {
         if (position01.z == position02.z || position01.z == position02.z - 1 ||
             position01.z == position02.z + 1) {
             horizAligned = true;
-            Debug.Log("Triangulating horizAligned: " + horizAligned);
+            // Debug.Log("Triangulating horizAligned: " + horizAligned);
         }
 
         return horizAligned;
@@ -129,15 +129,15 @@ public class TriangulateVectors : MonoBehaviour {
         if (horizAligned == true) {
             if (position01.x < position02.x) {
                 horizDistance = Mathf.RoundToInt(position02.x - position01.x);
-                Debug.Log("Triangulating horizDistance: " + horizDistance);
+                // Debug.Log("Triangulating horizDistance: " + horizDistance);
                 isRight = true;
-                Debug.Log("Triangulating right: " + isRight);
+                // Debug.Log("Triangulating right: " + isRight);
             }
             else if (position01.x > position02.x) {
                 horizDistance = Mathf.RoundToInt(position01.x - position02.x);
-                Debug.Log("Triangulating horizDistance: " + horizDistance);
+                // Debug.Log("Triangulating horizDistance: " + horizDistance);
                 isRight = false;
-                Debug.Log("Triangulating right: " + isRight);
+                // Debug.Log("Triangulating right: " + isRight);
             }
             else {
                 horizDistance = 0;
@@ -151,15 +151,15 @@ public class TriangulateVectors : MonoBehaviour {
         if (vertAligned == true) {
             if (position01.z < position02.z) {
                 vertDistance = Mathf.RoundToInt(position02.z - position01.z);
-                Debug.Log("Triangulating vertDistance: " + vertDistance);
+                // Debug.Log("Triangulating vertDistance: " + vertDistance);
                 isForward = true;
-                Debug.Log("Triangulating forward: " + isForward);
+                // Debug.Log("Triangulating forward: " + isForward);
             }
             else if (position01.z > position02.z) {
                 vertDistance = Mathf.RoundToInt(position01.z - position02.z);
-                Debug.Log("Triangulating vertDistance: " + vertDistance);
+                // Debug.Log("Triangulating vertDistance: " + vertDistance);
                 isForward = false;
-                Debug.Log("Triangulating forward: " + isForward);
+                // Debug.Log("Triangulating forward: " + isForward);
             }
             else {
                 vertDistance = 0;
@@ -171,13 +171,13 @@ public class TriangulateVectors : MonoBehaviour {
 
     /* getter function for the distance between two vector positions */
     public static int GetVerticalDistance() {
-        Debug.Log("Triangulate, GetVerticalDistance: " + vertDistance);
+        // Debug.Log("Triangulate, GetVerticalDistance: " + vertDistance);
         return vertDistance;
     }
 
     /* getter function for the distance between two vector positions */
     public static int GetHorizontalDistance() {
-        Debug.Log("Triangulate, GetHorizontalDistance: " + horizDistance);
+        // Debug.Log("Triangulate, GetHorizontalDistance: " + horizDistance);
         return horizDistance;
     }
 

@@ -63,8 +63,6 @@ public class GameManager : MonoBehaviour {
         Gizmos.color = Color.green;
         Gizmos.DrawLine(spawnPosition, pyramidPos);
         Gizmos.DrawLine(pyramidPos, destination01);
-
-        // Handles.Label(transform.position, "Path One: ");
     }
 
     private void Awake() {
@@ -150,23 +148,18 @@ public class GameManager : MonoBehaviour {
 
 
         // currently 'pyramids' are used for testing/visualising positions
-        pyramidPos = Vector3.Min(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1]);
-        pyramidPos02 = Vector3.Max(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1]);
-        Debug.Log("printing 'Min' of pos1 & pos2: " + pyramidPos);
-        Debug.Log("printing 'Max' of pos1 & pos2: " + pyramidPos02);
+        // pyramidPos = Vector3.Min(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1]);
+        // pyramidPos02 = Vector3.Max(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1]);
+        // Debug.Log("printing 'Min' of pos1 & pos2: " + pyramidPos);
+        // Debug.Log("printing 'Max' of pos1 & pos2: " + pyramidPos02);
 
         // SpawnObject.Spawn(otherPiece, pyramidPos);
         // SpawnObject.Spawn(otherPiece, pyramidPos02);
 
-        /** TODO: write function to find horizontal/vertical direction to the next intersection to then 'draw' the path **/
-        /** TODO: populate array vector3 along horizontal/vertical axes then output result **/
-        // CheckOrientation.CheckHorizontal(shortenedLegOneIntersections[0], shortenedLegOneIntersections[1], drawnPath);
-        // CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedLegOneIntersections[1], drawnPath);
-
         count = 0;
         while (count < shortenedLegOneIntersections.Count) {
-            Debug.Log("\nCount equals: " + count + "\n" + "Array length is: " + shortenedLegOneIntersections.Count);
-            Debug.Log("\nArray index a: " + count + "\n" + "Array index b: " + (count + 1));
+            // Debug.Log("\nCount equals: " + count + "\n" + "Array length is: " + shortenedLegOneIntersections.Count);
+            // Debug.Log("\nArray index a: " + count + "\n" + "Array index b: " + (count + 1));
             if ((count + 1) < shortenedLegOneIntersections.Count) {
                 CheckOrientation.CheckHorizontal(shortenedLegOneIntersections[count],
                                 shortenedLegOneIntersections[count + 1], drawnPath);
