@@ -10,6 +10,9 @@ public class CheckOrientation : MonoBehaviour {
     static GameObject miscPiece;
 
     // non debugging version of function signature
+    /** TODO: create intermediate function to call horizontal & vertical checks, if horizontal 1st that creates an extra vertex
+     *  TODO: the resulting vertex is passed to the vertical function or vice versa
+     */
     public static void CheckHorizontal(Vector3 pos01, Vector3 pos02, List<Vector3> path) {
         tmpPosition = new Vector3(0, 0, 0);
         Debug.Log("Checking alignment");
