@@ -8,8 +8,6 @@ public class TriangulateVectors : MonoBehaviour {
     static float backLeg, frontLeg;
     static int horizDistance, vertDistance;
 
-    // private int distance;
-
 
     public static Vector3 Position(Vector3 position01, Vector3 position02,
         float centreMargin) {
@@ -45,18 +43,6 @@ public class TriangulateVectors : MonoBehaviour {
         position.y = 0f;
         position.z = Mathf.RoundToInt(position.z);
 
-        // if (!switchMinMax) {
-        //     if (position.Equals(position01)) {
-        //         Debug.Log("Switching to UsingMaxs");
-        //         UsingMaxs(position01, position02);
-        //         switchMinMax = true;
-        //     } else if (position.Equals(position02)) {
-        //         Debug.Log("Switching to UsingMaxs");
-        //         UsingMaxs(position01, position02);
-        //         switchMinMax = true;
-        //     }
-        // }
-
         return position;
     }
 
@@ -68,23 +54,11 @@ public class TriangulateVectors : MonoBehaviour {
         position.y = 0f;
         position.z = Mathf.RoundToInt(position.z);
 
-        // if (!switchMinMax) {
-        //     if (position.Equals(position01)) {
-        //         Debug.Log("Switching to UsingMins");
-        //         UsingMins(position01, position02);
-        //         switchMinMax = true;
-        //     } else if (position.Equals(position02)) {
-        //         Debug.Log("Switching to UsingMins");
-        //         UsingMins(position01, position02);
-        //         switchMinMax = true;
-        //     }
-        // }
         return position;
     }
 
     /* are the 'X' values aligned within margin */
-    public static bool
-        VerticalAlignment(Vector3 position01, Vector3 position02) {
+    public static bool VerticalAlignment(Vector3 position01, Vector3 position02) {
         if (position01.x == position02.x || position01.x == position02.x - 1 ||
             position01.x == position02.x + 1) {
             vertAligned = true;
@@ -95,8 +69,7 @@ public class TriangulateVectors : MonoBehaviour {
     }
 
     /* are the 'Z' values aligned within margin */
-    public static bool HorizontalAlignment(Vector3 position01,
-        Vector3 position02) {
+    public static bool HorizontalAlignment(Vector3 position01, Vector3 position02) {
         if (position01.z == position02.z || position01.z == position02.z - 1 ||
             position01.z == position02.z + 1) {
             horizAligned = true;
@@ -152,8 +125,7 @@ public class TriangulateVectors : MonoBehaviour {
         return isRight;
     }
 
-    public static int
-        HorizontalDistance(Vector3 position01, Vector3 position02) {
+    public static int HorizontalDistance(Vector3 position01, Vector3 position02) {
         if (horizAligned == true) {
             if (position01.x < position02.x) {
                 horizDistance = Mathf.RoundToInt(position02.x - position01.x);
@@ -175,8 +147,31 @@ public class TriangulateVectors : MonoBehaviour {
         return horizDistance;
     }
 
+    public static int VerticalDistance(Vector3 position01, Vector3 position02) {
+        if (vertAligned == true) {
+            if (position01.z < position02.z) {
+                vertDistance = Mathf.RoundToInt(position02.z - position01.z);
+                Debug.Log("Triangulating vertDistance: " + vertDistance);
+                isForward = true;
+                Debug.Log("Triangulating forward: " + isForward);
+            }
+            else if (position01.z > position02.z) {
+                vertDistance = Mathf.RoundToInt(position01.z - position02.z);
+                Debug.Log("Triangulating vertDistance: " + vertDistance);
+                isForward = false;
+                Debug.Log("Triangulating forward: " + isForward);
+            }
+            else {
+                vertDistance = 0;
+            }
+        }
+
+        return vertDistance;
+    }
+
     /* getter function for the distance between two vector positions */
     public static int GetVerticalDistance() {
+        Debug.Log("Triangulate, GetVerticalDistance: " + vertDistance);
         return vertDistance;
     }
 
