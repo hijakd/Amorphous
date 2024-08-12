@@ -170,15 +170,18 @@ public class GameManager : MonoBehaviour {
             if ((count + 1) < shortenedLegOneIntersections.Count) {
                 CheckOrientation.CheckHorizontal(shortenedLegOneIntersections[count],
                                 shortenedLegOneIntersections[count + 1], drawnPath);
+                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedLegOneIntersections[count + 1],
+                            drawnPath);
             }
             else {
                 CheckOrientation.CheckHorizontal(shortenedLegOneIntersections[count],
                     shortenedLegOneIntersections[count], drawnPath);
+                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedLegOneIntersections[count],
+                    drawnPath);
             }
             
 
-            // CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedLegOneIntersections[count + 1],
-            // drawnPath);
+            
             count++;
         }
 
