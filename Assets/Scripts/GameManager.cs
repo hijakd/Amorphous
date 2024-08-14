@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEditor;
-
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
@@ -23,27 +22,31 @@ public class GameManager : MonoBehaviour {
     public bool isGameActive;
     public Button restartButton;
     public GameObject titleScreen;
-    
+
 
     [SerializeField] private List<GameObject> cardinals;
+
     // private List<GameObject> cardinals;
     [SerializeField] private List<Vector3> selectableCoords;
-    [SerializeField] private List<Vector3> LegOneIntersections;
-    [SerializeField] private List<Vector3> shortenedLegOneIntersections;
+    [SerializeField] private List<Vector3> intersections;
+    [SerializeField] private List<Vector3> shortenedIntersections;
     [SerializeField] private List<Vector3> drawnPath;
-    
+
     private float modifier = 1.0f;
-    
+
     private int halfHeight;
     private int halfWidth;
     private int count;
     private int distance01;
+    [SerializeField] private List<int> distances;
+
     private int distance02;
     private int farCornerDistance;
     private int lcm01;
     private int lcm02;
     private int lcm03;
     private int combinedLCM;
+    [SerializeField] private List<int> lcms;
     private Vector3 spawnPosition;
     private Vector3 goalPosition;
     private Vector3 destination01;
@@ -70,8 +73,8 @@ public class GameManager : MonoBehaviour {
 
         // visualize paths between 'intersections'
         Gizmos.color = Color.blue;
-        for (int i = 0; i < LegOneIntersections.Count - 1; i++) {
-            Gizmos.DrawLine(LegOneIntersections[i], LegOneIntersections[i + 1]);
+        for (int i = 0; i < intersections.Count - 1; i++) {
+            Gizmos.DrawLine(intersections[i], intersections[i + 1]);
         }
 
         Gizmos.color = Color.green;
@@ -102,7 +105,7 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < waypoints.Count; i++) {
             destinations.Add(RandomPosition.Position(xMinMax, yMinMax));
         }
-        
+
 
         /* this is used for 'random' vector triangulation */
         selectableCoords.Add(new Vector3(0, 0, 0));
@@ -113,14 +116,23 @@ public class GameManager : MonoBehaviour {
         selectableCoords.Add(spawnPosition);
         selectableCoords.Add(goalPosition);
         selectableCoords.Add(destination01);
+        selectableCoords.Add(destinations[0]);
+        selectableCoords.Add(destinations[1]);
+        selectableCoords.Add(destinations[2]);
+        selectableCoords.Add(destinations[3]);
 
         distance01 = Mathf.RoundToInt(Vector3.Distance(spawnPosition, destination01));
+        distances.Add(Mathf.RoundToInt(Vector3.Distance(spawnPosition, destinations[0])));
+        distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[0], destinations[1])));
+        distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[1], destinations[2])));
+        distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[2], destinations[3])));
+        distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[3], goalPosition)));
         midPoint01 = Vector3.Lerp(spawnPosition, destinations[0], 0.5f);
         midPoints.Add(Vector3.Lerp(spawnPosition, destinations[0], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[0], destinations[1], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[1], destinations[2], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[2], destinations[3], 0.5f));
-        
+        midPoints.Add(Vector3.Lerp(destinations[3], goalPosition, 0.5f));
     }
 
     // Start is called before the first frame update
@@ -128,42 +140,38 @@ public class GameManager : MonoBehaviour {
         // SpawnObject.Spawn(player, spawnPosition);
         player.transform.position = spawnPosition;
         SpawnObject.Spawn(goalObject, goalPosition);
-        SpawnObject.Spawn(waypoints[0], destination01);
+        // SpawnObject.Spawn(waypoints[0], destination01);
+        SpawnObject.Spawn(waypoints[0], destinations[0]);
+        SpawnObject.Spawn(waypoints[1], destinations[1]);
+        SpawnObject.Spawn(waypoints[2], destinations[2]);
+        SpawnObject.Spawn(waypoints[3], destinations[3]);
 
-        /* begin finding Lowest Common Multiples */
-        /** LCM's will be used to determine the number of intersections between two points **/
-        // find the far corner from midpoint01
-        farthestCorner = FindFarCorner.Find(midPoint01, halfHeight, halfWidth);
-        farCornerDistance = Mathf.RoundToInt(Vector3.Distance(midPoint01, farthestCorner));
-        distance02 = distance01 + farCornerDistance;
-        lcm01 = ReduceLcm(LCM_GCD.Lcm(distance01, farCornerDistance));
-        lcm02 = ReduceLcm(LCM_GCD.Lcm(distance01, distance02));
-        lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
-
-        combinedLCM = lcm01 + lcm02 + lcm03;
-        /* end find LCM */
-
-        count = 0;
-        LegOneIntersections.Add(spawnPosition);
-        while (count < combinedLCM) {
-            int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
-            int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
-            Vector3 coord01 = selectableCoords[select01];
-            Vector3 coord02 = selectableCoords[select02];
-
-            // pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
-            LegOneIntersections.Add(TriangulateVectors.Position(coord01, coord02, Random.Range(0.42f, 0.58f)));
-            count++;
+        for (int i = 0; i < midPoints.Count; i++) {
+            lcms.Add(FindLcms(midPoints[i], distances[i]));
         }
 
-        LegOneIntersections.Add(destination01);
-
-        /* remove duplicate values from pathOne */
-        shortenedLegOneIntersections = new List<Vector3>(ShortenList(LegOneIntersections));
 
         count = 0;
-        while (count < shortenedLegOneIntersections.Count) {
-            SpawnObject.Spawn(floorTile, shortenedLegOneIntersections[count]);
+        intersections.Add(spawnPosition);
+        Triangulate(lcms[0]);
+        intersections.Add(destinations[0]);
+        Triangulate(lcms[1]);
+        intersections.Add(destinations[1]);
+        Triangulate(lcms[2]);
+        intersections.Add(destinations[2]);
+        Triangulate(lcms[3]);
+        intersections.Add(destinations[3]);
+        Triangulate(lcms[4]);
+        intersections.Add(goalPosition);
+        
+        
+
+        /* remove duplicate values from pathOne */
+        shortenedIntersections = new List<Vector3>(ShortenList(intersections));
+
+        count = 0;
+        while (count < shortenedIntersections.Count) {
+            SpawnObject.Spawn(floorTile, shortenedIntersections[count]);
             count++;
         }
 
@@ -181,24 +189,22 @@ public class GameManager : MonoBehaviour {
         // SpawnObject.Spawn(otherPiece, pyramidPos02);
 
         count = 0;
-        while (count < shortenedLegOneIntersections.Count) {
+        while (count < shortenedIntersections.Count) {
             // Debug.Log("\nCount equals: " + count + "\n" + "Array length is: " + shortenedLegOneIntersections.Count);
             // Debug.Log("\nArray index a: " + count + "\n" + "Array index b: " + (count + 1));
-            if ((count + 1) < shortenedLegOneIntersections.Count) {
-                CheckOrientation.CheckHorizontal(shortenedLegOneIntersections[count],
-                                shortenedLegOneIntersections[count + 1], drawnPath);
-                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedLegOneIntersections[count + 1],
-                            drawnPath);
-            }
-            else {
-                CheckOrientation.CheckHorizontal(shortenedLegOneIntersections[count],
-                    shortenedLegOneIntersections[count], drawnPath);
-                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedLegOneIntersections[count],
+            if ((count + 1) < shortenedIntersections.Count) {
+                CheckOrientation.CheckHorizontal(shortenedIntersections[count],
+                    shortenedIntersections[count + 1], drawnPath);
+                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedIntersections[count + 1],
                     drawnPath);
             }
-            
+            else {
+                CheckOrientation.CheckHorizontal(shortenedIntersections[count],
+                    shortenedIntersections[count], drawnPath);
+                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedIntersections[count],
+                    drawnPath);
+            }
 
-            
             count++;
         }
 
@@ -208,6 +214,31 @@ public class GameManager : MonoBehaviour {
             SpawnObject.Spawn(floorTile2, drawnPath[count]);
             count++;
         }
+    }
+
+    private void Triangulate(int lcm) {
+        while (count < lcm) {
+            int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
+            int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
+            Vector3 coord01 = selectableCoords[select01];
+            Vector3 coord02 = selectableCoords[select02];
+
+            // pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
+            intersections.Add(TriangulateVectors.Position(coord01, coord02, Random.Range(0.42f, 0.58f)));
+            count++;
+        }
+    }
+
+    /** LCM's will be used to determine the number of intersections between two points **/
+    private int FindLcms(Vector3 midPoint, int distance) {
+        farthestCorner = FindFarCorner.Find(midPoint, halfHeight, halfWidth);
+        farCornerDistance = Mathf.RoundToInt(Vector3.Distance(midPoint01, farthestCorner));
+        distance02 = distance + farCornerDistance;
+        lcm01 = ReduceLcm(LCM_GCD.Lcm(distance01, farCornerDistance));
+        lcm02 = ReduceLcm(LCM_GCD.Lcm(distance01, distance02));
+        lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
+
+        return combinedLCM = lcm01 + lcm02 + lcm03;
     }
 
     // Update is called once per frame
@@ -250,7 +281,7 @@ public class GameManager : MonoBehaviour {
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);
     }
-    
+
     /*public void StartGame(int difficulty) {
         modifier /= difficulty;
         isGameActive = true;
