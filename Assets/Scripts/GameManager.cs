@@ -47,7 +47,9 @@ public class GameManager : MonoBehaviour {
     private Vector3 spawnPosition;
     private Vector3 goalPosition;
     private Vector3 destination01;
+    [SerializeField] private List<Vector3> destinations;
     private Vector3 midPoint01;
+    [SerializeField] private List<Vector3> midPoints;
     private Vector3 pyramidPos;
     private Vector3 pyramidPos02;
     private Vector3 farthestCorner;
@@ -97,6 +99,10 @@ public class GameManager : MonoBehaviour {
         goalPosition = RandomPosition.Position(xMinMax, yMinMax);
         spawnPosition = RandomPosition.Position(xMinMax, yMinMax);
         destination01 = RandomPosition.Position(xMinMax, yMinMax);
+        for (int i = 0; i < waypoints.Count; i++) {
+            destinations.Add(RandomPosition.Position(xMinMax, yMinMax));
+        }
+        
 
         /* this is used for 'random' vector triangulation */
         selectableCoords.Add(new Vector3(0, 0, 0));
@@ -109,7 +115,12 @@ public class GameManager : MonoBehaviour {
         selectableCoords.Add(destination01);
 
         distance01 = Mathf.RoundToInt(Vector3.Distance(spawnPosition, destination01));
-        midPoint01 = Vector3.Lerp(spawnPosition, destination01, 0.5f);
+        midPoint01 = Vector3.Lerp(spawnPosition, destinations[0], 0.5f);
+        midPoints.Add(Vector3.Lerp(spawnPosition, destinations[0], 0.5f));
+        midPoints.Add(Vector3.Lerp(destinations[0], destinations[1], 0.5f));
+        midPoints.Add(Vector3.Lerp(destinations[1], destinations[2], 0.5f));
+        midPoints.Add(Vector3.Lerp(destinations[2], destinations[3], 0.5f));
+        
     }
 
     // Start is called before the first frame update
