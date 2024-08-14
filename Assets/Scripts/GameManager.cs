@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour {
     public GameObject floorTile;
     public GameObject floorTile2;
     public GameObject otherPiece;
+    public int gridHeight;
+    public int gridWidth;
     public List<GameObject> waypoints;
     public TextMeshProUGUI winText;
     public TextMeshProUGUI gameOverText;
@@ -23,16 +25,15 @@ public class GameManager : MonoBehaviour {
     public GameObject titleScreen;
     
 
-    // [SerializeField] private List<GameObject> cardinals;
-    private List<GameObject> cardinals;
-    private List<Vector3> selectableCoords;
-    private List<Vector3> LegOneIntersections;
-    private List<Vector3> shortenedLegOneIntersections;
-    private List<Vector3> drawnPath;
+    [SerializeField] private List<GameObject> cardinals;
+    // private List<GameObject> cardinals;
+    [SerializeField] private List<Vector3> selectableCoords;
+    [SerializeField] private List<Vector3> LegOneIntersections;
+    [SerializeField] private List<Vector3> shortenedLegOneIntersections;
+    [SerializeField] private List<Vector3> drawnPath;
     
     private float modifier = 1.0f;
-    private int gridHeight;
-    private int gridWidth;
+    
     private int halfHeight;
     private int halfWidth;
     private int count;
@@ -113,7 +114,8 @@ public class GameManager : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        SpawnObject.Spawn(player, spawnPosition);
+        // SpawnObject.Spawn(player, spawnPosition);
+        player.transform.position = spawnPosition;
         SpawnObject.Spawn(goalObject, goalPosition);
         SpawnObject.Spawn(waypoints[0], destination01);
 

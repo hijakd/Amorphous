@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour {
     void Awake() {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+        camera = GameObject.FindGameObjectWithTag("MainCamera");
         mazeCentre = GameObject.Find("Maze Centre");
         controls = new PlayerControls();
         
