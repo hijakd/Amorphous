@@ -1,7 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEditor;
+
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
@@ -11,33 +15,40 @@ public class GameManager : MonoBehaviour {
     public GameObject floorTile;
     public GameObject floorTile2;
     public GameObject otherPiece;
-
     public List<GameObject> waypoints;
+    public TextMeshProUGUI winText;
+    public TextMeshProUGUI gameOverText;
+    public bool isGameActive;
+    public Button restartButton;
+    public GameObject titleScreen;
+    
 
-    [SerializeField] private List<GameObject> cardinals;
-    [SerializeField] private List<Vector3> selectableCoords;
-    [SerializeField] private List<Vector3> LegOneIntersections;
-    [SerializeField] private List<Vector3> shortenedLegOneIntersections;
-    [SerializeField] private List<Vector3> drawnPath;
-
-    [SerializeField] private int gridHeight;
-    [SerializeField] private int gridWidth;
+    // [SerializeField] private List<GameObject> cardinals;
+    private List<GameObject> cardinals;
+    private List<Vector3> selectableCoords;
+    private List<Vector3> LegOneIntersections;
+    private List<Vector3> shortenedLegOneIntersections;
+    private List<Vector3> drawnPath;
+    
+    private float modifier = 1.0f;
+    private int gridHeight;
+    private int gridWidth;
     private int halfHeight;
     private int halfWidth;
     private int count;
-    [SerializeField] private int distance01;
-    [SerializeField] private int distance02;
-    [SerializeField] private int farCornerDistance;
-    [SerializeField] private int lcm01;
-    [SerializeField] private int lcm02;
-    [SerializeField] private int lcm03;
-    [SerializeField] private int combinedLCM;
-    [SerializeField] private Vector3 spawnPosition;
+    private int distance01;
+    private int distance02;
+    private int farCornerDistance;
+    private int lcm01;
+    private int lcm02;
+    private int lcm03;
+    private int combinedLCM;
+    private Vector3 spawnPosition;
     private Vector3 goalPosition;
     private Vector3 destination01;
     private Vector3 midPoint01;
-    [SerializeField] private Vector3 pyramidPos;
-    [SerializeField] private Vector3 pyramidPos02;
+    private Vector3 pyramidPos;
+    private Vector3 pyramidPos02;
     private Vector3 farthestCorner;
     public static Vector2 xMinMax;
     public static Vector2 yMinMax;
@@ -207,5 +218,30 @@ public class GameManager : MonoBehaviour {
         return shortList;
     }
 
+    public void GameOver() {
+        isGameActive = false;
+        restartButton.gameObject.SetActive(true);
+        gameOverText.gameObject.SetActive(true);
+    }
+
+    public void EndLevel() {
+        Debug.Log("display winText");
+        winText.gameObject.SetActive(true);
+    }
+
+    public void RestartGame() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void StartGame() {
+        isGameActive = true;
+        titleScreen.gameObject.SetActive(false);
+    }
+    
+    /*public void StartGame(int difficulty) {
+        modifier /= difficulty;
+        isGameActive = true;
+        titleScreen.gameObject.SetActive(false);
+    }*/
 
 }
