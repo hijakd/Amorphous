@@ -37,9 +37,8 @@ public class GameManager : MonoBehaviour {
     private int halfHeight;
     private int halfWidth;
     private int count;
-    private int distance01;
     [SerializeField] private List<int> distances;
-
+    // private int distance01;
     private int distance02;
     private int farCornerDistance;
     private int lcm01;
@@ -49,9 +48,9 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private List<int> lcms;
     private Vector3 spawnPosition;
     private Vector3 goalPosition;
-    private Vector3 destination01;
+    // private Vector3 destination01;
     [SerializeField] private List<Vector3> destinations;
-    private Vector3 midPoint01;
+    // private Vector3 midPoint01;
     [SerializeField] private List<Vector3> midPoints;
     private Vector3 pyramidPos;
     private Vector3 pyramidPos02;
@@ -72,14 +71,14 @@ public class GameManager : MonoBehaviour {
         Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
 
         // visualize paths between 'intersections'
-        Gizmos.color = Color.blue;
-        for (int i = 0; i < intersections.Count - 1; i++) {
-            Gizmos.DrawLine(intersections[i], intersections[i + 1]);
-        }
+        // Gizmos.color = Color.blue;
+        // for (int i = 0; i < intersections.Count - 1; i++) {
+        //     Gizmos.DrawLine(intersections[i], intersections[i + 1]);
+        // }
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(spawnPosition, pyramidPos);
-        Gizmos.DrawLine(pyramidPos, destination01);
+        // Gizmos.color = Color.green;
+        // Gizmos.DrawLine(spawnPosition, pyramidPos);
+        // Gizmos.DrawLine(pyramidPos, destination01);
     }
 
     private void Awake() {
@@ -101,7 +100,7 @@ public class GameManager : MonoBehaviour {
 
         goalPosition = RandomPosition.Position(xMinMax, yMinMax);
         spawnPosition = RandomPosition.Position(xMinMax, yMinMax);
-        destination01 = RandomPosition.Position(xMinMax, yMinMax);
+        // destination01 = RandomPosition.Position(xMinMax, yMinMax);
         for (int i = 0; i < waypoints.Count; i++) {
             destinations.Add(RandomPosition.Position(xMinMax, yMinMax));
         }
@@ -115,19 +114,19 @@ public class GameManager : MonoBehaviour {
         selectableCoords.Add(cardinals[3].transform.position);
         selectableCoords.Add(spawnPosition);
         selectableCoords.Add(goalPosition);
-        selectableCoords.Add(destination01);
+        // selectableCoords.Add(destination01);
         selectableCoords.Add(destinations[0]);
         selectableCoords.Add(destinations[1]);
         selectableCoords.Add(destinations[2]);
         selectableCoords.Add(destinations[3]);
 
-        distance01 = Mathf.RoundToInt(Vector3.Distance(spawnPosition, destination01));
+        // distance01 = Mathf.RoundToInt(Vector3.Distance(spawnPosition, destination01));
         distances.Add(Mathf.RoundToInt(Vector3.Distance(spawnPosition, destinations[0])));
         distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[0], destinations[1])));
         distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[1], destinations[2])));
         distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[2], destinations[3])));
         distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[3], goalPosition)));
-        midPoint01 = Vector3.Lerp(spawnPosition, destinations[0], 0.5f);
+        // midPoint01 = Vector3.Lerp(spawnPosition, destinations[0], 0.5f);
         midPoints.Add(Vector3.Lerp(spawnPosition, destinations[0], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[0], destinations[1], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[1], destinations[2], 0.5f));
@@ -232,10 +231,10 @@ public class GameManager : MonoBehaviour {
     /** LCM's will be used to determine the number of intersections between two points **/
     private int FindLcms(Vector3 midPoint, int distance) {
         farthestCorner = FindFarCorner.Find(midPoint, halfHeight, halfWidth);
-        farCornerDistance = Mathf.RoundToInt(Vector3.Distance(midPoint01, farthestCorner));
+        farCornerDistance = Mathf.RoundToInt(Vector3.Distance(midPoint, farthestCorner));
         distance02 = distance + farCornerDistance;
-        lcm01 = ReduceLcm(LCM_GCD.Lcm(distance01, farCornerDistance));
-        lcm02 = ReduceLcm(LCM_GCD.Lcm(distance01, distance02));
+        lcm01 = ReduceLcm(LCM_GCD.Lcm(distance, farCornerDistance));
+        lcm02 = ReduceLcm(LCM_GCD.Lcm(distance, distance02));
         lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
 
         return combinedLCM = lcm01 + lcm02 + lcm03;

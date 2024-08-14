@@ -36,26 +36,26 @@ public class TriangulateVectors : MonoBehaviour {
     }
 
     /* find an intersecting vector position at right angles to two given positions */
-    public static Vector3 UsingMins(Vector3 position01, Vector3 position02) {
-        // Debug.Log("UsingMins, switchMinMax: " + switchMinMax);
-        position = Vector3.Min(position01, position02);
-        position.x = Mathf.RoundToInt(position.x);
-        position.y = 0f;
-        position.z = Mathf.RoundToInt(position.z);
-
-        return position;
-    }
+    // public static Vector3 UsingMins(Vector3 position01, Vector3 position02) {
+    //     // Debug.Log("UsingMins, switchMinMax: " + switchMinMax);
+    //     position = Vector3.Min(position01, position02);
+    //     position.x = Mathf.RoundToInt(position.x);
+    //     position.y = 0f;
+    //     position.z = Mathf.RoundToInt(position.z);
+    //
+    //     return position;
+    // }
 
     /* find an intersecting vector position at right angles to two given positions */
-    public static Vector3 UsingMaxs(Vector3 position01, Vector3 position02) {
-        // Debug.Log("UsingMaxs, switchMinMax: " + switchMinMax);
-        position = Vector3.Max(position01, position02);
-        position.x = Mathf.RoundToInt(position.x);
-        position.y = 0f;
-        position.z = Mathf.RoundToInt(position.z);
-
-        return position;
-    }
+    // public static Vector3 UsingMaxs(Vector3 position01, Vector3 position02) {
+    //     // Debug.Log("UsingMaxs, switchMinMax: " + switchMinMax);
+    //     position = Vector3.Max(position01, position02);
+    //     position.x = Mathf.RoundToInt(position.x);
+    //     position.y = 0f;
+    //     position.z = Mathf.RoundToInt(position.z);
+    //
+    //     return position;
+    // }
 
     /* are the 'X' values aligned within margin */
     public static bool VerticalAlignment(Vector3 position01, Vector3 position02) {
