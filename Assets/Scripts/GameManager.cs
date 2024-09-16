@@ -30,9 +30,9 @@ public class GameManager : MonoBehaviour {
     // private List<GameObject> cardinals;
     [SerializeField] private List<Vector3> selectableCoords;
     [SerializeField] private List<Vector3> intersections;
-    [SerializeField] private List<Vector3> shortenedIntersections;
     [SerializeField] private List<Vector3> drawnPath;
     [SerializeField] private List<Vector3> drawnWalls;
+    [SerializeField] private List<Vector3> shortenedList;
 
     private float modifier = 1.0f;
 
@@ -164,12 +164,18 @@ public class GameManager : MonoBehaviour {
         Triangulate(lcms[4]);
         intersections.Add(goalPosition);
 
-        /* remove duplicate values from pathOne */
-        shortenedIntersections = new List<Vector3>(ShortenList(intersections));
+        /* remove duplicate values from intersections */
+        shortenedList = new List<Vector3>(ShortenList(intersections));
+        intersections.Clear();
+        for (int i = 0; i < shortenedList.Count; i++) {
+            intersections.Add(shortenedList[i]);
+        }
+        shortenedList.Clear();
 
+        
         count = 0;
-        while (count < shortenedIntersections.Count) {
-            SpawnObject.Spawn(floorTile, shortenedIntersections[count]);
+        while (count < intersections.Count) {
+            SpawnObject.Spawn(floorTile, intersections[count]);
             count++;
         }
         
@@ -189,24 +195,32 @@ public class GameManager : MonoBehaviour {
         */
 
         count = 0;
-        while (count < shortenedIntersections.Count) {
+        while (count < intersections.Count) {
             // Debug.Log("\nCount equals: " + count + "\n" + "Array length is: " + shortenedLegOneIntersections.Count);
             // Debug.Log("\nArray index a: " + count + "\n" + "Array index b: " + (count + 1));
-            if ((count + 1) < shortenedIntersections.Count) {
-                CheckOrientation.CheckHorizontal(shortenedIntersections[count],
-                    shortenedIntersections[count + 1], drawnPath);
-                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedIntersections[count + 1],
+            if ((count + 1) < intersections.Count) {
+                CheckOrientation.CheckHorizontal(intersections[count],
+                    intersections[count + 1], drawnPath);
+                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], intersections[count + 1],
                     drawnPath);
             }
             else {
-                CheckOrientation.CheckHorizontal(shortenedIntersections[count],
-                    shortenedIntersections[count], drawnPath);
-                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], shortenedIntersections[count],
+                CheckOrientation.CheckHorizontal(intersections[count],
+                    intersections[count], drawnPath);
+                CheckOrientation.CheckVertical(drawnPath[drawnPath.Count - 1], intersections[count],
                     drawnPath);
             }
 
             count++;
         }
+
+        /* remove duplicate values from drawnPath */
+        shortenedList = new List<Vector3>(ShortenList(drawnPath));
+        drawnPath.Clear();
+        for (int i = 0; i < shortenedList.Count; i++) {
+            drawnPath.Add(shortenedList[i]);
+        }
+        shortenedList.Clear();
 
 
         count = 0;
@@ -225,6 +239,14 @@ public class GameManager : MonoBehaviour {
             }
             xVal++;
         }
+        
+        /* remove duplicate values from drawnWalls */
+        shortenedList = new List<Vector3>(ShortenList(drawnWalls));
+        drawnWalls.Clear();
+        for (int i = 0; i < shortenedList.Count; i++) {
+            drawnWalls.Add(shortenedList[i]);
+        }
+        shortenedList.Clear();
 
         // xVal = xMinMax.x;
         // count = 0;
