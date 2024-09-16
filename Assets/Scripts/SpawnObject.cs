@@ -8,6 +8,7 @@ public class SpawnObject : MonoBehaviour {
         Instantiate(gameObject);
     }
 
+    // overloading Spawn function to set rotation
     public static void Spawn(GameObject gameObject, Vector3 position, Quaternion rotation) {
         gameObject.transform.position = position;
         gameObject.transform.rotation = rotation;
