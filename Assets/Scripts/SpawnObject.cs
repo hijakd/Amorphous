@@ -7,4 +7,11 @@ public class SpawnObject : MonoBehaviour {
         gameObject.transform.position = position;
         Instantiate(gameObject);
     }
+
+    public static void Spawn(GameObject gameObject, Vector3 position, Quaternion rotation) {
+        gameObject.transform.position = position;
+        gameObject.transform.rotation = rotation;
+        Instantiate(gameObject);
+    }
+
 }

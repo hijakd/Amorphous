@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
     public GameObject player;
     public GameObject floorTile;
     public GameObject floorTile2;
+    public GameObject wallPanel;
     public GameObject otherPiece;
     public int gridHeight;
     public int gridWidth;
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private List<Vector3> intersections;
     [SerializeField] private List<Vector3> shortenedIntersections;
     [SerializeField] private List<Vector3> drawnPath;
+    [SerializeField] private List<Vector3> drawnWalls;
 
     private float modifier = 1.0f;
 
@@ -59,7 +61,6 @@ public class GameManager : MonoBehaviour {
     public static Vector2 yMinMax;
     private Vector2 randomVariance;
 
-    // public List<Vector2> vectorAngles; // for testing Vector3.Angle/SignedAngle() to find a path direction
 
 
     private void OnDrawGizmos() {
@@ -162,8 +163,6 @@ public class GameManager : MonoBehaviour {
         intersections.Add(destinations[3]);
         Triangulate(lcms[4]);
         intersections.Add(goalPosition);
-        
-        
 
         /* remove duplicate values from pathOne */
         shortenedIntersections = new List<Vector3>(ShortenList(intersections));
@@ -173,7 +172,8 @@ public class GameManager : MonoBehaviour {
             SpawnObject.Spawn(floorTile, shortenedIntersections[count]);
             count++;
         }
-
+        
+        /*
         // pyramidPos = TriangulateV.Position(spawnPosition, destination01, xMinMax, yMinMax);
         // SpawnObject.Spawn(otherPiece, pyramidPos);
 
@@ -186,6 +186,7 @@ public class GameManager : MonoBehaviour {
 
         // SpawnObject.Spawn(otherPiece, pyramidPos);
         // SpawnObject.Spawn(otherPiece, pyramidPos02);
+        */
 
         count = 0;
         while (count < shortenedIntersections.Count) {
@@ -213,6 +214,27 @@ public class GameManager : MonoBehaviour {
             SpawnObject.Spawn(floorTile2, drawnPath[count]);
             count++;
         }
+        
+
+        float xVal = xMinMax.x;
+        while (drawnWalls.Count < drawnPath.Count) {
+            for (count = 0; count < drawnPath.Count; count++) {
+                if (drawnPath[count].x == xVal) {
+                  drawnWalls.Add(drawnPath[count]);  
+                }
+            }
+            xVal++;
+        }
+
+        // xVal = xMinMax.x;
+        // count = 0;
+        // while (count < drawnWalls.Count) {
+        //     // if (drawnWalls[count].x != drawnWalls[count + 1].x && drawnWalls[count].z != drawnWalls[count + 1].z)
+        //     if (drawnWalls[count].z != drawnWalls[count + 1].z && drawnWalls[count + 1].x != xVal)
+        //     SpawnObject.Spawn(wallPanel, drawnWalls[count], Quaternion.Euler(0, 0, 0));
+        //     count++;
+        //     xVal++;
+        // }
     }
 
     private void Triangulate(int lcm) {
@@ -260,6 +282,7 @@ public class GameManager : MonoBehaviour {
         List<Vector3> shortList = tmpList.ToList();
         return shortList;
     }
+    
 
     public void GameOver() {
         isGameActive = false;
