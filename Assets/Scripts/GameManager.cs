@@ -30,9 +30,11 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private List<Vector3> intersections;
     [SerializeField] private List<Vector3> drawnPath;
     [SerializeField] private List<Vector3> drawnWalls;
+    [SerializeField] private List<Vector3> horizontalWalls;
+    [SerializeField] private List<Vector3> verticalWalls;
     [SerializeField] private List<Vector3> shortenedList;
 
-    private float modifier = 1.0f;
+    // private float modifier = 1.0f;
 
     private int halfHeight;
     private int halfWidth;
@@ -56,7 +58,8 @@ public class GameManager : MonoBehaviour {
     private Vector3 farthestCorner;
     public static Vector2 xMinMax;
     public static Vector2 yMinMax;
-    private Vector2 randomVariance;
+
+    // private Vector2 randomVariance;
 
 
     private void OnDrawGizmos() {
@@ -85,8 +88,9 @@ public class GameManager : MonoBehaviour {
         xMinMax.y = halfWidth;
         yMinMax.x = -halfHeight;
         yMinMax.y = halfHeight;
-        randomVariance.x = 0.42f;
-        randomVariance.y = 0.58f;
+
+        // randomVariance.x = 0.42f;
+        // randomVariance.y = 0.58f;
 
         /* cardinals are the corners of the grid & used for boundary calculations */
         // cardinals.Capacity = 4;
@@ -214,13 +218,6 @@ public class GameManager : MonoBehaviour {
 
         shortenedList.Clear();
 
-        /* spawn floor tiles */
-        count = 0;
-        while (count < drawnPath.Count) {
-            SpawnObject.Spawn(floorTile2, drawnPath[count]);
-            count++;
-        }
-
         /* create an ordered list for spawning wall panels */
         xVal = xMinMax.x;
         while (drawnWalls.Count < drawnPath.Count) {
@@ -237,22 +234,66 @@ public class GameManager : MonoBehaviour {
         shortenedList = new List<Vector3>(ShortenList(drawnWalls));
         drawnWalls.Clear();
         for (int i = 0; i < shortenedList.Count; i++) {
-            drawnWalls.Add(shortenedList[i]);
+            // drawnWalls.Add(shortenedList[i]);
+            horizontalWalls.Add(shortenedList[i]);
+            verticalWalls.Add(shortenedList[i]);
         }
 
         shortenedList.Clear();
 
-        
+
+        count = 0;
+        while (count < horizontalWalls.Count) {
+            HashSet<Vector3> temp = new HashSet<Vector3>();
+            int tmpXValue = Mathf.RoundToInt(horizontalWalls[count].x);
+            temp.Add(horizontalWalls[0]);
+
+            if (horizontalWalls[count].x != tmpXValue) {
+                temp.Add(horizontalWalls[count]);
+
+                // horizontalWalls.Remove(horizontalWalls[count + 1]);
+            }
+
+            if (horizontalWalls[count].x != tmpXValue) {
+                tmpXValue++;
+            }
+
+            count++;
+
+        }
+
+
+        /* spawn floor tiles */
+        count = 0;
+        while (count < drawnPath.Count) {
+            SpawnObject.Spawn(floorTile2, drawnPath[count]);
+            count++;
+        }
+
+
         float xValLeft = xMinMax.x;
         float xValRight = xMinMax.y;
         float zValTop = yMinMax.y;
         float zValBottom = yMinMax.x;
 
-        for (count = 0; count < drawnPath.Count; count++) {
+        /*
+         for (count = 0; count < drawnPath.Count; count++) {
             if (drawnPath[count].x == xValLeft) {
-                SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 0, 0));
+                // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 0, 0));
+                Debug.Log("Spawning a wall at: " + drawnPath[count]);
+                // if (drawnPath[count].x + 1 != xValLeft + 1) {
+                    // Debug.Log("Spawning walls: " + (drawnPath[count].x + 1) + " , " + (xValLeft + 1));
+                    // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 270, 0));
+                // }
                 // xValLeft++;
+                Debug.Log("xValLeft: " + xValLeft);
             }
+            // if (drawnPath[count].x == xValLeft) {
+            //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 0, 0));
+            //     Debug.Log("Spawning a wall at: " + drawnPath[count]);
+            //
+            // }
+
             if (drawnPath[count].z == zValTop) {
                 SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 90, 0));
                 // xValRight--;
@@ -265,21 +306,21 @@ public class GameManager : MonoBehaviour {
                 SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 270, 0));
                 // zValBottom++;
             }
-            
-        }
 
-        
+        }
+        */
+
 
         // count = 0;
         // xVal = xMinMax.x;
         // float zVal = yMinMax.y;
         // while (count < drawnWalls.Count) {
-            //     // if (drawnWalls[count].x != drawnWalls[count + 1].x && drawnWalls[count].z != drawnWalls[count + 1].z)
-            // if (drawnWalls[count].z != drawnWalls[count + 1].z && drawnWalls[count + 1].x != xVal)
-                // SpawnObject.Spawn(wallPanel, drawnWalls[count], Quaternion.Euler(0, 0, 0));
-            // count++;
+        //     // if (drawnWalls[count].x != drawnWalls[count + 1].x && drawnWalls[count].z != drawnWalls[count + 1].z)
+        // if (drawnWalls[count].z != drawnWalls[count + 1].z && drawnWalls[count + 1].x != xVal)
+        // SpawnObject.Spawn(wallPanel, drawnWalls[count], Quaternion.Euler(0, 0, 0));
+        // count++;
 
-            //     xVal++;
+        //     xVal++;
         // }
     }
 

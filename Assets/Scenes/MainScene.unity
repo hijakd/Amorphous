@@ -178,9 +178,11 @@ MonoBehaviour:
   - {fileID: 3213665459922966523, guid: f7f1ac272a0109b49acc3e9e073ef6a3, type: 3}
   selectableCoords: []
   intersections: []
-  shortenedIntersections: []
   drawnPath: []
   drawnWalls: []
+  horizontalWalls: []
+  verticalWalls: []
+  shortenedList: []
   distances: 
   lcms: 
   destinations: []
@@ -933,7 +935,7 @@ PrefabInstance:
     - target: {fileID: 8633637255975074103, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 8633637255975074103, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
@@ -996,142 +998,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 921098112}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &944050021
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_Name
-      value: Floor Tile Green
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4330889811821691844, guid: 6bf05f82252b718478bc86503fbafbf6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6bf05f82252b718478bc86503fbafbf6, type: 3}
---- !u!1001 &983104283
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.7138619
-      objectReference: {fileID: 0}
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7002865
-      objectReference: {fileID: 0}
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 271.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1184588577867985329, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1428840922709220998, guid: 0d7d4116c7c29f94db40815268bfe935,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall Tile
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0d7d4116c7c29f94db40815268bfe935, type: 3}
 --- !u!1 &1406682495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,5 +1552,3 @@ SceneRoots:
   - {fileID: 848237405}
   - {fileID: 2072029880}
   - {fileID: 921098112}
-  - {fileID: 944050021}
-  - {fileID: 983104283}

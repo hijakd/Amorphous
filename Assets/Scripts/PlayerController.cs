@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour {
         /* set focalPoint position to that of the players position for the camera to follow */
         focalPoint.transform.position = transform.position;
 
-        controls.Player.Look.performed += ctx => SendMessage(ctx.ReadValue<Vector2>());
+        // controls.Player.Look.performed += ctx => SendMessage(ctx.ReadValue<Vector2>());
     }
     
     void FixedUpdate()

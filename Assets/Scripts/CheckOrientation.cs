@@ -165,4 +165,36 @@ public class CheckOrientation : MonoBehaviour {
     }
 
 
+    public static void NextTile(Vector3 pos01, Vector3 pos02, GameObject wallPanel) {
+        // string north = "north";
+        // string east = "east";
+        // string south = "south";
+        // string west = "west";
+        string nextDirection = "";
+        bool firstTile = true;
+
+        if (pos01.x < pos02.x && pos01.z == pos02.z) {
+            nextDirection = "goEeast";
+        } else if (pos01.x > pos02.x && pos01.z == pos02.z) {
+            nextDirection = "goWest";
+        } else if (pos01.x == pos02.x && pos01.z < pos02.z) {
+            nextDirection = "goNorth";
+        } else if (pos01.x == pos02.x && pos01.x > pos02.x) {
+            nextDirection = "goSouth";
+        }
+        else {
+            nextDirection = "";
+        }
+
+        switch (nextDirection) {
+            case "goEeast":
+                SpawnObject.Spawn(wallPanel, pos01, Quaternion.Euler(0, 0, 0));
+                SpawnObject.Spawn(wallPanel, pos01, Quaternion.Euler(0, 180, 0));
+                break;
+            default:
+                Debug.Log("exiting switch");
+                break;
+        }
+    }
+
 }
