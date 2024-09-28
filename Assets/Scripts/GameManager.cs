@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEditor;
+// using UnityEditor;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
@@ -31,8 +31,13 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private List<Vector3> drawnPath;
     [SerializeField] private List<Vector3> drawnWalls;
     [SerializeField] private List<Vector3> horizontalWalls;
+    [SerializeField] private List<Vector3> horizontalWalls2;
     [SerializeField] private List<Vector3> verticalWalls;
     [SerializeField] private List<Vector3> shortenedList;
+    public HashSet<int> horizontalXs = new HashSet<int>();
+    public HashSet<int> verticalZs = new HashSet<int>();
+    public List<int> horizontalXs2 = new List<int>();
+    public List<int> verticalZs2 = new List<int>();
 
     // private float modifier = 1.0f;
 
@@ -240,28 +245,45 @@ public class GameManager : MonoBehaviour {
         }
 
         shortenedList.Clear();
-
-
+        
+        // horizontalXs = new HashSet<int>();
         count = 0;
         while (count < horizontalWalls.Count) {
-            HashSet<Vector3> temp = new HashSet<Vector3>();
-            int tmpXValue = Mathf.RoundToInt(horizontalWalls[count].x);
-            temp.Add(horizontalWalls[0]);
-
-            if (horizontalWalls[count].x != tmpXValue) {
-                temp.Add(horizontalWalls[count]);
-
-                // horizontalWalls.Remove(horizontalWalls[count + 1]);
-            }
-
-            if (horizontalWalls[count].x != tmpXValue) {
-                tmpXValue++;
-            }
-
+            horizontalXs.Add(Mathf.RoundToInt(horizontalWalls[count].x));
             count++;
-
         }
+        horizontalXs2 = horizontalXs.ToList();
+        
+        count = 0;
+        while (count < horizontalWalls.Count) {
+            verticalZs.Add(Mathf.RoundToInt(horizontalWalls[count].x));
+            count++;
+        }
+        verticalZs2 = verticalZs.ToList();
+        
+        
+        
 
+        // count = 0;
+        // while (count < horizontalWalls.Count) {
+        //     HashSet<Vector3> temp = new HashSet<Vector3>();
+        //     int tmpXValue = Mathf.RoundToInt(horizontalWalls[count].x);
+        //     temp.Add(horizontalWalls[0]);
+        //
+        //     if (horizontalWalls[count].x != tmpXValue) {
+        //         temp.Add(horizontalWalls[count]);
+        //
+        //         // horizontalWalls.Remove(horizontalWalls[count + 1]);
+        //     }
+        //
+        //     if (horizontalWalls[count].x != tmpXValue) {
+        //         tmpXValue++;
+        //     }
+        //     
+        //     count++;
+        // }
+
+        // horizontalWalls2 = new List<Vector3>(scanForHorizontalBoundaries(horizontalWalls));
 
         /* spawn floor tiles */
         count = 0;
@@ -396,5 +418,27 @@ public class GameManager : MonoBehaviour {
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);
     }*/
+
+    public List<Vector3> scanForHorizontalBoundaries(List<Vector3> boundaries) {
+        int xValueTemp = Mathf.RoundToInt(boundaries[0].x);
+        int xValueCounter = 0;
+        int i = 0;
+        HashSet<Vector3> boundariesTemp = new HashSet<Vector3>();
+        
+        boundariesTemp.Add(boundaries[0]);
+
+        while (xValueCounter < boundaries.Count) {
+            while (boundaries[i].x == xValueTemp) {
+                xValueCounter++;
+                i++;
+            }
+            boundariesTemp.Add(boundaries[xValueCounter]);
+            xValueTemp++;
+        }
+
+        List<Vector3> boundariesList = boundariesTemp.ToList();
+        
+        return boundariesList;
+    }
 
 }
