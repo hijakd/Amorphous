@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+
 // using UnityEditor;
 using Random = UnityEngine.Random;
 
@@ -170,6 +171,7 @@ public class GameManager : MonoBehaviour {
             intersections.Add(shortenedList[i]);
         }
 
+        /* delete contents of shortenedList to save unnecessary use of memory */
         shortenedList.Clear();
 
 
@@ -194,6 +196,8 @@ public class GameManager : MonoBehaviour {
         // SpawnObject.Spawn(otherPiece, pyramidPos02);
         */
 
+
+        /* "decide" which way the path needs to be drawn from one intersection to the next */
         count = 0;
         while (count < intersections.Count) {
             // Debug.Log("\nCount equals: " + count + "\n" + "Array length is: " + shortenedLegOneIntersections.Count);
@@ -221,48 +225,82 @@ public class GameManager : MonoBehaviour {
             drawnPath.Add(shortenedList[i]);
         }
 
+        /* delete contents of shortenedList to save unnecessary use of memory */
         shortenedList.Clear();
 
-        /* create an ordered list for spawning wall panels */
-        xVal = xMinMax.x;
-        while (drawnWalls.Count < drawnPath.Count) {
-            for (count = 0; count < drawnPath.Count; count++) {
-                if (drawnPath[count].x == xVal) {
-                    drawnWalls.Add(drawnPath[count]);
-                }
-            }
-
-            xVal++;
-        }
-
-        /* remove duplicate values from drawnWalls */
-        shortenedList = new List<Vector3>(ShortenList(drawnWalls));
-        drawnWalls.Clear();
-        for (int i = 0; i < shortenedList.Count; i++) {
-            // drawnWalls.Add(shortenedList[i]);
-            horizontalWalls.Add(shortenedList[i]);
-            verticalWalls.Add(shortenedList[i]);
-        }
-
-        shortenedList.Clear();
-        
-        // horizontalXs = new HashSet<int>();
         count = 0;
-        while (count < horizontalWalls.Count) {
-            horizontalXs.Add(Mathf.RoundToInt(horizontalWalls[count].x));
-            count++;
+
+        // if (TriangulateVectors.IsItForward(drawnPath[count], drawnPath[count + 1])) {
+        //     // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 90, 0));    // top wallpanel
+        //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 45, 0));    // top wallpanel
+        // }
+        //
+        // if (TriangulateVectors.IsItForward(drawnPath[count + 1], drawnPath[count])) {
+        //     // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 270, 0));    // bottom wallpanel
+        //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 15, 0));    // bottom wallpanel
+        // }
+        // if (TriangulateVectors.IsItRight(drawnPath[count], drawnPath[count + 1])) {
+        //     // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 0, 0));      // left wallpanel
+        //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 30, 0));      // left wallpanel
+        // }
+        //
+        // if (TriangulateVectors.IsItRight(drawnPath[count + 1], drawnPath[count])) {
+        //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 60, 0));     // right wallpanel
+        // }
+
+        if (TriangulateVectors.HorizontalAlignment(drawnPath[count], drawnPath[count + 1])) {
+            // if (TriangulateVectors.IsItForward(drawnPath[count], drawnPath[count + 1])) {
+                SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 90, 0));    // top wallpanel
+            // }
+
+            // if (TriangulateVectors.IsItForward(drawnPath[count + 1], drawnPath[count])) {
+                SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 270, 0)); // bottom wallpanel
+            // }
         }
-        horizontalXs2 = horizontalXs.ToList();
-        
-        count = 0;
-        while (count < horizontalWalls.Count) {
-            verticalZs.Add(Mathf.RoundToInt(horizontalWalls[count].x));
-            count++;
-        }
-        verticalZs2 = verticalZs.ToList();
-        
-        
-        
+
+
+        // /* create an ordered list for spawning wall panels */
+        // xVal = xMinMax.x;
+        // while (drawnWalls.Count < drawnPath.Count) {
+        //     for (count = 0; count < drawnPath.Count; count++) {
+        //         if (drawnPath[count].x == xVal) {
+        //             drawnWalls.Add(drawnPath[count]);
+        //         }
+        //     }
+        //
+        //     xVal++;
+        // }
+
+        // /* remove duplicate values from drawnWalls */
+        // shortenedList = new List<Vector3>(ShortenList(drawnWalls));
+
+        // // drawnWalls.Clear();
+        // for (int i = 0; i < shortenedList.Count; i++) {
+        //     // drawnWalls.Add(shortenedList[i]);
+        //     horizontalWalls.Add(shortenedList[i]);
+        //     verticalWalls.Add(shortenedList[i]);
+        // }
+
+        // /* delete contents of shortenedList to save unnecessary use of memory */
+        // shortenedList.Clear();
+
+        // // horizontalXs = new HashSet<int>();
+        // count = 0;
+        // while (count < horizontalWalls.Count) {
+        //     horizontalXs.Add(Mathf.RoundToInt(horizontalWalls[count].x));
+        //     count++;
+        // }
+
+        // horizontalXs2 = horizontalXs.ToList();
+
+        // count = 0;
+        // while (count < horizontalWalls.Count) {
+        //     verticalZs.Add(Mathf.RoundToInt(horizontalWalls[count].x));
+        //     count++;
+        // }
+
+        // verticalZs2 = verticalZs.ToList();
+
 
         // count = 0;
         // while (count < horizontalWalls.Count) {
@@ -346,6 +384,10 @@ public class GameManager : MonoBehaviour {
         // }
     }
 
+    // Update is called once per frame
+    void Update() {
+    }
+
     private void Triangulate(int lcm) {
         while (count < lcm) {
             int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
@@ -369,10 +411,6 @@ public class GameManager : MonoBehaviour {
         lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
 
         return combinedLCM = lcm01 + lcm02 + lcm03;
-    }
-
-    // Update is called once per frame
-    void Update() {
     }
 
     /* reducing the value of LCM to ensure there is a reasonably usable number */
@@ -424,7 +462,7 @@ public class GameManager : MonoBehaviour {
         int xValueCounter = 0;
         int i = 0;
         HashSet<Vector3> boundariesTemp = new HashSet<Vector3>();
-        
+
         boundariesTemp.Add(boundaries[0]);
 
         while (xValueCounter < boundaries.Count) {
@@ -432,12 +470,13 @@ public class GameManager : MonoBehaviour {
                 xValueCounter++;
                 i++;
             }
+
             boundariesTemp.Add(boundaries[xValueCounter]);
             xValueTemp++;
         }
 
         List<Vector3> boundariesList = boundariesTemp.ToList();
-        
+
         return boundariesList;
     }
 
