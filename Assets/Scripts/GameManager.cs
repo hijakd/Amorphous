@@ -4,8 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
-// using UnityEditor;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
@@ -197,7 +195,7 @@ public class GameManager : MonoBehaviour {
         */
 
 
-        /* "decide" which way the path needs to be drawn from one intersection to the next */
+        /* "decide" which way the path needs to be drawn from one intersection to the next, saving data in drawnPath[] */
         count = 0;
         while (count < intersections.Count) {
             // Debug.Log("\nCount equals: " + count + "\n" + "Array length is: " + shortenedLegOneIntersections.Count);
@@ -228,101 +226,10 @@ public class GameManager : MonoBehaviour {
         /* delete contents of shortenedList to save unnecessary use of memory */
         shortenedList.Clear();
 
-        count = 0;
-
-        // if (TriangulateVectors.IsItForward(drawnPath[count], drawnPath[count + 1])) {
-        //     // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 90, 0));    // top wallpanel
-        //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 45, 0));    // top wallpanel
-        // }
-        //
-        // if (TriangulateVectors.IsItForward(drawnPath[count + 1], drawnPath[count])) {
-        //     // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 270, 0));    // bottom wallpanel
-        //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 15, 0));    // bottom wallpanel
-        // }
-        // if (TriangulateVectors.IsItRight(drawnPath[count], drawnPath[count + 1])) {
-        //     // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 0, 0));      // left wallpanel
-        //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 30, 0));      // left wallpanel
-        // }
-        //
-        // if (TriangulateVectors.IsItRight(drawnPath[count + 1], drawnPath[count])) {
-        //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 60, 0));     // right wallpanel
-        // }
-
-        if (TriangulateVectors.HorizontalAlignment(drawnPath[count], drawnPath[count + 1])) {
-            // if (TriangulateVectors.IsItForward(drawnPath[count], drawnPath[count + 1])) {
-                SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 90, 0));    // top wallpanel
-            // }
-
-            // if (TriangulateVectors.IsItForward(drawnPath[count + 1], drawnPath[count])) {
-                SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 270, 0)); // bottom wallpanel
-            // }
-        }
-
-
-        // /* create an ordered list for spawning wall panels */
-        // xVal = xMinMax.x;
-        // while (drawnWalls.Count < drawnPath.Count) {
-        //     for (count = 0; count < drawnPath.Count; count++) {
-        //         if (drawnPath[count].x == xVal) {
-        //             drawnWalls.Add(drawnPath[count]);
-        //         }
-        //     }
-        //
-        //     xVal++;
-        // }
-
-        // /* remove duplicate values from drawnWalls */
-        // shortenedList = new List<Vector3>(ShortenList(drawnWalls));
-
-        // // drawnWalls.Clear();
-        // for (int i = 0; i < shortenedList.Count; i++) {
-        //     // drawnWalls.Add(shortenedList[i]);
-        //     horizontalWalls.Add(shortenedList[i]);
-        //     verticalWalls.Add(shortenedList[i]);
-        // }
-
-        // /* delete contents of shortenedList to save unnecessary use of memory */
-        // shortenedList.Clear();
-
-        // // horizontalXs = new HashSet<int>();
-        // count = 0;
-        // while (count < horizontalWalls.Count) {
-        //     horizontalXs.Add(Mathf.RoundToInt(horizontalWalls[count].x));
-        //     count++;
-        // }
-
-        // horizontalXs2 = horizontalXs.ToList();
-
-        // count = 0;
-        // while (count < horizontalWalls.Count) {
-        //     verticalZs.Add(Mathf.RoundToInt(horizontalWalls[count].x));
-        //     count++;
-        // }
-
-        // verticalZs2 = verticalZs.ToList();
-
-
-        // count = 0;
-        // while (count < horizontalWalls.Count) {
-        //     HashSet<Vector3> temp = new HashSet<Vector3>();
-        //     int tmpXValue = Mathf.RoundToInt(horizontalWalls[count].x);
-        //     temp.Add(horizontalWalls[0]);
-        //
-        //     if (horizontalWalls[count].x != tmpXValue) {
-        //         temp.Add(horizontalWalls[count]);
-        //
-        //         // horizontalWalls.Remove(horizontalWalls[count + 1]);
-        //     }
-        //
-        //     if (horizontalWalls[count].x != tmpXValue) {
-        //         tmpXValue++;
-        //     }
-        //     
-        //     count++;
-        // }
-
-        // horizontalWalls2 = new List<Vector3>(scanForHorizontalBoundaries(horizontalWalls));
-
+        /* ... */
+        
+        /* ... */
+        
         /* spawn floor tiles */
         count = 0;
         while (count < drawnPath.Count) {
@@ -331,57 +238,7 @@ public class GameManager : MonoBehaviour {
         }
 
 
-        float xValLeft = xMinMax.x;
-        float xValRight = xMinMax.y;
-        float zValTop = yMinMax.y;
-        float zValBottom = yMinMax.x;
 
-        /*
-         for (count = 0; count < drawnPath.Count; count++) {
-            if (drawnPath[count].x == xValLeft) {
-                // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 0, 0));
-                Debug.Log("Spawning a wall at: " + drawnPath[count]);
-                // if (drawnPath[count].x + 1 != xValLeft + 1) {
-                    // Debug.Log("Spawning walls: " + (drawnPath[count].x + 1) + " , " + (xValLeft + 1));
-                    // SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 270, 0));
-                // }
-                // xValLeft++;
-                Debug.Log("xValLeft: " + xValLeft);
-            }
-            // if (drawnPath[count].x == xValLeft) {
-            //     SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 0, 0));
-            //     Debug.Log("Spawning a wall at: " + drawnPath[count]);
-            //
-            // }
-
-            if (drawnPath[count].z == zValTop) {
-                SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 90, 0));
-                // xValRight--;
-            }
-            if (drawnPath[count].x == xValRight) {
-                SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 180, 0));
-                // zValTop--;
-            }
-            if (drawnPath[count].z == zValBottom) {
-                SpawnObject.Spawn(wallPanel, drawnPath[count], Quaternion.Euler(0, 270, 0));
-                // zValBottom++;
-            }
-
-        }
-        */
-
-
-        // count = 0;
-        // xVal = xMinMax.x;
-        // float zVal = yMinMax.y;
-        // while (count < drawnWalls.Count) {
-        //     // if (drawnWalls[count].x != drawnWalls[count + 1].x && drawnWalls[count].z != drawnWalls[count + 1].z)
-        // if (drawnWalls[count].z != drawnWalls[count + 1].z && drawnWalls[count + 1].x != xVal)
-        // SpawnObject.Spawn(wallPanel, drawnWalls[count], Quaternion.Euler(0, 0, 0));
-        // count++;
-
-        //     xVal++;
-        // }
     }
 
     // Update is called once per frame
@@ -396,7 +253,7 @@ public class GameManager : MonoBehaviour {
             Vector3 coord02 = selectableCoords[select02];
 
             // pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
-            intersections.Add(TriangulateVectors.Position(coord01, coord02, Random.Range(0.42f, 0.58f)));
+            intersections.Add(Triangulation.Position(coord01, coord02, Random.Range(0.42f, 0.58f)));
             count++;
         }
     }

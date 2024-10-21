@@ -13,19 +13,19 @@ public class CheckOrientation : MonoBehaviour {
     public static void CheckHorizontal(Vector3 pos01, Vector3 pos02, List<Vector3> path) {
         tmpPosition = new Vector3(0, 0, 0);
         // Debug.Log("Checking alignment");
-        if (TriangulateVectors.HorizontalAlignment(pos01, pos02)) {
-            // Debug.Log("Checking horizontal alignment: " + TriangulateVectors.HorizontalAlignment(pos01, pos02));
-            if (TriangulateVectors.IsItRight(pos01, pos02)) {
-                pathLength = TriangulateVectors.GetHorizontalDistance();
-                // Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(pos01, pos02) + " Distance is: " + pathLength);
+        if (Triangulation.HorizontalAlignment(pos01, pos02)) {
+            // Debug.Log("Checking horizontal alignment: " + Triangulation.HorizontalAlignment(pos01, pos02));
+            if (Triangulation.IsItRight(pos01, pos02)) {
+                pathLength = Triangulation.GetHorizontalDistance();
+                // Debug.Log("Check if is right: " + Triangulation.IsItRight(pos01, pos02) + " Distance is: " + pathLength);
                 for (count = 0; count <= pathLength; count++) {
                     path.Add(new Vector3(pos01.x + count, pos01.y, pos01.z));
                     // Debug.Log("populating path array: " + path[count]);
                 }
             }
             else {
-                pathLength = TriangulateVectors.GetHorizontalDistance();
-                // Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(pos01, pos02) + " Distance is: " + pathLength);
+                pathLength = Triangulation.GetHorizontalDistance();
+                // Debug.Log("Check if is right: " + Triangulation.IsItRight(pos01, pos02) + " Distance is: " + pathLength);
                 for (count = 0; count <= pathLength; count++) {
                     path.Add(new Vector3(pos01.x - count, pos01.y, pos01.z));
                     // Debug.Log("populating path array: " + path[count]);
@@ -46,19 +46,19 @@ public class CheckOrientation : MonoBehaviour {
             }
 
             if (xPosition == 1) {
-                if (TriangulateVectors.HorizontalAlignment(tmpPosition, pos02)) {
-                    // Debug.Log("Checking horizontal alignment: " + TriangulateVectors.HorizontalAlignment(tmpPosition, pos02));
-                    if (TriangulateVectors.IsItRight(tmpPosition, pos02)) {
-                        pathLength = TriangulateVectors.GetHorizontalDistance();
-                        // Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(tmpPosition, pos02) + " Distance is: " + pathLength);
+                if (Triangulation.HorizontalAlignment(tmpPosition, pos02)) {
+                    // Debug.Log("Checking horizontal alignment: " + Triangulation.HorizontalAlignment(tmpPosition, pos02));
+                    if (Triangulation.IsItRight(tmpPosition, pos02)) {
+                        pathLength = Triangulation.GetHorizontalDistance();
+                        // Debug.Log("Check if is right: " + Triangulation.IsItRight(tmpPosition, pos02) + " Distance is: " + pathLength);
                         for (count = 0; count <= pathLength; count++) {
                             path.Add(new Vector3(tmpPosition.x + count, tmpPosition.y, tmpPosition.z));
                             // Debug.Log("populating path array: " + path[count]);
                         }
                     }
                     else {
-                        pathLength = TriangulateVectors.GetHorizontalDistance();
-                        // Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(tmpPosition, pos02) + " Distance is: " + pathLength);
+                        pathLength = Triangulation.GetHorizontalDistance();
+                        // Debug.Log("Check if is right: " + Triangulation.IsItRight(tmpPosition, pos02) + " Distance is: " + pathLength);
                         for (count = 0; count <= pathLength; count++) {
                             path.Add(new Vector3(tmpPosition.x - count, tmpPosition.y, tmpPosition.z));
                             // Debug.Log("populating path array: " + path[count]);
@@ -68,19 +68,19 @@ public class CheckOrientation : MonoBehaviour {
             }
 
             if (xPosition == 2) {
-                if (TriangulateVectors.HorizontalAlignment(pos01, tmpPosition)) {
-                    // Debug.Log("Checking horizontal alignment: " + TriangulateVectors.HorizontalAlignment(pos01, tmpPosition));
-                    if (TriangulateVectors.IsItRight(pos01, tmpPosition)) {
-                        pathLength = TriangulateVectors.GetHorizontalDistance();
-                        // Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(pos01, tmpPosition) + " Distance is: " + pathLength);
+                if (Triangulation.HorizontalAlignment(pos01, tmpPosition)) {
+                    // Debug.Log("Checking horizontal alignment: " + Triangulation.HorizontalAlignment(pos01, tmpPosition));
+                    if (Triangulation.IsItRight(pos01, tmpPosition)) {
+                        pathLength = Triangulation.GetHorizontalDistance();
+                        // Debug.Log("Check if is right: " + Triangulation.IsItRight(pos01, tmpPosition) + " Distance is: " + pathLength);
                         for (count = 0; count <= pathLength; count++) {
                             path.Add(new Vector3(pos01.x + count, tmpPosition.y, tmpPosition.z));
                             // Debug.Log("populating path array: " + path[count]);
                         }
                     }
                     else {
-                        pathLength = TriangulateVectors.GetHorizontalDistance();
-                        // Debug.Log("Check if is right: " + TriangulateVectors.IsItRight(pos01, tmpPosition) + " Distance is: " + pathLength);
+                        pathLength = Triangulation.GetHorizontalDistance();
+                        // Debug.Log("Check if is right: " + Triangulation.IsItRight(pos01, tmpPosition) + " Distance is: " + pathLength);
                         for (count = 0; count <= pathLength; count++) {
                             path.Add(new Vector3(pos01.x - count, tmpPosition.y, tmpPosition.z));
                             // Debug.Log("populating path array: " + path[count]);
@@ -93,19 +93,19 @@ public class CheckOrientation : MonoBehaviour {
 
     public static void CheckVertical(Vector3 pos01, Vector3 pos02, List<Vector3> path) {
         /* positions are within horizontal alignment margins */
-        if (TriangulateVectors.VerticalAlignment(pos01, pos02)) {
-            // Debug.Log("Checking vertical alignment: " + TriangulateVectors.VerticalAlignment(pos01, pos02));
-            if (TriangulateVectors.IsItForward(pos01, pos02)) {
-                // Debug.Log("Check if is forward: " + TriangulateVectors.IsItForward(pos01, pos02) + " Distance is: " + pathLength);
-                pathLength = TriangulateVectors.GetVerticalDistance();
+        if (Triangulation.VerticalAlignment(pos01, pos02)) {
+            // Debug.Log("Checking vertical alignment: " + Triangulation.VerticalAlignment(pos01, pos02));
+            if (Triangulation.IsItForward(pos01, pos02)) {
+                // Debug.Log("Check if is forward: " + Triangulation.IsItForward(pos01, pos02) + " Distance is: " + pathLength);
+                pathLength = Triangulation.GetVerticalDistance();
                 for (count = 0; count <= pathLength; count++) {
                     path.Add(new Vector3(pos01.x, pos01.y, pos01.z + count));
                     // Debug.Log("populating path array: " + path[count]);
                 }
             }
             else {
-                pathLength = TriangulateVectors.GetVerticalDistance();
-                // Debug.Log("Check if is forward: " + TriangulateVectors.IsItForward(pos01, pos02) + " Distance is: " + pathLength);
+                pathLength = Triangulation.GetVerticalDistance();
+                // Debug.Log("Check if is forward: " + Triangulation.IsItForward(pos01, pos02) + " Distance is: " + pathLength);
                 for (count = 0; count <= pathLength; count++) {
                     path.Add(new Vector3(pos01.x, pos01.y, pos01.z - count));
                     // Debug.Log("populating path array: " + path[count]);
@@ -124,18 +124,18 @@ public class CheckOrientation : MonoBehaviour {
             xPosition = 1;
         }
 
-        if (TriangulateVectors.VerticalAlignment(pos01, tmpPosition)) {
-            // Debug.Log("Checking vertical alignment: " + TriangulateVectors.VerticalAlignment(pos01, pos02));
-            if (TriangulateVectors.IsItForward(pos01, tmpPosition)) {
-                // Debug.Log("Check if is forward: " + TriangulateVectors.IsItForward(pos01, pos02) + " Distance is: " + pathLength);
-                pathLength = TriangulateVectors.GetVerticalDistance();
+        if (Triangulation.VerticalAlignment(pos01, tmpPosition)) {
+            // Debug.Log("Checking vertical alignment: " + Triangulation.VerticalAlignment(pos01, pos02));
+            if (Triangulation.IsItForward(pos01, tmpPosition)) {
+                // Debug.Log("Check if is forward: " + Triangulation.IsItForward(pos01, pos02) + " Distance is: " + pathLength);
+                pathLength = Triangulation.GetVerticalDistance();
                 for (count = 0; count <= pathLength; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, pos01.z + count));
                     // Debug.Log("populating path array: " + path[count]);
                 }
             }
             else {
-                pathLength = TriangulateVectors.GetVerticalDistance();
+                pathLength = Triangulation.GetVerticalDistance();
                 for (count = 0; count <= pathLength; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, pos01.z - count));
                     // Debug.Log("populating path array: " + path[count]);
@@ -144,18 +144,18 @@ public class CheckOrientation : MonoBehaviour {
         }
 
 
-        if (TriangulateVectors.VerticalAlignment(tmpPosition, pos02)) {
-            // Debug.Log("Checking vertical alignment: " + TriangulateVectors.VerticalAlignment(pos01, pos02));
-            if (TriangulateVectors.IsItForward(tmpPosition, pos02)) {
-                // Debug.Log("Check if is forward: " + TriangulateVectors.IsItForward(pos01, pos02) + " Distance is: " + pathLength);
-                pathLength = TriangulateVectors.GetVerticalDistance();
+        if (Triangulation.VerticalAlignment(tmpPosition, pos02)) {
+            // Debug.Log("Checking vertical alignment: " + Triangulation.VerticalAlignment(pos01, pos02));
+            if (Triangulation.IsItForward(tmpPosition, pos02)) {
+                // Debug.Log("Check if is forward: " + Triangulation.IsItForward(pos01, pos02) + " Distance is: " + pathLength);
+                pathLength = Triangulation.GetVerticalDistance();
                 for (count = 0; count <= pathLength; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, tmpPosition.z + count));
                     // Debug.Log("populating path array: " + path[count]);
                 }
             }
             else {
-                pathLength = TriangulateVectors.GetVerticalDistance();
+                pathLength = Triangulation.GetVerticalDistance();
                 for (count = 0; count <= pathLength; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, tmpPosition.z - count));
                     // Debug.Log("populating path array: " + path[count]);

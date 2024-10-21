@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TriangulateVectors : MonoBehaviour {
+public class Triangulation : MonoBehaviour {
 
     static Vector3 position;
     private static bool horizAligned, vertAligned, isForward, isRight;
