@@ -9,6 +9,10 @@ public class Triangulation : MonoBehaviour {
     static int horizDistance, vertDistance;
 
 
+    /* create an approximately "center" position between two points using */
+    /* Slerp that is clamped within the maze boundaries, this is intended */
+    /* to take a Random.Range() value to create a point close to center */
+    /* within approx. 40/60 weighting */
     public static Vector3 Position(Vector3 position01, Vector3 position02,
         float centreMargin) {
         // position = Vector3.Slerp(position01, position02, Random.Range(0.42f, 0.58f));

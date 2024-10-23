@@ -22,7 +22,8 @@ public class GameManager : MonoBehaviour {
     public bool isGameActive;
     public Button restartButton;
     public GameObject titleScreen;
-
+    [Range(0.24f, 0.76f)]
+    public float randomVariance = 0.42f;
 
     [SerializeField] private List<GameObject> cardinals;
     [SerializeField] private List<Vector3> selectableCoords;
@@ -37,8 +38,6 @@ public class GameManager : MonoBehaviour {
     public HashSet<int> verticalZs = new HashSet<int>();
     public List<int> horizontalXs2 = new List<int>();
     public List<int> verticalZs2 = new List<int>();
-
-    // private float modifier = 1.0f;
 
     private int halfHeight;
     private int halfWidth;
@@ -62,8 +61,10 @@ public class GameManager : MonoBehaviour {
     private Vector3 farthestCorner;
     public static Vector2 xMinMax;
     public static Vector2 yMinMax;
+    
+    MazeCell[,] maze;
 
-    // private Vector2 randomVariance;
+    private Vector2 randVariance;
 
 
     private void OnDrawGizmos() {
@@ -93,8 +94,8 @@ public class GameManager : MonoBehaviour {
         yMinMax.x = -halfHeight;
         yMinMax.y = halfHeight;
 
-        // randomVariance.x = 0.42f;
-        // randomVariance.y = 0.58f;
+        randVariance.x = randomVariance;
+        randVariance.y = 1f - randomVariance;
 
         /* cardinals are the corners of the grid & used for boundary calculations */
         // cardinals.Capacity = 4;
@@ -108,8 +109,8 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < waypoints.Count; i++) {
             destinations.Add(RandomPosition.Position(xMinMax, yMinMax));
         }
-
-
+        
+        /* TODO: refactor into a function to accomodate a variable number "endpoints/destinations" based on the [].Count of destinations[] */
         /* this is used for 'random' vector triangulation */
         selectableCoords.Add(new Vector3(0, 0, 0));
         selectableCoords.Add(cardinals[0].transform.position);
@@ -123,11 +124,13 @@ public class GameManager : MonoBehaviour {
         selectableCoords.Add(destinations[2]);
         selectableCoords.Add(destinations[3]);
 
+        /* TODO: refactor into a function that uses appropriate selectableCoords[] elements */
         distances.Add(Mathf.RoundToInt(Vector3.Distance(spawnPosition, destinations[0])));
         distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[0], destinations[1])));
         distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[1], destinations[2])));
         distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[2], destinations[3])));
         distances.Add(Mathf.RoundToInt(Vector3.Distance(destinations[3], goalPosition)));
+        /* TODO: refactor into a function that uses appropriate selectableCoords[] elements */
         midPoints.Add(Vector3.Lerp(spawnPosition, destinations[0], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[0], destinations[1], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[1], destinations[2], 0.5f));
@@ -149,7 +152,7 @@ public class GameManager : MonoBehaviour {
         }
 
 
-        count = 0;
+        ResetCount();
         intersections.Add(spawnPosition);
         Triangulate(lcms[0]);
         intersections.Add(destinations[0]);
@@ -173,7 +176,7 @@ public class GameManager : MonoBehaviour {
         shortenedList.Clear();
 
 
-        count = 0;
+        ResetCount();
         while (count < intersections.Count) {
             SpawnObject.Spawn(floorTile, intersections[count]);
             count++;
@@ -196,7 +199,7 @@ public class GameManager : MonoBehaviour {
 
 
         /* "decide" which way the path needs to be drawn from one intersection to the next, saving data in drawnPath[] */
-        count = 0;
+        ResetCount();
         while (count < intersections.Count) {
             // Debug.Log("\nCount equals: " + count + "\n" + "Array length is: " + shortenedLegOneIntersections.Count);
             // Debug.Log("\nArray index a: " + count + "\n" + "Array index b: " + (count + 1));
@@ -231,18 +234,27 @@ public class GameManager : MonoBehaviour {
         /* ... */
         
         /* spawn floor tiles */
-        count = 0;
+        ResetCount();
         while (count < drawnPath.Count) {
             SpawnObject.Spawn(floorTile2, drawnPath[count]);
             count++;
         }
 
+        ResetCount();
+        while (count < drawnPath.Count) {
+            maze = new MazeCell[Mathf.RoundToInt(drawnPath[count].x), Mathf.RoundToInt(drawnPath[count].z)];
+            count++;
+        }
 
 
     }
 
     // Update is called once per frame
     void Update() {
+    }
+
+    private void ResetCount() {
+        count = 0;
     }
 
     private void Triangulate(int lcm) {
@@ -253,7 +265,8 @@ public class GameManager : MonoBehaviour {
             Vector3 coord02 = selectableCoords[select02];
 
             // pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
-            intersections.Add(Triangulation.Position(coord01, coord02, Random.Range(0.42f, 0.58f)));
+            // intersections.Add(Triangulation.Position(coord01, coord02, Random.Range(0.42f, 0.58f)));
+            intersections.Add(Triangulation.Position(coord01, coord02, Random.Range(randVariance.x, randVariance.y)));
             count++;
         }
     }
