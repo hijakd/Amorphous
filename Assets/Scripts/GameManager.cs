@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private List<Vector3> horizontalWalls2;
     [SerializeField] private List<Vector3> verticalWalls;
     [SerializeField] private List<Vector3> shortenedList;
+    [SerializeField] private List<Vector3> slicedPath;
     public HashSet<int> horizontalXs = new HashSet<int>();
     public HashSet<int> verticalZs = new HashSet<int>();
     public List<int> horizontalXs2 = new List<int>();
@@ -61,10 +62,10 @@ public class GameManager : MonoBehaviour {
     private Vector3 farthestCorner;
     public static Vector2 xMinMax;
     public static Vector2 yMinMax;
-    
+    private Vector2 randVariance;
     MazeCell[,] maze;
 
-    private Vector2 randVariance;
+    
 
 
     private void OnDrawGizmos() {
@@ -240,17 +241,78 @@ public class GameManager : MonoBehaviour {
             count++;
         }
 
-        ResetCount();
-        while (count < drawnPath.Count) {
-            maze = new MazeCell[Mathf.RoundToInt(drawnPath[count].x), Mathf.RoundToInt(drawnPath[count].z)];
-            count++;
-        }
+        // ResetCount();
+        // while (count < drawnPath.Count) {
+        //     maze = new MazeCell[Mathf.RoundToInt(drawnPath[count].x), Mathf.RoundToInt(drawnPath[count].z)];
+        //     count++;
+        // }
+
+        int mazeRow = Mathf.RoundToInt(yMinMax.y);      // first horizontal row, alternatively use 'count'
+
+        // Debug.Log("Value of mazeRow is: " + mazeRow);
+        // for (int i = 0; i < drawnPath.Count - 1; i++) {
+        //     Debug.Log("Checking Y value of drawnPath[i]: " + drawnPath[i]);
+        //     if (drawnPath[i].z == mazeRow) {            // drawnPath contains V3's, looking at [].z for horizontal rows
+        //         slicedPath.Add(drawnPath[i]);
+        //     }
+        // }
+        
+        // ResetCount();
+        // while (count < drawnPath.Count) {
+        //     Debug.Log("Checking Y value of drawnPath[i]: " + drawnPath[count]);
+        //     if (drawnPath[count].z == mazeRow) {
+        //         slicedPath.Add(drawnPath[count]);
+        //     }
+        //     count++;
+        // }
+
+        slicedPath = SliceList(drawnPath, mazeRow);
 
 
     }
 
     // Update is called once per frame
     void Update() {
+    }
+
+    private List<Vector3> SliceList(List<Vector3> path, int row) {
+        int listCount = 0;
+        List<Vector3> slice = new List<Vector3>();
+        List<Vector3> sortedSlice = new List<Vector3>();
+        Debug.Log("Slicing List");
+        while (listCount < path.Count) {
+            if (path[listCount].z == row) {
+                slice.Add(path[listCount]);
+            }
+            listCount++;
+        }
+
+        // for (int i = 0; i < slice.Count; i++) {
+        //     Debug.Log(slice[i]);
+        // }
+        
+        sortedSlice = SortList(slice);
+        return sortedSlice;
+    }
+
+    private List<Vector3> SortList(List<Vector3> list) {
+        List<Vector3> sorted = new List<Vector3>();
+        int lowest = Mathf.RoundToInt(xMinMax.x);
+        int listCount = 0;
+        Debug.Log("Sorting Sliced List");
+        while (listCount < list.Count) {
+            if (list[listCount].x == lowest) {
+                sorted.Add(list[listCount]);
+            }
+            // Debug.Log("lowest value is: " + lowest);
+            lowest++;
+            listCount++;
+        }
+        
+        // for (int i = 0; i < sorted.Count; i++) {
+        //     Debug.Log(sorted[i]);
+        // }
+        return sorted;
     }
 
     private void ResetCount() {

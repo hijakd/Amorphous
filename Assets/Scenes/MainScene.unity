@@ -171,6 +171,7 @@ MonoBehaviour:
   isGameActive: 0
   restartButton: {fileID: 425114794}
   titleScreen: {fileID: 0}
+  randomVariance: 0.42
   cardinals:
   - {fileID: 4148244526285827355, guid: 74873c4dd0d3ce543bc9fc5afa183190, type: 3}
   - {fileID: 3113399133684136916, guid: 4d9c89b80fe286744aaa794da5d01acc, type: 3}
@@ -181,8 +182,10 @@ MonoBehaviour:
   drawnPath: []
   drawnWalls: []
   horizontalWalls: []
+  horizontalWalls2: []
   verticalWalls: []
   shortenedList: []
+  slicedPath: []
   distances: 
   lcms: 
   destinations: []
