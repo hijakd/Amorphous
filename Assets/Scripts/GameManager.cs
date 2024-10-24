@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour {
     public GameObject otherPiece;
     public int gridHeight;
     public int gridWidth;
-    public int sliceCount;      // for debugging
     public List<GameObject> waypoints;
     public TextMeshProUGUI winText;
     public TextMeshProUGUI gameOverText;
@@ -287,11 +286,6 @@ public class GameManager : MonoBehaviour {
             }
             slicingCount++;
         }
-
-        // for (int i = 0; i < slice.Count; i++) {
-        //     Debug.Log(slice[i]);
-        // }
-        sliceCount = slice.Count;
         sortedSlice = SortList(slice);
         return sortedSlice;
     }
