@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
     public GameObject player;
     public GameObject floorTile;
     public GameObject floorTile2;
-    public GameObject wallPanel;
+    public GameObject wallPanels;
     public GameObject otherPiece;
     public int gridHeight;
     public int gridWidth;
@@ -35,10 +35,6 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private List<Vector3> verticalWalls;
     [SerializeField] private List<Vector3> shortenedList;
     [SerializeField] private List<Vector3> slicedPath;
-    public HashSet<int> horizontalXs = new HashSet<int>();
-    public HashSet<int> verticalZs = new HashSet<int>();
-    public List<int> horizontalXs2 = new List<int>();
-    public List<int> verticalZs2 = new List<int>();
 
     private int halfHeight;
     private int halfWidth;
@@ -238,6 +234,7 @@ public class GameManager : MonoBehaviour {
         ResetCount();
         while (count < drawnPath.Count) {
             SpawnObject.Spawn(floorTile2, drawnPath[count]);
+            SpawnObject.Spawn(wallPanels, drawnPath[count]);
             count++;
         }
 
@@ -247,26 +244,10 @@ public class GameManager : MonoBehaviour {
         //     count++;
         // }
 
-        int mazeRow = Mathf.RoundToInt(yMinMax.y);      // first horizontal row, alternatively use 'count'
-
-        // Debug.Log("Value of mazeRow is: " + mazeRow);
-        // for (int i = 0; i < drawnPath.Count - 1; i++) {
-        //     Debug.Log("Checking Y value of drawnPath[i]: " + drawnPath[i]);
-        //     if (drawnPath[i].z == mazeRow) {            // drawnPath contains V3's, looking at [].z for horizontal rows
-        //         slicedPath.Add(drawnPath[i]);
-        //     }
-        // }
         
-        // ResetCount();
-        // while (count < drawnPath.Count) {
-        //     Debug.Log("Checking Y value of drawnPath[i]: " + drawnPath[count]);
-        //     if (drawnPath[count].z == mazeRow) {
-        //         slicedPath.Add(drawnPath[count]);
-        //     }
-        //     count++;
-        // }
-
-        slicedPath = SliceList(drawnPath, mazeRow);
+        /* currently this checks only the first row of the maze grid */
+        /* will need to use this in a loop to process the entire grid */
+        slicedPath = SliceList(drawnPath, halfHeight);          // height gives the rows
 
 
     }
@@ -279,7 +260,7 @@ public class GameManager : MonoBehaviour {
         int slicingCount = 0;
         List<Vector3> slice = new List<Vector3>();
         List<Vector3> sortedSlice = new List<Vector3>();
-        Debug.Log("Slicing List");
+        // Debug.Log("Slicing List");
         while (slicingCount < path.Count) {
             if (path[slicingCount].z == row) {
                 slice.Add(path[slicingCount]);
@@ -319,9 +300,6 @@ public class GameManager : MonoBehaviour {
             int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
             Vector3 coord01 = selectableCoords[select01];
             Vector3 coord02 = selectableCoords[select02];
-
-            // pathOne.Add(TriangulateV.Position(coord01, coord02, distance02, xMinMax, yMinMax));
-            // intersections.Add(Triangulation.Position(coord01, coord02, Random.Range(0.42f, 0.58f)));
             intersections.Add(Triangulation.Position(coord01, coord02, Random.Range(randVariance.x, randVariance.y)));
             count++;
         }
