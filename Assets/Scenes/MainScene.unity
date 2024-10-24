@@ -155,7 +155,7 @@ MonoBehaviour:
     type: 3}
   floorTile2: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
     type: 3}
-  wallPanel: {fileID: 1428840922709220998, guid: 0d7d4116c7c29f94db40815268bfe935,
+  wallPanels: {fileID: 1456626071757749188, guid: dd8f4f433d2007648b9ebd049382923d,
     type: 3}
   otherPiece: {fileID: 1879861639291899805, guid: 47fc53489bafbde45a767d87ff3e67f7,
     type: 3}
@@ -938,7 +938,7 @@ PrefabInstance:
     - target: {fileID: 8633637255975074103, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 8633637255975074103, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
