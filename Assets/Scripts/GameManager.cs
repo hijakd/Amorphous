@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour {
     public GameObject otherPiece;
     public int gridHeight;
     public int gridWidth;
+    public int sliceCount;      // for debugging
+    public int sortedCount;     // for debugging
+    public int sortSize;        // for debugging
     public List<GameObject> waypoints;
     public TextMeshProUGUI winText;
     public TextMeshProUGUI gameOverText;
@@ -276,42 +279,51 @@ public class GameManager : MonoBehaviour {
     }
 
     private List<Vector3> SliceList(List<Vector3> path, int row) {
-        int listCount = 0;
+        int slicingCount = 0;
         List<Vector3> slice = new List<Vector3>();
         List<Vector3> sortedSlice = new List<Vector3>();
         Debug.Log("Slicing List");
-        while (listCount < path.Count) {
-            if (path[listCount].z == row) {
-                slice.Add(path[listCount]);
+        while (slicingCount < path.Count) {
+            if (path[slicingCount].z == row) {
+                slice.Add(path[slicingCount]);
             }
-            listCount++;
+            slicingCount++;
         }
 
         // for (int i = 0; i < slice.Count; i++) {
         //     Debug.Log(slice[i]);
         // }
-        
+        sliceCount = slice.Count;
         sortedSlice = SortList(slice);
         return sortedSlice;
     }
 
     private List<Vector3> SortList(List<Vector3> list) {
+        // sortedCount = 0; // for debugging
+        Debug.Log("sortedCount = " + sortedCount);
         List<Vector3> sorted = new List<Vector3>();
         int lowest = Mathf.RoundToInt(xMinMax.x);
-        int listCount = 0;
+        int sortingCount = 0;
+        int listSize = list.Count;
+        sortSize = listSize; // for debugging
+        bool validList = true;
         Debug.Log("Sorting Sliced List");
-        while (listCount < list.Count) {
-            if (list[listCount].x == lowest) {
-                sorted.Add(list[listCount]);
+        while (sortingCount < listSize) {
+            for (int i = 0; i < listSize; i++) {
+                if (list[i].x == lowest) {
+                    sorted.Add(list[i]);
+                    sortingCount++;
+                    Debug.Log("sortingCount = " + sortingCount);
+                }
             }
-            // Debug.Log("lowest value is: " + lowest);
             lowest++;
-            listCount++;
         }
+        
         
         // for (int i = 0; i < sorted.Count; i++) {
         //     Debug.Log(sorted[i]);
         // }
+        
         return sorted;
     }
 
