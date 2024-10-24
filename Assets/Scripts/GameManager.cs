@@ -17,8 +17,6 @@ public class GameManager : MonoBehaviour {
     public int gridHeight;
     public int gridWidth;
     public int sliceCount;      // for debugging
-    public int sortedCount;     // for debugging
-    public int sortSize;        // for debugging
     public List<GameObject> waypoints;
     public TextMeshProUGUI winText;
     public TextMeshProUGUI gameOverText;
@@ -299,30 +297,20 @@ public class GameManager : MonoBehaviour {
     }
 
     private List<Vector3> SortList(List<Vector3> list) {
-        // sortedCount = 0; // for debugging
-        Debug.Log("sortedCount = " + sortedCount);
         List<Vector3> sorted = new List<Vector3>();
         int lowest = Mathf.RoundToInt(xMinMax.x);
         int sortingCount = 0;
         int listSize = list.Count;
-        sortSize = listSize; // for debugging
-        bool validList = true;
-        Debug.Log("Sorting Sliced List");
+        // Debug.Log("Sorting Sliced List");
         while (sortingCount < listSize) {
             for (int i = 0; i < listSize; i++) {
                 if (list[i].x == lowest) {
                     sorted.Add(list[i]);
                     sortingCount++;
-                    Debug.Log("sortingCount = " + sortingCount);
                 }
             }
             lowest++;
         }
-        
-        
-        // for (int i = 0; i < sorted.Count; i++) {
-        //     Debug.Log(sorted[i]);
-        // }
         
         return sorted;
     }
