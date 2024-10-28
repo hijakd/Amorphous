@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour {
     public GameObject player;
     public GameObject floorTile;
     public GameObject floorTile2;
-    public GameObject wallPanels;
-    public GameObject otherPiece;
+    public GameObject mazeCell;
+    public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     public int gridHeight;
     public int gridWidth;
     public List<GameObject> waypoints;
@@ -22,8 +22,7 @@ public class GameManager : MonoBehaviour {
     public bool isGameActive;
     public Button restartButton;
     public GameObject titleScreen;
-    [Range(0.24f, 0.76f)]
-    public float randomVariance = 0.42f;
+    [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
 
     [SerializeField] private List<GameObject> cardinals;
     [SerializeField] private List<Vector3> selectableCoords;
@@ -59,9 +58,10 @@ public class GameManager : MonoBehaviour {
     public static Vector2 xMinMax;
     public static Vector2 yMinMax;
     private Vector2 randVariance;
-    MazeCell[,] maze;
-
-    
+    MazeCell[] maze;
+    Material obsMaterial;
+    Material gypMaterial;
+    Material purpleMaterial;
 
 
     private void OnDrawGizmos() {
@@ -94,6 +94,13 @@ public class GameManager : MonoBehaviour {
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
 
+        obsMaterial = Resources.Load<Material>("Materials/OBS_Mat");
+        gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
+        purpleMaterial = Resources.Load<Material>("Materials/Purple_Mat");
+
+        // obsMaterial = GetComponent<Renderer>().material;
+
+
         /* cardinals are the corners of the grid & used for boundary calculations */
         // cardinals.Capacity = 4;
         SpawnObject.Spawn(cardinals[0], new Vector3(xMinMax.x, 0f, yMinMax.y));
@@ -106,7 +113,7 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < waypoints.Count; i++) {
             destinations.Add(RandomPosition.Position(xMinMax, yMinMax));
         }
-        
+
         /* TODO: refactor into a function to accomodate a variable number "endpoints/destinations" based on the [].Count of destinations[] */
         /* this is used for 'random' vector triangulation */
         selectableCoords.Add(new Vector3(0, 0, 0));
@@ -227,14 +234,15 @@ public class GameManager : MonoBehaviour {
         shortenedList.Clear();
 
         /* ... */
-        
+
         /* ... */
-        
+
         /* spawn floor tiles */
         ResetCount();
         while (count < drawnPath.Count) {
             SpawnObject.Spawn(floorTile2, drawnPath[count]);
-            SpawnObject.Spawn(wallPanels, drawnPath[count]);
+
+            // SpawnObject.Spawn(mazeCell, drawnPath[count]);
             count++;
         }
 
@@ -244,12 +252,52 @@ public class GameManager : MonoBehaviour {
         //     count++;
         // }
 
-        
+
         /* currently this checks only the first row of the maze grid */
         /* will need to use this in a loop to process the entire grid */
-        slicedPath = SliceList(drawnPath, halfHeight);          // height gives the rows
+        slicedPath = SliceList(drawnPath, halfHeight); // height gives the rows
+        for (int i = 0; i < slicedPath.Count; i++) {
+            if (i == 0) {
+                SpawnObject.Spawn(wallPanels[0], slicedPath[i]);
+                SpawnObject.Spawn(wallPanels[3], slicedPath[i]);
+
+                // SpawnObject.Spawn(wallPanels[1], slicedPath[i]);
+                // SpawnObject.Spawn(mazeCell, slicedPath[i]);
+            }
+            else if (slicedPath[i].x == slicedPath[i - 1].x + 1) {
+                SpawnObject.Spawn(wallPanels[0], slicedPath[i]);
+                
+                if (i < slicedPath.Count - 1) {
+                    Debug.Log("slicedPath[i].x = " + slicedPath[i].x +
+                              "\nslicedPath[i + 1].x = " + slicedPath[i + 1].x);
+                    if (slicedPath[i + 1].x >= slicedPath[i].x + 2) {
+                        SpawnObject.Spawn(wallPanels[1], slicedPath[i], purpleMaterial);
+                    }
+                }
+            }
+
+            // else if ((slicedPath[i + 1].x > slicedPath[i].x) && (slicedPath[i - 1].x < slicedPath[i].x - 1)) {
+            //     if (slicedPath[i + 1].x < halfWidth) {
+            //         SpawnObject.Spawn(wallPanels[1], slicedPath[i], gypMaterial);
+            //     }
+            //
+            //     // } else if (slicedPath[i + 1].x > slicedPath[i].x && slicedPath[i + 1].x <= halfWidth) {
+            //     // SpawnObject.Spawn(wallPanels[1], slicedPath[i]);
+            // }
 
 
+            if (slicedPath[i].x == halfWidth) {
+                SpawnObject.Spawn(wallPanels[1], slicedPath[i], obsMaterial);
+            }
+            else if (i == slicedPath.Count - 1) {
+                SpawnObject.Spawn(wallPanels[1], slicedPath[i], gypMaterial);
+            }
+
+            // else {
+            //     SpawnObject.Spawn(wallPanels[0], slicedPath[i]);
+            //     SpawnObject.Spawn(wallPanels[1], slicedPath[i]);
+            // }
+        }
     }
 
     // Update is called once per frame
@@ -260,13 +308,16 @@ public class GameManager : MonoBehaviour {
         int slicingCount = 0;
         List<Vector3> slice = new List<Vector3>();
         List<Vector3> sortedSlice = new List<Vector3>();
+
         // Debug.Log("Slicing List");
         while (slicingCount < path.Count) {
             if (path[slicingCount].z == row) {
                 slice.Add(path[slicingCount]);
             }
+
             slicingCount++;
         }
+
         sortedSlice = SortList(slice);
         return sortedSlice;
     }
@@ -276,6 +327,7 @@ public class GameManager : MonoBehaviour {
         int lowest = Mathf.RoundToInt(xMinMax.x);
         int sortingCount = 0;
         int listSize = list.Count;
+
         // Debug.Log("Sorting Sliced List");
         while (sortingCount < listSize) {
             for (int i = 0; i < listSize; i++) {
@@ -284,9 +336,10 @@ public class GameManager : MonoBehaviour {
                     sortingCount++;
                 }
             }
+
             lowest++;
         }
-        
+
         return sorted;
     }
 

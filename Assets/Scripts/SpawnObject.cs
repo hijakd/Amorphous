@@ -15,4 +15,11 @@ public class SpawnObject : MonoBehaviour {
         Instantiate(gameObject);
     }
 
+    public static void Spawn(GameObject gameObject, Vector3 position, Material material) {
+        gameObject.transform.position = position;
+        gameObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = material;
+        // gameObject.
+        Instantiate(gameObject);
+    }
+
 }
