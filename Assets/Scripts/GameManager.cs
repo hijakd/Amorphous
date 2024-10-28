@@ -260,9 +260,6 @@ public class GameManager : MonoBehaviour {
             if (i == 0) {
                 SpawnObject.Spawn(wallPanels[0], slicedPath[i]);
                 SpawnObject.Spawn(wallPanels[3], slicedPath[i]);
-
-                // SpawnObject.Spawn(wallPanels[1], slicedPath[i]);
-                // SpawnObject.Spawn(mazeCell, slicedPath[i]);
             }
             else if (slicedPath[i].x == slicedPath[i - 1].x + 1) {
                 SpawnObject.Spawn(wallPanels[0], slicedPath[i]);
@@ -270,7 +267,7 @@ public class GameManager : MonoBehaviour {
                 if (i < slicedPath.Count - 1) {
                     Debug.Log("slicedPath[i].x = " + slicedPath[i].x +
                               "\nslicedPath[i + 1].x = " + slicedPath[i + 1].x);
-                    if (slicedPath[i + 1].x >= slicedPath[i].x + 2) {
+                    if (slicedPath[i + 1].x <= halfWidth && slicedPath[i + 1].x >= slicedPath[i].x + 2) {
                         SpawnObject.Spawn(wallPanels[1], slicedPath[i], purpleMaterial);
                     }
                 }
