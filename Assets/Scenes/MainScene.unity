@@ -155,10 +155,13 @@ MonoBehaviour:
     type: 3}
   floorTile2: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
     type: 3}
-  wallPanels: {fileID: 1456626071757749188, guid: dd8f4f433d2007648b9ebd049382923d,
+  mazeCell: {fileID: 1456626071757749188, guid: dd8f4f433d2007648b9ebd049382923d,
     type: 3}
-  otherPiece: {fileID: 1879861639291899805, guid: 47fc53489bafbde45a767d87ff3e67f7,
-    type: 3}
+  wallPanels:
+  - {fileID: 1947273285586917020, guid: dce1e17de8142fa4cb420b081468d73f, type: 3}
+  - {fileID: 7754419566860733638, guid: 3d5bb6f788317c74eaf67fa3a2010c07, type: 3}
+  - {fileID: 3351476046705320498, guid: 83fd6a674b54a46469e0f4780426997e, type: 3}
+  - {fileID: 1428840922709220998, guid: 0d7d4116c7c29f94db40815268bfe935, type: 3}
   gridHeight: 80
   gridWidth: 80
   waypoints:

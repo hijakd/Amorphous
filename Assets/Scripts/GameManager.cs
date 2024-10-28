@@ -62,6 +62,8 @@ public class GameManager : MonoBehaviour {
     Material obsMaterial;
     Material gypMaterial;
     Material purpleMaterial;
+    Material pinkMaterial;
+    Material blueMaterial;
 
 
     private void OnDrawGizmos() {
@@ -97,6 +99,8 @@ public class GameManager : MonoBehaviour {
         obsMaterial = Resources.Load<Material>("Materials/OBS_Mat");
         gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
         purpleMaterial = Resources.Load<Material>("Materials/Purple_Mat");
+        pinkMaterial = Resources.Load<Material>("Materials/Pink_Mat");
+        blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat");
 
         // obsMaterial = GetComponent<Renderer>().material;
 
@@ -253,34 +257,32 @@ public class GameManager : MonoBehaviour {
         // }
 
 
+        bool pathBreak = false;
         /* currently this checks only the first row of the maze grid */
         /* will need to use this in a loop to process the entire grid */
         slicedPath = SliceList(drawnPath, halfHeight); // height gives the rows
         for (int i = 0; i < slicedPath.Count; i++) {
             if (i == 0) {
-                SpawnObject.Spawn(wallPanels[0], slicedPath[i]);
-                SpawnObject.Spawn(wallPanels[3], slicedPath[i]);
+                SpawnObject.Spawn(wallPanels[0], slicedPath[i], gypMaterial);
+                SpawnObject.Spawn(wallPanels[3], slicedPath[i], blueMaterial);
             }
             else if (slicedPath[i].x == slicedPath[i - 1].x + 1) {
-                SpawnObject.Spawn(wallPanels[0], slicedPath[i]);
-                
+                SpawnObject.Spawn(wallPanels[0], slicedPath[i], gypMaterial);
                 if (i < slicedPath.Count - 1) {
                     Debug.Log("slicedPath[i].x = " + slicedPath[i].x +
                               "\nslicedPath[i + 1].x = " + slicedPath[i + 1].x);
-                    if (slicedPath[i + 1].x <= halfWidth && slicedPath[i + 1].x >= slicedPath[i].x + 2) {
+                    if (slicedPath[i + 1].x <= halfWidth && slicedPath[i + 1].x >= slicedPath[i].x + 2) { 
+                        // spawn east wall if there is a break in the row
                         SpawnObject.Spawn(wallPanels[1], slicedPath[i], purpleMaterial);
+                        pathBreak = true;
                     }
                 }
+                else if (slicedPath[i - 1].x <= slicedPath[i].x - 1 && pathBreak) {
+                    SpawnObject.Spawn(wallPanels[0], slicedPath[i], pinkMaterial);
+                    SpawnObject.Spawn(wallPanels[3], slicedPath[i], blueMaterial);
+                    pathBreak = false;
+                }
             }
-
-            // else if ((slicedPath[i + 1].x > slicedPath[i].x) && (slicedPath[i - 1].x < slicedPath[i].x - 1)) {
-            //     if (slicedPath[i + 1].x < halfWidth) {
-            //         SpawnObject.Spawn(wallPanels[1], slicedPath[i], gypMaterial);
-            //     }
-            //
-            //     // } else if (slicedPath[i + 1].x > slicedPath[i].x && slicedPath[i + 1].x <= halfWidth) {
-            //     // SpawnObject.Spawn(wallPanels[1], slicedPath[i]);
-            // }
 
 
             if (slicedPath[i].x == halfWidth) {
