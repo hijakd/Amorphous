@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -64,6 +66,7 @@ public class GameManager : MonoBehaviour {
     Material purpleMaterial;
     Material pinkMaterial;
     Material blueMaterial;
+    Material greenMaterial;
 
 
     private void OnDrawGizmos() {
@@ -101,6 +104,7 @@ public class GameManager : MonoBehaviour {
         purpleMaterial = Resources.Load<Material>("Materials/Purple_Mat");
         pinkMaterial = Resources.Load<Material>("Materials/Pink_Mat");
         blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat");
+        greenMaterial = Resources.Load<Material>("Materials/Green_Mat");
 
         // obsMaterial = GetComponent<Renderer>().material;
 
@@ -271,24 +275,19 @@ public class GameManager : MonoBehaviour {
         }
 
         SpawnEastWestWalls(slicedPath);
-        
+
         rowNumber--;
-        // Debug.Log("rowNumber == " + rowNumber);
-        // Debug.Log("-halfHeight == " + -halfHeight);
+
 
         while (rowNumber >= -halfHeight) {
             Debug.Log("looping rowNumber == " + rowNumber);
-            
+
             slicedPath = SliceList(drawnPath, rowNumber);
             SpawnEastWestWalls(slicedPath);
             slicedPath.Clear();
             rowNumber--;
         }
-
-        // for (int x = rowNumber; x < -halfHeight; x--) {
-        //     slicedPath = SliceList(drawnPath, rowNumber);
-        //     SpawnEastWestWalls(slicedPath);
-        // }
+        
     }
 
     // Update is called once per frame
@@ -299,6 +298,7 @@ public class GameManager : MonoBehaviour {
     private int FindFirstRow(List<Vector3> list) {
         // Debug.Log("Finding first row");
         int rowNumber = Mathf.RoundToInt(list[0].z);
+
         // Debug.Log("FFR rowNumber == " + rowNumber);
         return rowNumber;
     }
@@ -312,62 +312,35 @@ public class GameManager : MonoBehaviour {
     /* Spawn the east & west walls across a given row of the maze path */
     private void SpawnEastWestWalls(List<Vector3> path) {
         Debug.Log("Spawning East/West Walls");
-        bool pathBreak = false;
+
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
+                /* spawn the first west wall of the row */
                 SpawnObject.Spawn(wallPanels[3], path[i], gypMaterial);
             }
-            else if (path[i].x == path[i - 1].x + 1) {
-                if (i < path.Count - 1) {
-                    // Debug.Log("path[i].x = " + path[i].x +
-                    //           "\npath[i + 1].x = " + path[i + 1].x);
-                    if (path[i + 1].x <= halfWidth && path[i + 1].x >= path[i].x + 2) {
-                        /* spawn east wall if there is a break in the row */ 
-                        SpawnObject.Spawn(wallPanels[1], path[i], purpleMaterial);
-                        // pathBreak = true;
-                        Debug.Log("pathBreak == true");
-                    }
-                }
-            }
-            // else if (pathBreak) {
-                // Debug.Log("pathBreak == true, \nclosing pathBreak");
-               else if (path[i - 1].x <= path[i].x - 2) {
-                    /* spawn west wall at end of a break in the row */ 
-                    SpawnObject.Spawn(wallPanels[3], path[i], blueMaterial);
-                    pathBreak = false;
-                    Debug.Log("pathBreak == false");
-                }
-            // }
-        
-            if (path[i].x == halfWidth) {
-                SpawnObject.Spawn(wallPanels[1], path[i], obsMaterial);
-            }
-            else if (i == path.Count - 1) {
-                SpawnObject.Spawn(wallPanels[1], path[i], gypMaterial);
-            }
-        }
-
-        /*
-         for (int i = 0; i < path.Count; i++) {
-            if (i == 0) {
-                SpawnObject.Spawn(wallPanels[3], path[i], gypMaterial);
-            }
-            else if (path[i - 1].x <= path[i].x - 2) {
+            else if (path[i - 1].x < path[i].x - 1) {
+                /* spawn west wall at end of a break in the row */
                 SpawnObject.Spawn(wallPanels[3], path[i], blueMaterial);
             }
-            else if (path[i + 1].x >= path[i].x + 2) {
-                SpawnObject.Spawn(wallPanels[1], path[i], purpleMaterial);
-            }
-            
-            if (path[i].x == halfWidth) {
-                SpawnObject.Spawn(wallPanels[1], path[i], obsMaterial);
-            }
             else if (i == path.Count - 1) {
+                /* spawn the last east wall of the row if the list ends before the boundary */
                 SpawnObject.Spawn(wallPanels[1], path[i], gypMaterial);
             }
         }
-        */
 
+        /* reserving the List to spawn the east walls */
+        path.Reverse();
+
+        for (int j = 0; j < path.Count; j++) {
+            if (j == 0) {
+                /* spawn the last east wall of the row */
+                SpawnObject.Spawn(wallPanels[1], path[j], obsMaterial);
+            }
+            else if (path[j - 1].x > path[j].x + 1) {
+                /* spawn east wall at end of a break in the row */
+                SpawnObject.Spawn(wallPanels[1], path[j], greenMaterial);
+            }
+        }
     }
 
     private List<Vector3> SliceList(List<Vector3> path, int row) {
