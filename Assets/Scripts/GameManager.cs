@@ -261,6 +261,9 @@ public class GameManager : MonoBehaviour {
         /* will need to use this in a loop to process the entire grid */
         slicedPath = SliceList(drawnPath, halfHeight); // height gives the rows
 
+        int rowNumber = FindFirstRow(slicedPath);
+        Debug.Log("rowNumber == " + rowNumber);
+
         /* Spawn the "north" walls of the first row */
         /* currently this will only spawn for the first grid row */
         for (int i = 0; i < slicedPath.Count; i++) {
@@ -269,15 +272,39 @@ public class GameManager : MonoBehaviour {
 
         SpawnEastWestWalls(slicedPath);
         
-        
+        rowNumber--;
+        Debug.Log("rowNumber == " + rowNumber);
+
+        while (rowNumber >= -halfHeight) {
+            Debug.Log("looping rowNumber == " + rowNumber);
+            slicedPath = SliceList(drawnPath, rowNumber);
+            SpawnEastWestWalls(slicedPath);
+            rowNumber--;
+        }
     }
 
     // Update is called once per frame
     void Update() {
     }
 
+    /* find/return the value of the first row of the maze path */
+    private int FindFirstRow(List<Vector3> list) {
+        Debug.Log("Finding first row");
+        int rowNumber = Mathf.RoundToInt(list[0].z);
+        Debug.Log("FFR rowNumber == " + rowNumber);
+
+        // return Mathf.RoundToInt(list[0].z);
+        return rowNumber;
+    }
+
+    /* find/return the value of the first column of the maze path */
+    private int FindFirstColumn(List<Vector3> list) {
+        return Mathf.RoundToInt(list[0].x);
+    }
+
     /* Spawn the east & west walls across a given row of the maze path */
     private void SpawnEastWestWalls(List<Vector3> path) {
+        Debug.Log("Spawning East/West Walls");
         bool pathBreak = false;
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
