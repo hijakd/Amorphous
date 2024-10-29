@@ -257,50 +257,61 @@ public class GameManager : MonoBehaviour {
         // }
 
 
-        bool pathBreak = false;
         /* currently this checks only the first row of the maze grid */
         /* will need to use this in a loop to process the entire grid */
         slicedPath = SliceList(drawnPath, halfHeight); // height gives the rows
+
+        /* Spawn the "north" walls of the first row */
+        /* currently this will only spawn for the first grid row */
         for (int i = 0; i < slicedPath.Count; i++) {
-            if (i == 0) {
-                SpawnObject.Spawn(wallPanels[0], slicedPath[i], gypMaterial);
-                SpawnObject.Spawn(wallPanels[3], slicedPath[i], blueMaterial);
-            }
-            else if (slicedPath[i].x == slicedPath[i - 1].x + 1) {
-                SpawnObject.Spawn(wallPanels[0], slicedPath[i], gypMaterial);
-                if (i < slicedPath.Count - 1) {
-                    Debug.Log("slicedPath[i].x = " + slicedPath[i].x +
-                              "\nslicedPath[i + 1].x = " + slicedPath[i + 1].x);
-                    if (slicedPath[i + 1].x <= halfWidth && slicedPath[i + 1].x >= slicedPath[i].x + 2) { 
-                        // spawn east wall if there is a break in the row
-                        SpawnObject.Spawn(wallPanels[1], slicedPath[i], purpleMaterial);
-                        pathBreak = true;
-                    }
-                }
-                else if (slicedPath[i - 1].x <= slicedPath[i].x - 1 && pathBreak) {
-                    SpawnObject.Spawn(wallPanels[0], slicedPath[i], pinkMaterial);
-                    SpawnObject.Spawn(wallPanels[3], slicedPath[i], blueMaterial);
-                    pathBreak = false;
-                }
-            }
-
-
-            if (slicedPath[i].x == halfWidth) {
-                SpawnObject.Spawn(wallPanels[1], slicedPath[i], obsMaterial);
-            }
-            else if (i == slicedPath.Count - 1) {
-                SpawnObject.Spawn(wallPanels[1], slicedPath[i], gypMaterial);
-            }
-
-            // else {
-            //     SpawnObject.Spawn(wallPanels[0], slicedPath[i]);
-            //     SpawnObject.Spawn(wallPanels[1], slicedPath[i]);
-            // }
+            SpawnObject.Spawn(wallPanels[0], slicedPath[i], gypMaterial);
         }
+
+        SpawnEastWestWalls(slicedPath);
+        
+        
     }
 
     // Update is called once per frame
     void Update() {
+    }
+
+    /* Spawn the east & west walls across a given row of the maze path */
+    private void SpawnEastWestWalls(List<Vector3> path) {
+        bool pathBreak = false;
+        for (int i = 0; i < path.Count; i++) {
+            if (i == 0) {
+                SpawnObject.Spawn(wallPanels[3], path[i], gypMaterial);
+            }
+            else if (path[i].x == path[i - 1].x + 1) {
+                if (i < path.Count - 1) {
+                    // Debug.Log("path[i].x = " + path[i].x +
+                    //           "\npath[i + 1].x = " + path[i + 1].x);
+                    if (path[i + 1].x <= halfWidth && path[i + 1].x >= path[i].x + 2) {
+                        // spawn east wall if there is a break in the row
+                        SpawnObject.Spawn(wallPanels[1], path[i], purpleMaterial);
+                        pathBreak = true;
+
+                        // Debug.Log("pathBreak == true");
+                    }
+                }
+            }
+            else if (pathBreak) {
+                // Debug.Log("pathBreak == true, \nclosing pathBreak");
+                if (path[i - 1].x <= path[i].x - 2) {
+                    // spawn west wall at end of a break in the row
+                    SpawnObject.Spawn(wallPanels[3], path[i], blueMaterial);
+                    pathBreak = false;
+                }
+            }
+
+            if (path[i].x == halfWidth) {
+                SpawnObject.Spawn(wallPanels[1], path[i], obsMaterial);
+            }
+            else if (i == slicedPath.Count - 1) {
+                SpawnObject.Spawn(wallPanels[1], path[i], gypMaterial);
+            }
+        }
     }
 
     private List<Vector3> SliceList(List<Vector3> path, int row) {
