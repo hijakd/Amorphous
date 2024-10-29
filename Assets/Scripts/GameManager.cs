@@ -273,14 +273,22 @@ public class GameManager : MonoBehaviour {
         SpawnEastWestWalls(slicedPath);
         
         rowNumber--;
-        Debug.Log("rowNumber == " + rowNumber);
+        // Debug.Log("rowNumber == " + rowNumber);
+        // Debug.Log("-halfHeight == " + -halfHeight);
 
         while (rowNumber >= -halfHeight) {
             Debug.Log("looping rowNumber == " + rowNumber);
+            
             slicedPath = SliceList(drawnPath, rowNumber);
             SpawnEastWestWalls(slicedPath);
+            slicedPath.Clear();
             rowNumber--;
         }
+
+        // for (int x = rowNumber; x < -halfHeight; x--) {
+        //     slicedPath = SliceList(drawnPath, rowNumber);
+        //     SpawnEastWestWalls(slicedPath);
+        // }
     }
 
     // Update is called once per frame
@@ -289,17 +297,16 @@ public class GameManager : MonoBehaviour {
 
     /* find/return the value of the first row of the maze path */
     private int FindFirstRow(List<Vector3> list) {
-        Debug.Log("Finding first row");
+        // Debug.Log("Finding first row");
         int rowNumber = Mathf.RoundToInt(list[0].z);
-        Debug.Log("FFR rowNumber == " + rowNumber);
-
-        // return Mathf.RoundToInt(list[0].z);
+        // Debug.Log("FFR rowNumber == " + rowNumber);
         return rowNumber;
     }
 
     /* find/return the value of the first column of the maze path */
     private int FindFirstColumn(List<Vector3> list) {
-        return Mathf.RoundToInt(list[0].x);
+        int columnNumber = Mathf.RoundToInt(list[0].x);
+        return columnNumber;
     }
 
     /* Spawn the east & west walls across a given row of the maze path */
@@ -315,30 +322,52 @@ public class GameManager : MonoBehaviour {
                     // Debug.Log("path[i].x = " + path[i].x +
                     //           "\npath[i + 1].x = " + path[i + 1].x);
                     if (path[i + 1].x <= halfWidth && path[i + 1].x >= path[i].x + 2) {
-                        // spawn east wall if there is a break in the row
+                        /* spawn east wall if there is a break in the row */ 
                         SpawnObject.Spawn(wallPanels[1], path[i], purpleMaterial);
-                        pathBreak = true;
-
-                        // Debug.Log("pathBreak == true");
+                        // pathBreak = true;
+                        Debug.Log("pathBreak == true");
                     }
                 }
             }
-            else if (pathBreak) {
+            // else if (pathBreak) {
                 // Debug.Log("pathBreak == true, \nclosing pathBreak");
-                if (path[i - 1].x <= path[i].x - 2) {
-                    // spawn west wall at end of a break in the row
+               else if (path[i - 1].x <= path[i].x - 2) {
+                    /* spawn west wall at end of a break in the row */ 
                     SpawnObject.Spawn(wallPanels[3], path[i], blueMaterial);
                     pathBreak = false;
+                    Debug.Log("pathBreak == false");
                 }
-            }
-
+            // }
+        
             if (path[i].x == halfWidth) {
                 SpawnObject.Spawn(wallPanels[1], path[i], obsMaterial);
             }
-            else if (i == slicedPath.Count - 1) {
+            else if (i == path.Count - 1) {
                 SpawnObject.Spawn(wallPanels[1], path[i], gypMaterial);
             }
         }
+
+        /*
+         for (int i = 0; i < path.Count; i++) {
+            if (i == 0) {
+                SpawnObject.Spawn(wallPanels[3], path[i], gypMaterial);
+            }
+            else if (path[i - 1].x <= path[i].x - 2) {
+                SpawnObject.Spawn(wallPanels[3], path[i], blueMaterial);
+            }
+            else if (path[i + 1].x >= path[i].x + 2) {
+                SpawnObject.Spawn(wallPanels[1], path[i], purpleMaterial);
+            }
+            
+            if (path[i].x == halfWidth) {
+                SpawnObject.Spawn(wallPanels[1], path[i], obsMaterial);
+            }
+            else if (i == path.Count - 1) {
+                SpawnObject.Spawn(wallPanels[1], path[i], gypMaterial);
+            }
+        }
+        */
+
     }
 
     private List<Vector3> SliceList(List<Vector3> path, int row) {
@@ -346,7 +375,7 @@ public class GameManager : MonoBehaviour {
         List<Vector3> slice = new List<Vector3>();
         List<Vector3> sortedSlice = new List<Vector3>();
 
-        // Debug.Log("Slicing List");
+        Debug.Log("Slicing List");
         while (slicingCount < path.Count) {
             if (path[slicingCount].z == row) {
                 slice.Add(path[slicingCount]);
@@ -365,7 +394,7 @@ public class GameManager : MonoBehaviour {
         int sortingCount = 0;
         int listSize = list.Count;
 
-        // Debug.Log("Sorting Sliced List");
+        Debug.Log("Sorting Sliced List");
         while (sortingCount < listSize) {
             for (int i = 0; i < listSize; i++) {
                 if (list[i].x == lowest) {
