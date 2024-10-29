@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class GameManager : MonoBehaviour {
     public bool isGameActive;
     public Button restartButton;
     public GameObject titleScreen;
-    [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
+    [UnityEngine.Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
 
     [SerializeField] private List<GameObject> cardinals;
     [SerializeField] private List<Vector3> selectableCoords;
@@ -47,6 +48,8 @@ public class GameManager : MonoBehaviour {
     private int lcm02;
     private int lcm03;
     private int combinedLCM;
+    int rowNumber;
+    int columnNumber;
     float xVal;
     float zVal;
     [SerializeField] private List<int> lcms;
@@ -263,10 +266,12 @@ public class GameManager : MonoBehaviour {
 
         /* currently this checks only the first row of the maze grid */
         /* will need to use this in a loop to process the entire grid */
-        slicedPath = SliceList(drawnPath, halfHeight); // height gives the rows
+        slicedPath = SliceListRows(drawnPath, halfHeight); // height gives the rows
 
-        int rowNumber = FindFirstRow(slicedPath);
-        Debug.Log("rowNumber == " + rowNumber);
+        rowNumber = FindFirstRow(slicedPath);
+        
+        // Debug.Log("rowNumber == " + rowNumber + 
+        //           "\ncolumnNumber == " + columnNumber);
 
         /* Spawn the "north" walls of the first row */
         /* currently this will only spawn for the first grid row */
@@ -282,10 +287,22 @@ public class GameManager : MonoBehaviour {
         while (rowNumber >= -halfHeight) {
             Debug.Log("looping rowNumber == " + rowNumber);
 
-            slicedPath = SliceList(drawnPath, rowNumber);
+            slicedPath = SliceListRows(drawnPath, rowNumber);
             SpawnEastWestWalls(slicedPath);
             slicedPath.Clear();
             rowNumber--;
+        }
+        
+        slicedPath = SliceListColumns(drawnPath, halfWidth);
+        columnNumber = FindFirstColumn(slicedPath);
+        
+        while (columnNumber >= -halfWidth) {
+            Debug.Log("looping columnNumber == " + columnNumber);
+
+            slicedPath = SliceListColumns(drawnPath, columnNumber);
+            SpawnNorthSouthWalls(slicedPath);
+            slicedPath.Clear();
+            columnNumber--;
         }
         
     }
@@ -343,12 +360,44 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private List<Vector3> SliceList(List<Vector3> path, int row) {
+    private void SpawnNorthSouthWalls(List<Vector3> path) {
+        Debug.Log("Spawning North/South Walls");
+        for (int i = 0; i < path.Count; i++) {
+            if (i == 0) {
+                /* spawn the first north wall of the row */
+                SpawnObject.Spawn(wallPanels[0], path[i], gypMaterial);
+            }
+            else if (path[i - 1].z < path[i].z - 1) {
+                /* spawn north wall at end of a break in the row */
+                SpawnObject.Spawn(wallPanels[0], path[i], blueMaterial);
+            }
+            else if (i == path.Count - 1) {
+                /* spawn the last south wall of the row if the list ends before the boundary */
+                SpawnObject.Spawn(wallPanels[2], path[i], gypMaterial);
+            }
+        }
+
+        /* reserving the List to spawn the east walls */
+        path.Reverse();
+
+        for (int j = 0; j < path.Count; j++) {
+            if (j == 0) {
+                /* spawn the last south wall of the row */
+                SpawnObject.Spawn(wallPanels[2], path[j], obsMaterial);
+            }
+            else if (path[j - 1].z > path[j].z + 1) {
+                /* spawn south wall at end of a break in the row */
+                SpawnObject.Spawn(wallPanels[2], path[j], greenMaterial);
+            }
+        }
+    }
+
+    private List<Vector3> SliceListRows(List<Vector3> path, int row) {
         int slicingCount = 0;
         List<Vector3> slice = new List<Vector3>();
         List<Vector3> sortedSlice = new List<Vector3>();
 
-        Debug.Log("Slicing List");
+        Debug.Log("Slicing rows List");
         while (slicingCount < path.Count) {
             if (path[slicingCount].z == row) {
                 slice.Add(path[slicingCount]);
@@ -357,13 +406,32 @@ public class GameManager : MonoBehaviour {
             slicingCount++;
         }
 
-        sortedSlice = SortList(slice);
+        sortedSlice = SortList(slice, Mathf.RoundToInt(xMinMax.x));
         return sortedSlice;
     }
 
-    private List<Vector3> SortList(List<Vector3> list) {
+    private List<Vector3> SliceListColumns(List<Vector3> path, int column) {
+        int slicingCount = 0;
+        List<Vector3> slice = new List<Vector3>();
+        List<Vector3> sortedSlice = new List<Vector3>();
+
+        Debug.Log("Slicing columns List");
+        while (slicingCount < path.Count) {
+            if (path[slicingCount].x == column) {
+                slice.Add(path[slicingCount]);
+            }
+
+            slicingCount++;
+        }
+
+        sortedSlice = SortList(slice, Mathf.RoundToInt(yMinMax.x));
+
+        return sortedSlice;
+    }
+
+    private List<Vector3> SortList(List<Vector3> list, int lowest) {
         List<Vector3> sorted = new List<Vector3>();
-        int lowest = Mathf.RoundToInt(xMinMax.x);
+        // int lowest = Mathf.RoundToInt(xMinMax.x);
         int sortingCount = 0;
         int listSize = list.Count;
 
