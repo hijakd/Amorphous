@@ -6,14 +6,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+// ReSharper disable InconsistentNaming
+// ReSharper disable NotAccessedField.Local
+// ReSharper disable Unity.RedundantEventFunction
 
 public class GameManager : MonoBehaviour {
 
     public GameObject goalObject;
     public GameObject player;
-    public GameObject floorTile;
-    public GameObject floorTile2;
-    public static GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
+    public GameObject floorTile01;
+    public GameObject floorTile02;
+    public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     public int gridHeight;
     public int gridWidth;
     public List<GameObject> waypoints;
@@ -197,7 +200,7 @@ public class GameManager : MonoBehaviour {
 
         ResetCount();
         while (count < intersections.Count) {
-            SpawnObject.Spawn(floorTile, intersections[count]);
+            SpawnObject.Spawn(floorTile01, intersections[count]);
             count++;
         }
 
@@ -251,7 +254,7 @@ public class GameManager : MonoBehaviour {
         /* spawn floor tiles */
         ResetCount();
         while (count < drawnPath.Count) {
-            SpawnObject.Spawn(floorTile2, drawnPath[count]);
+            SpawnObject.Spawn(floorTile02, drawnPath[count]);
             count++;
         }
 
@@ -264,7 +267,8 @@ public class GameManager : MonoBehaviour {
         while (rowNumber >= -halfHeight) {
             // Debug.Log("looping rowNumber == " + rowNumber);
             slicedPath = SliceNSort.SliceListRows(drawnPath, rowNumber);
-            SpawnObject.SpawnEastWestWalls(slicedPath, gypMaterial);
+            // SpawnEastWestWalls(slicedPath);
+            SpawnObject.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
             slicedPath.Clear();
             rowNumber--;
         }
@@ -280,7 +284,8 @@ public class GameManager : MonoBehaviour {
         while (columnNumber >= -halfWidth) {
             // Debug.Log("looping columnNumber == " + columnNumber);
             slicedPath = SliceNSort.SliceListColumns(drawnPath, columnNumber);
-            SpawnObject.SpawnNorthSouthWalls(slicedPath, gypMaterial);
+            // SpawnNorthSouthWalls(slicedPath);
+            SpawnObject.SpawnNorthSouthWalls(slicedPath, wallPanels, gypMaterial);
             slicedPath.Clear();
             columnNumber--;
         }
@@ -294,16 +299,18 @@ public class GameManager : MonoBehaviour {
     /* find/return the value of the first row of the maze path */
     private int FindFirstRow(List<Vector3> list) {
         // Debug.Log("Finding first row");
-        int rowNumber = Mathf.RoundToInt(list[0].z);
-        return rowNumber;
+        int row = Mathf.RoundToInt(list[0].z);
+        return row;
     }
 
     /* find/return the value of the first column of the maze path */
     private int FindFirstColumn(List<Vector3> list) {
-        int columnNumber = Mathf.RoundToInt(list[0].x);
-        return columnNumber;
+        int column = Mathf.RoundToInt(list[0].x);
+        return column;
     }
 
+    
+    
     
     private void ResetCount() {
         count = 0;

@@ -16,6 +16,9 @@ TagManager:
   - WestWall
   - NorthWall
   - SouthWall
+  - Pick Up
+  - Ground
+  - GroundPlane
   layers:
   - Default
   - TransparentFX
