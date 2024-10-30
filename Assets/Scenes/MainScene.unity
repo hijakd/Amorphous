@@ -155,8 +155,6 @@ MonoBehaviour:
     type: 3}
   floorTile2: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
     type: 3}
-  mazeCell: {fileID: 1456626071757749188, guid: dd8f4f433d2007648b9ebd049382923d,
-    type: 3}
   wallPanels:
   - {fileID: 1947273285586917020, guid: dce1e17de8142fa4cb420b081468d73f, type: 3}
   - {fileID: 7754419566860733638, guid: 3d5bb6f788317c74eaf67fa3a2010c07, type: 3}
@@ -175,16 +173,6 @@ MonoBehaviour:
   restartButton: {fileID: 425114794}
   titleScreen: {fileID: 0}
   randomVariance: 0.42
-  cardinals: []
-  selectableCoords: []
-  intersections: []
-  drawnPath: []
-  shortenedList: []
-  slicedPath: []
-  distances: 
-  lcms: 
-  destinations: []
-  midPoints: []
 --- !u!4 &103129383
 Transform:
   m_ObjectHideFlags: 0

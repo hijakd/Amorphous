@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour {
     public GameObject player;
     public GameObject floorTile;
     public GameObject floorTile2;
-    public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
+    public static GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     public int gridHeight;
     public int gridWidth;
     public List<GameObject> waypoints;
@@ -264,15 +264,15 @@ public class GameManager : MonoBehaviour {
 
 
         /* find the first row of the maze grid */
-        slicedPath = SliceListRows(drawnPath, halfHeight); // height gives the rows
+        slicedPath = SliceNSort.SliceListRows(drawnPath, halfHeight); // height gives the rows
 
         rowNumber = FindFirstRow(slicedPath);
         
         while (rowNumber >= -halfHeight) {
             Debug.Log("looping rowNumber == " + rowNumber);
 
-            slicedPath = SliceListRows(drawnPath, rowNumber);
-            SpawnEastWestWalls(slicedPath);
+            slicedPath = SliceNSort.SliceListRows(drawnPath, rowNumber);
+            SpawnObject.SpawnEastWestWalls(slicedPath, gypMaterial);
             slicedPath.Clear();
             rowNumber--;
         }
@@ -280,14 +280,14 @@ public class GameManager : MonoBehaviour {
         /* delete contents of slicedPath to eliminate junk data in the next step */
         slicedPath.Clear();
         
-        slicedPath = SliceListColumns(drawnPath, halfWidth);
+        slicedPath = SliceNSort.SliceListColumns(drawnPath, halfWidth);
         columnNumber = FindFirstColumn(slicedPath);
         
         while (columnNumber >= -halfWidth) {
             Debug.Log("looping columnNumber == " + columnNumber);
 
-            slicedPath = SliceListColumns(drawnPath, columnNumber);
-            SpawnNorthSouthWalls(slicedPath);
+            slicedPath = SliceNSort.SliceListColumns(drawnPath, columnNumber);
+            SpawnObject.SpawnNorthSouthWalls(slicedPath, gypMaterial);
             slicedPath.Clear();
             columnNumber--;
         }
@@ -302,8 +302,6 @@ public class GameManager : MonoBehaviour {
     private int FindFirstRow(List<Vector3> list) {
         // Debug.Log("Finding first row");
         int rowNumber = Mathf.RoundToInt(list[0].z);
-
-        // Debug.Log("FFR rowNumber == " + rowNumber);
         return rowNumber;
     }
 
@@ -313,153 +311,7 @@ public class GameManager : MonoBehaviour {
         return columnNumber;
     }
 
-    /* Spawn the east & west walls across a given row of the maze path */
-    private void SpawnEastWestWalls(List<Vector3> path) {
-        Debug.Log("Spawning East/West Walls");
-
-        for (int i = 0; i < path.Count; i++) {
-            if (i == 0) {
-                /* spawn the first west wall of the row */
-                SpawnObject.Spawn(wallPanels[3], path[i], gypMaterial);
-            }
-            else if (path[i - 1].x < path[i].x - 1) {
-                /* spawn west wall at end of a break in the row */
-                SpawnObject.Spawn(wallPanels[3], path[i], gypMaterial);
-            }
-            else if (i == path.Count - 1) {
-                /* spawn the last east wall of the row if the list ends before the boundary */
-                SpawnObject.Spawn(wallPanels[1], path[i], gypMaterial);
-            }
-        }
-
-        /* reserving the List to spawn the east walls */
-        path.Reverse();
-
-        for (int j = 0; j < path.Count; j++) {
-            if (j == 0) {
-                /* spawn the last east wall of the row */
-                SpawnObject.Spawn(wallPanels[1], path[j], gypMaterial);
-            }
-            else if (path[j - 1].x > path[j].x + 1) {
-                /* spawn east wall at end of a break in the row */
-                SpawnObject.Spawn(wallPanels[1], path[j], gypMaterial);
-            }
-        }
-    }
-
-    /* Spawn the north & south walls along a given column of the maze path */
-    private void SpawnNorthSouthWalls(List<Vector3> path) {
-        Debug.Log("Spawning North/South Walls");
-        for (int i = 0; i < path.Count; i++) {
-            if (i == 0) {
-                /* spawn the first north wall of the row */
-                SpawnObject.Spawn(wallPanels[2], path[i], gypMaterial);
-            }
-            else if (path[i - 1].z < path[i].z - 1) {
-                /* spawn north wall at end of a break in the row */
-                SpawnObject.Spawn(wallPanels[2], path[i], gypMaterial);
-            }
-            else if (i == path.Count - 1) {
-                /* spawn the last south wall of the row if the list ends before the boundary */
-                SpawnObject.Spawn(wallPanels[0], path[i], gypMaterial);
-            }
-        }
-
-        /* reserving the List to spawn the east walls */
-        path.Reverse();
-
-        for (int j = 0; j < path.Count; j++) {
-            if (j == 0) {
-                /* spawn the last south wall of the row */
-                SpawnObject.Spawn(wallPanels[0], path[j], gypMaterial);
-            }
-            else if (path[j - 1].z > path[j].z + 1) {
-                /* spawn south wall at end of a break in the row */
-                SpawnObject.Spawn(wallPanels[0], path[j], gypMaterial);
-            }
-        }
-    }
-
-    /* return a sorted slice/portion of the path array at a given row of the maze grid */
-    private List<Vector3> SliceListRows(List<Vector3> path, int row) {
-        int slicingCount = 0;
-        List<Vector3> slice = new List<Vector3>();
-        List<Vector3> sortedSlice = new List<Vector3>();
-
-        Debug.Log("Slicing rows List");
-        while (slicingCount < path.Count) {
-            if (path[slicingCount].z == row) {
-                slice.Add(path[slicingCount]);
-            }
-
-            slicingCount++;
-        }
-
-        sortedSlice = SortListRows(slice, Mathf.RoundToInt(xMinMax.x));
-        return sortedSlice;
-    }
-
-    /* return a sorted slice/portion of the path array at a given column of the maze grid */
-    private List<Vector3> SliceListColumns(List<Vector3> path, int column) {
-        int slicingCount = 0;
-        List<Vector3> slice = new List<Vector3>();
-        List<Vector3> sortedSlice = new List<Vector3>();
-
-        Debug.Log("Slicing columns List");
-        while (slicingCount < path.Count) {
-            if (path[slicingCount].x == column) {
-                slice.Add(path[slicingCount]);
-            }
-
-            slicingCount++;
-        }
-
-        sortedSlice = SortListColumns(slice, Mathf.RoundToInt(yMinMax.x));
-
-        return sortedSlice;
-    }
-
-    /* for sorting an array slice based on X axis */
-    private List<Vector3> SortListRows(List<Vector3> list, int lowestValue) {
-        List<Vector3> sorted = new List<Vector3>();
-        // int lowest = Mathf.RoundToInt(xMinMax.x);
-        int sortingCount = 0;
-        int listSize = list.Count;
-
-        Debug.Log("Sorting Sliced List");
-        while (sortingCount < listSize) {
-            for (int i = 0; i < listSize; i++) {
-                if (list[i].x == lowestValue) {
-                    sorted.Add(list[i]);
-                    sortingCount++;
-                }
-            }
-
-            lowestValue++;
-        }
-
-        return sorted;
-    }
-
-    /* for sorting an array slice based on Z axis */
-    private List<Vector3> SortListColumns(List<Vector3> list, int lowestValue) {
-        List<Vector3> sorted = new List<Vector3>();
-        int sortingCount = 0;
-        int listSize = list.Count;
-
-        while (sortingCount < listSize) {
-            for (int i = 0; i < listSize; i++) {
-                if (list[i].z == lowestValue) {
-                    sorted.Add(list[i]);
-                    sortingCount++;
-                }
-            }
-
-            lowestValue++;
-        }
-        return sorted;
-    }
-
+    
     private void ResetCount() {
         count = 0;
     }
