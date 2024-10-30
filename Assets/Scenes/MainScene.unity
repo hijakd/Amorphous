@@ -175,18 +175,10 @@ MonoBehaviour:
   restartButton: {fileID: 425114794}
   titleScreen: {fileID: 0}
   randomVariance: 0.42
-  cardinals:
-  - {fileID: 4148244526285827355, guid: 74873c4dd0d3ce543bc9fc5afa183190, type: 3}
-  - {fileID: 3113399133684136916, guid: 4d9c89b80fe286744aaa794da5d01acc, type: 3}
-  - {fileID: 3113399133684136916, guid: 37a57cb0709d0c047b98aa801098b98c, type: 3}
-  - {fileID: 3213665459922966523, guid: f7f1ac272a0109b49acc3e9e073ef6a3, type: 3}
+  cardinals: []
   selectableCoords: []
   intersections: []
   drawnPath: []
-  drawnWalls: []
-  horizontalWalls: []
-  horizontalWalls2: []
-  verticalWalls: []
   shortenedList: []
   slicedPath: []
   distances: 

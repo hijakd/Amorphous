@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour {
     public GameObject player;
     public GameObject floorTile;
     public GameObject floorTile2;
-    public GameObject mazeCell;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     public int gridHeight;
     public int gridWidth;
@@ -24,50 +23,47 @@ public class GameManager : MonoBehaviour {
     public Button restartButton;
     public GameObject titleScreen;
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
-
-    [SerializeField] private List<GameObject> cardinals;
-    [SerializeField] private List<Vector3> selectableCoords;
-    [SerializeField] private List<Vector3> intersections;
-    [SerializeField] private List<Vector3> drawnPath;
-    [SerializeField] private List<Vector3> drawnWalls;
-    [SerializeField] private List<Vector3> horizontalWalls;
-    [SerializeField] private List<Vector3> horizontalWalls2;
-    [SerializeField] private List<Vector3> verticalWalls;
-    [SerializeField] private List<Vector3> shortenedList;
-    [SerializeField] private List<Vector3> slicedPath;
-
+    public static Vector2 xMinMax;
+    public static Vector2 yMinMax;
+    
+    private List<GameObject> cardinals;
+    private List<Vector3> selectableCoords;
+    private List<Vector3> intersections;
+    private List<Vector3> drawnPath;
+    private List<Vector3> shortenedList;
+    private List<Vector3> slicedPath;
+    private float xVal;
+    private float zVal;
+    private int count;
     private int halfHeight;
     private int halfWidth;
-    private int count;
-    [SerializeField] private List<int> distances;
     private int distance02;
     private int farCornerDistance;
     private int lcm01;
     private int lcm02;
     private int lcm03;
     private int combinedLCM;
-    int rowNumber;
-    int columnNumber;
-    float xVal;
-    float zVal;
-    [SerializeField] private List<int> lcms;
-    private Vector3 spawnPosition;
+    private int rowNumber;
+    private int columnNumber;
+    private List<int> distances;
+    private List<int> lcms;
+    private Vector2 randVariance;
+    private Vector3 farthestCorner;
     private Vector3 goalPosition;
-    [SerializeField] private List<Vector3> destinations;
-    [SerializeField] private List<Vector3> midPoints;
     private Vector3 pyramidPos;
     private Vector3 pyramidPos02;
-    private Vector3 farthestCorner;
-    public static Vector2 xMinMax;
-    public static Vector2 yMinMax;
-    private Vector2 randVariance;
-    MazeCell[] maze;
-    Material obsMaterial;               // added for testing
-    Material gypMaterial;               // added for testing
-    Material purpleMaterial;            // added for testing
-    Material pinkMaterial;              // added for testing
-    Material blueMaterial;              // added for testing
-    Material greenMaterial;             // added for testing
+    private Vector3 spawnPosition;
+    private List<Vector3> destinations;
+    private List<Vector3> midPoints;
+    
+    private Material obsMaterial;               // added for testing
+    private Material gypMaterial;               // added for testing
+    private Material purpleMaterial;            // added for testing
+    private Material pinkMaterial;              // added for testing
+    private Material blueMaterial;              // added for testing
+    private Material greenMaterial;             // added for testing
+    private MazeCell[] maze;
+    
 
 
     private void OnDrawGizmos() {
@@ -96,6 +92,17 @@ public class GameManager : MonoBehaviour {
         xMinMax.y = halfWidth;
         yMinMax.x = -halfHeight;
         yMinMax.y = halfHeight;
+        
+        cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
+        selectableCoords = new List<Vector3>();
+        intersections = new List<Vector3>();
+        drawnPath = new List<Vector3>();
+        shortenedList = new List<Vector3>();
+        slicedPath = new List<Vector3>();
+        distances = new List<int>();
+        lcms = new List<int>();
+        destinations = new List<Vector3>();
+        midPoints = new List<Vector3>();
 
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
