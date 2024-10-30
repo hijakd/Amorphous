@@ -171,8 +171,7 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < midPoints.Count; i++) {
             lcms.Add(FindLcms(midPoints[i], distances[i]));
         }
-
-
+        
         ResetCount();
         intersections.Add(spawnPosition);
         Triangulate(lcms[0]);
@@ -195,7 +194,6 @@ public class GameManager : MonoBehaviour {
 
         /* delete contents of shortenedList to save unnecessary use of memory */
         shortenedList.Clear();
-
 
         ResetCount();
         while (count < intersections.Count) {
@@ -250,27 +248,21 @@ public class GameManager : MonoBehaviour {
         /* delete contents of shortenedList to save unnecessary use of memory */
         shortenedList.Clear();
 
-        /* ... */
-
-        /* ... */
-
         /* spawn floor tiles */
         ResetCount();
         while (count < drawnPath.Count) {
             SpawnObject.Spawn(floorTile2, drawnPath[count]);
             count++;
         }
-        
-
 
         /* find the first row of the maze grid */
-        slicedPath = SliceNSort.SliceListRows(drawnPath, halfHeight); // height gives the rows
-
+        slicedPath = SliceNSort.SliceListRows(drawnPath, halfHeight); // height gives the number of rows
+        /* find the value of the first row */
         rowNumber = FindFirstRow(slicedPath);
         
+        /* Spawn the east/west walls */
         while (rowNumber >= -halfHeight) {
-            Debug.Log("looping rowNumber == " + rowNumber);
-
+            // Debug.Log("looping rowNumber == " + rowNumber);
             slicedPath = SliceNSort.SliceListRows(drawnPath, rowNumber);
             SpawnObject.SpawnEastWestWalls(slicedPath, gypMaterial);
             slicedPath.Clear();
@@ -280,12 +272,13 @@ public class GameManager : MonoBehaviour {
         /* delete contents of slicedPath to eliminate junk data in the next step */
         slicedPath.Clear();
         
-        slicedPath = SliceNSort.SliceListColumns(drawnPath, halfWidth);
+        slicedPath = SliceNSort.SliceListColumns(drawnPath, halfWidth); // width gives the number of columns
+        /* find the value of the first column */
         columnNumber = FindFirstColumn(slicedPath);
         
+        /* Spawn the north/south walls */
         while (columnNumber >= -halfWidth) {
-            Debug.Log("looping columnNumber == " + columnNumber);
-
+            // Debug.Log("looping columnNumber == " + columnNumber);
             slicedPath = SliceNSort.SliceListColumns(drawnPath, columnNumber);
             SpawnObject.SpawnNorthSouthWalls(slicedPath, gypMaterial);
             slicedPath.Clear();
