@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -25,7 +23,7 @@ public class GameManager : MonoBehaviour {
     public bool isGameActive;
     public Button restartButton;
     public GameObject titleScreen;
-    [UnityEngine.Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
+    [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
 
     [SerializeField] private List<GameObject> cardinals;
     [SerializeField] private List<Vector3> selectableCoords;
@@ -64,12 +62,12 @@ public class GameManager : MonoBehaviour {
     public static Vector2 yMinMax;
     private Vector2 randVariance;
     MazeCell[] maze;
-    Material obsMaterial;
-    Material gypMaterial;
-    Material purpleMaterial;
-    Material pinkMaterial;
-    Material blueMaterial;
-    Material greenMaterial;
+    Material obsMaterial;               // added for testing
+    Material gypMaterial;               // added for testing
+    Material purpleMaterial;            // added for testing
+    Material pinkMaterial;              // added for testing
+    Material blueMaterial;              // added for testing
+    Material greenMaterial;             // added for testing
 
 
     private void OnDrawGizmos() {
@@ -102,14 +100,12 @@ public class GameManager : MonoBehaviour {
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
 
-        obsMaterial = Resources.Load<Material>("Materials/OBS_Mat");
-        gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
-        purpleMaterial = Resources.Load<Material>("Materials/Purple_Mat");
-        pinkMaterial = Resources.Load<Material>("Materials/Pink_Mat");
-        blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat");
-        greenMaterial = Resources.Load<Material>("Materials/Green_Mat");
-
-        // obsMaterial = GetComponent<Renderer>().material;
+        obsMaterial = Resources.Load<Material>("Materials/OBS_Mat");                // added for testing
+        gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat");            // added for testing
+        purpleMaterial = Resources.Load<Material>("Materials/Purple_Mat");          // added for testing
+        pinkMaterial = Resources.Load<Material>("Materials/Pink_Mat");              // added for testing
+        blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat");      // added for testing
+        greenMaterial = Resources.Load<Material>("Materials/Green_Mat");            // added for testing
 
 
         /* cardinals are the corners of the grid & used for boundary calculations */
@@ -154,6 +150,9 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
+        
+        /** TODO: possibly add an array of alike materials to randomly select from for use on the walls **/
+        
         // SpawnObject.Spawn(player, spawnPosition);
         player.transform.position = spawnPosition;
         SpawnObject.Spawn(goalObject, goalPosition);
@@ -252,38 +251,16 @@ public class GameManager : MonoBehaviour {
         ResetCount();
         while (count < drawnPath.Count) {
             SpawnObject.Spawn(floorTile2, drawnPath[count]);
-
-            // SpawnObject.Spawn(mazeCell, drawnPath[count]);
             count++;
         }
-
-        // ResetCount();
-        // while (count < drawnPath.Count) {
-        //     maze = new MazeCell[Mathf.RoundToInt(drawnPath[count].x), Mathf.RoundToInt(drawnPath[count].z)];
-        //     count++;
-        // }
+        
 
 
-        /* currently this checks only the first row of the maze grid */
-        /* will need to use this in a loop to process the entire grid */
+        /* find the first row of the maze grid */
         slicedPath = SliceListRows(drawnPath, halfHeight); // height gives the rows
 
         rowNumber = FindFirstRow(slicedPath);
         
-        // Debug.Log("rowNumber == " + rowNumber + 
-        //           "\ncolumnNumber == " + columnNumber);
-
-        /* Spawn the "north" walls of the first row */
-        /* currently this will only spawn for the first grid row */
-        for (int i = 0; i < slicedPath.Count; i++) {
-            SpawnObject.Spawn(wallPanels[0], slicedPath[i], gypMaterial);
-        }
-
-        SpawnEastWestWalls(slicedPath);
-
-        rowNumber--;
-
-
         while (rowNumber >= -halfHeight) {
             Debug.Log("looping rowNumber == " + rowNumber);
 
@@ -292,6 +269,9 @@ public class GameManager : MonoBehaviour {
             slicedPath.Clear();
             rowNumber--;
         }
+        
+        /* delete contents of slicedPath to eliminate junk data in the next step */
+        slicedPath.Clear();
         
         slicedPath = SliceListColumns(drawnPath, halfWidth);
         columnNumber = FindFirstColumn(slicedPath);
@@ -337,7 +317,7 @@ public class GameManager : MonoBehaviour {
             }
             else if (path[i - 1].x < path[i].x - 1) {
                 /* spawn west wall at end of a break in the row */
-                SpawnObject.Spawn(wallPanels[3], path[i], blueMaterial);
+                SpawnObject.Spawn(wallPanels[3], path[i], gypMaterial);
             }
             else if (i == path.Count - 1) {
                 /* spawn the last east wall of the row if the list ends before the boundary */
@@ -351,29 +331,30 @@ public class GameManager : MonoBehaviour {
         for (int j = 0; j < path.Count; j++) {
             if (j == 0) {
                 /* spawn the last east wall of the row */
-                SpawnObject.Spawn(wallPanels[1], path[j], obsMaterial);
+                SpawnObject.Spawn(wallPanels[1], path[j], gypMaterial);
             }
             else if (path[j - 1].x > path[j].x + 1) {
                 /* spawn east wall at end of a break in the row */
-                SpawnObject.Spawn(wallPanels[1], path[j], greenMaterial);
+                SpawnObject.Spawn(wallPanels[1], path[j], gypMaterial);
             }
         }
     }
 
+    /* Spawn the north & south walls along a given column of the maze path */
     private void SpawnNorthSouthWalls(List<Vector3> path) {
         Debug.Log("Spawning North/South Walls");
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
                 /* spawn the first north wall of the row */
-                SpawnObject.Spawn(wallPanels[0], path[i], gypMaterial);
+                SpawnObject.Spawn(wallPanels[2], path[i], gypMaterial);
             }
             else if (path[i - 1].z < path[i].z - 1) {
                 /* spawn north wall at end of a break in the row */
-                SpawnObject.Spawn(wallPanels[0], path[i], blueMaterial);
+                SpawnObject.Spawn(wallPanels[2], path[i], gypMaterial);
             }
             else if (i == path.Count - 1) {
                 /* spawn the last south wall of the row if the list ends before the boundary */
-                SpawnObject.Spawn(wallPanels[2], path[i], gypMaterial);
+                SpawnObject.Spawn(wallPanels[0], path[i], gypMaterial);
             }
         }
 
@@ -383,15 +364,16 @@ public class GameManager : MonoBehaviour {
         for (int j = 0; j < path.Count; j++) {
             if (j == 0) {
                 /* spawn the last south wall of the row */
-                SpawnObject.Spawn(wallPanels[2], path[j], obsMaterial);
+                SpawnObject.Spawn(wallPanels[0], path[j], gypMaterial);
             }
             else if (path[j - 1].z > path[j].z + 1) {
                 /* spawn south wall at end of a break in the row */
-                SpawnObject.Spawn(wallPanels[2], path[j], greenMaterial);
+                SpawnObject.Spawn(wallPanels[0], path[j], gypMaterial);
             }
         }
     }
 
+    /* return a sorted slice/portion of the path array at a given row of the maze grid */
     private List<Vector3> SliceListRows(List<Vector3> path, int row) {
         int slicingCount = 0;
         List<Vector3> slice = new List<Vector3>();
@@ -406,10 +388,11 @@ public class GameManager : MonoBehaviour {
             slicingCount++;
         }
 
-        sortedSlice = SortList(slice, Mathf.RoundToInt(xMinMax.x));
+        sortedSlice = SortListRows(slice, Mathf.RoundToInt(xMinMax.x));
         return sortedSlice;
     }
 
+    /* return a sorted slice/portion of the path array at a given column of the maze grid */
     private List<Vector3> SliceListColumns(List<Vector3> path, int column) {
         int slicingCount = 0;
         List<Vector3> slice = new List<Vector3>();
@@ -424,12 +407,13 @@ public class GameManager : MonoBehaviour {
             slicingCount++;
         }
 
-        sortedSlice = SortList(slice, Mathf.RoundToInt(yMinMax.x));
+        sortedSlice = SortListColumns(slice, Mathf.RoundToInt(yMinMax.x));
 
         return sortedSlice;
     }
 
-    private List<Vector3> SortList(List<Vector3> list, int lowest) {
+    /* for sorting an array slice based on X axis */
+    private List<Vector3> SortListRows(List<Vector3> list, int lowestValue) {
         List<Vector3> sorted = new List<Vector3>();
         // int lowest = Mathf.RoundToInt(xMinMax.x);
         int sortingCount = 0;
@@ -438,15 +422,34 @@ public class GameManager : MonoBehaviour {
         Debug.Log("Sorting Sliced List");
         while (sortingCount < listSize) {
             for (int i = 0; i < listSize; i++) {
-                if (list[i].x == lowest) {
+                if (list[i].x == lowestValue) {
                     sorted.Add(list[i]);
                     sortingCount++;
                 }
             }
 
-            lowest++;
+            lowestValue++;
         }
 
+        return sorted;
+    }
+
+    /* for sorting an array slice based on Z axis */
+    private List<Vector3> SortListColumns(List<Vector3> list, int lowestValue) {
+        List<Vector3> sorted = new List<Vector3>();
+        int sortingCount = 0;
+        int listSize = list.Count;
+
+        while (sortingCount < listSize) {
+            for (int i = 0; i < listSize; i++) {
+                if (list[i].z == lowestValue) {
+                    sorted.Add(list[i]);
+                    sortingCount++;
+                }
+            }
+
+            lowestValue++;
+        }
         return sorted;
     }
 
@@ -454,6 +457,7 @@ public class GameManager : MonoBehaviour {
         count = 0;
     }
 
+    /* Find an approximate centre between two points */
     private void Triangulate(int lcm) {
         while (count < lcm) {
             int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
@@ -521,7 +525,8 @@ public class GameManager : MonoBehaviour {
         titleScreen.gameObject.SetActive(false);
     }*/
 
-    public List<Vector3> scanForHorizontalBoundaries(List<Vector3> boundaries) {
+    /*
+     public List<Vector3> scanForHorizontalBoundaries(List<Vector3> boundaries) {
         int xValueTemp = Mathf.RoundToInt(boundaries[0].x);
         int xValueCounter = 0;
         int i = 0;
@@ -543,5 +548,6 @@ public class GameManager : MonoBehaviour {
 
         return boundariesList;
     }
+    */
 
 }
