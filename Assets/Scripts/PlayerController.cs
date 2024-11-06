@@ -73,7 +73,10 @@ public class PlayerController : MonoBehaviour {
         if (other.gameObject.CompareTag("Goal")) {
             Debug.Log("Found the Goal");
         }
+        
     }
+    
+    
 
     private void SendMessage(Vector2 coordinates) {
         Debug.Log("Thumb-stick coordinates = " + coordinates);
@@ -98,6 +101,17 @@ public class PlayerController : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Pick Up")) {
             other.gameObject.SetActive(false);
+        }
+        
+        if (other.gameObject.CompareTag("Waypoint")) {
+            Debug.Log("Found a Waypoint");
+            // var otherParticle = other.gameObject.GetComponentInChildren<ParticleSystem>();
+            // otherParticle.Play();
+        }
+        if (other.gameObject.CompareTag("Goal")) {
+            Debug.Log("Found the Goal");
+            // var otherParticle = other.gameObject.GetComponentInChildren<ParticleSystem>();
+            // otherParticle.Play();
         }
     }
 

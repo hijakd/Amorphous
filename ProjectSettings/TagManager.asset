@@ -19,6 +19,7 @@ TagManager:
   - Pick Up
   - Ground
   - GroundPlane
+  - Waypoint
   layers:
   - Default
   - TransparentFX

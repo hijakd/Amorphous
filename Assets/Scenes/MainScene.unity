@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853c765da52fb624ebc28ca953f89032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goalObject: {fileID: 322872540526578377, guid: 19733a7e47aeda94b9bd3576807b2240,
+  goalObject: {fileID: 5677207750639347875, guid: 2122cf9eaa9b0ea439e1ba1188161890,
     type: 3}
   player: {fileID: 921098113}
   floorTile01: {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1,
@@ -163,10 +163,10 @@ MonoBehaviour:
   gridHeight: 80
   gridWidth: 80
   waypoints:
-  - {fileID: 4329182377450462915, guid: bff26bd175e17f44eac7118639ba40f7, type: 3}
-  - {fileID: 8938460807281594788, guid: a45ff90a3f2f8df4fbc1a63178e1a934, type: 3}
-  - {fileID: 322872540526578377, guid: 880e16bdba1ae0a4aa665bccdaa85c6e, type: 3}
-  - {fileID: 6906895470787378847, guid: e5f55014134b4ce409ea3c9f67b09c10, type: 3}
+  - {fileID: 1764451327423892652, guid: 644a18b7175da1543964aa9cbf67ee99, type: 3}
+  - {fileID: 300494864511345988, guid: 0c81ab301aa56cc41a7a633d846d8715, type: 3}
+  - {fileID: 1793636287016426436, guid: ad9bf061878a06c4087c4a79139a2768, type: 3}
+  - {fileID: 3098229123924119120, guid: 529b25dede5b6724099334f6760eabe0, type: 3}
   winText: {fileID: 1744664631}
   gameOverText: {fileID: 144824136}
   isGameActive: 0
