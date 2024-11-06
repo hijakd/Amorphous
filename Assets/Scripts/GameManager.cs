@@ -20,10 +20,11 @@ public class GameManager : MonoBehaviour {
     private GameObject groundPlane;
     public int gridHeight;
     public int gridWidth;
-    public List<GameObject> waypoints;
+    public List<GameObject> waypoints; 
     public TextMeshProUGUI winText;
     public TextMeshProUGUI gameOverText;
     public bool isGameActive;
+    public static bool goalFound;
     public Button restartButton;
     public GameObject titleScreen;
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
@@ -299,7 +300,10 @@ public class GameManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
+        if (goalFound) {
+            EndLevel();
+        }
     }
 
     /* find/return the value of the first row of the maze path */

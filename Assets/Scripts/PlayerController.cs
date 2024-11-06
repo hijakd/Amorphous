@@ -110,6 +110,8 @@ public class PlayerController : MonoBehaviour {
         }
         if (other.gameObject.CompareTag("Goal")) {
             Debug.Log("Found the Goal");
+            GameManager.goalFound = true;
+
             // var otherParticle = other.gameObject.GetComponentInChildren<ParticleSystem>();
             // otherParticle.Play();
         }
