@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
     public GameObject floorTile01;
     public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
+    private GameObject groundPlane;
     public int gridHeight;
     public int gridWidth;
     public List<GameObject> waypoints;
@@ -71,9 +72,10 @@ public class GameManager : MonoBehaviour {
 
     private void OnDrawGizmos() {
         // visualize the corners of the grid in the Editor
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
         Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
+        Gizmos.color = Color.red;
         Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
         Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f));
 
@@ -89,6 +91,8 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Awake() {
+        groundPlane = GameObject.Find("GroundPlane");
+        
         halfHeight = gridHeight / 2;
         halfWidth = gridWidth / 2;
         xMinMax.x = -halfWidth;
@@ -160,6 +164,8 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
+        
+        groundPlane.gameObject.SetActive(false);
         
         /** TODO: possibly add an array of alike materials to randomly select from for use on the walls **/
         

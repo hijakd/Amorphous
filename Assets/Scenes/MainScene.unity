@@ -151,9 +151,9 @@ MonoBehaviour:
   goalObject: {fileID: 322872540526578377, guid: 19733a7e47aeda94b9bd3576807b2240,
     type: 3}
   player: {fileID: 921098113}
-  floorTile: {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1,
+  floorTile01: {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1,
     type: 3}
-  floorTile2: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
+  floorTile02: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
     type: 3}
   wallPanels:
   - {fileID: 1947273285586917020, guid: dce1e17de8142fa4cb420b081468d73f, type: 3}
@@ -910,13 +910,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3993035926326769355, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
+      propertyPath: speed
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3993035926326769355, guid: 20f7eff89049281498ab87b25e6ce7c7,
+        type: 3}
       propertyPath: camera
       value: 
       objectReference: {fileID: 4960613510451943363}
+    - target: {fileID: 3993035926326769355, guid: 20f7eff89049281498ab87b25e6ce7c7,
+        type: 3}
+      propertyPath: lookSpeed
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 5907710679276863060, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427594764396996826, guid: 20f7eff89049281498ab87b25e6ce7c7,
+        type: 3}
+      propertyPath: m_Drag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427594764396996826, guid: 20f7eff89049281498ab87b25e6ce7c7,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 8633637255975074103, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
@@ -997,7 +1017,7 @@ GameObject:
   - component: {fileID: 1406682497}
   - component: {fileID: 1406682496}
   m_Layer: 0
-  m_Name: Ground
+  m_Name: GroundPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
