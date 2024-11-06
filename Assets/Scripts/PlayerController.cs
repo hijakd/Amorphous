@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour {
     private float movez;
     public float speed = 10;
     public float rotationSpeed = 10;
-    public float lookSpeed = 100;
+    public float lookSpeed = 10;
     
     void Awake() {
         playerRb = GetComponent<Rigidbody>();
@@ -105,15 +105,10 @@ public class PlayerController : MonoBehaviour {
         
         if (other.gameObject.CompareTag("Waypoint")) {
             Debug.Log("Found a Waypoint");
-            // var otherParticle = other.gameObject.GetComponentInChildren<ParticleSystem>();
-            // otherParticle.Play();
         }
         if (other.gameObject.CompareTag("Goal")) {
             Debug.Log("Found the Goal");
             GameManager.goalFound = true;
-
-            // var otherParticle = other.gameObject.GetComponentInChildren<ParticleSystem>();
-            // otherParticle.Play();
         }
     }
 

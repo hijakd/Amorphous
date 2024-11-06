@@ -1,23 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BarrierOpener : MonoBehaviour
 {
-    
-    // GameObject playerObject;
-    
-    // private void OnCollisionEnter(Collision other) {
-    //     if (other.gameObject.CompareTag("Player")) {
-    //         // other.GetComponent<Renderer>().material.color = gameObject.GetComponent<Material>().color;
-    //         gameObject.GetComponentInChildren<ParticleSystem>().gameObject.SetActive(true);
-    //         
-    //     }
-    // }
-    
+    /* TODO: set a flag/value for "unlocking the barriers" & enable  win conditions on the goal for the player  */
+    /* using the Particle effect on the waypoint to prove/test the player triggering an action */
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Player")) {
-            // other.GetComponent<Renderer>().material.color = gameObject.GetComponent<Material>().color;
+            
             gameObject.GetComponentInChildren<ParticleSystem>().Play();
             
         }
