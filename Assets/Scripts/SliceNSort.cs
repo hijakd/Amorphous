@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+// ReSharper disable CompareOfFloatsByEqualityOperator
+// ReSharper disable RedundantAssignment
 
 public class SliceNSort : MonoBehaviour {
 
@@ -38,7 +40,7 @@ public class SliceNSort : MonoBehaviour {
     }
 
     /* for sorting an array slice based on X axis */
-    public static List<Vector3> SortListRows(List<Vector3> list, int lowestValue) {
+    private static List<Vector3> SortListRows(List<Vector3> list, int lowestValue) {
         List<Vector3> sorted = new List<Vector3>();
         int sortingCount = 0;
         int listSize = list.Count;

@@ -1,4 +1,5 @@
 using UnityEngine;
+// ReSharper disable CompareOfFloatsByEqualityOperator
 
 public class Triangulation : MonoBehaviour {
 
@@ -85,7 +86,7 @@ public class Triangulation : MonoBehaviour {
 
     /* check if positionB is ahead/north of positonA & by how far */
     public static bool IsItForward(Vector3 position01, Vector3 position02) {
-        if (vertAligned == true) {
+        if (vertAligned) {
             if (position01.z < position02.z) {
                 vertDistance = Mathf.RoundToInt(position02.z - position01.z);
                 // Debug.Log("Triangulating vertDistance: " + vertDistance);
@@ -108,7 +109,7 @@ public class Triangulation : MonoBehaviour {
 
     /* check if positionB is right/east of positonA & by how far */
     public static bool IsItRight(Vector3 position01, Vector3 position02) {
-        if (horizAligned == true) {
+        if (horizAligned) {
             if (position01.x < position02.x) {
                 horizDistance = Mathf.RoundToInt(position02.x - position01.x);
                 // Debug.Log("Triangulating horizDistance: " + horizDistance);
@@ -130,7 +131,7 @@ public class Triangulation : MonoBehaviour {
     }
 
     public static int HorizontalDistance(Vector3 position01, Vector3 position02) {
-        if (horizAligned == true) {
+        if (horizAligned) {
             if (position01.x < position02.x) {
                 horizDistance = Mathf.RoundToInt(position02.x - position01.x);
                 // Debug.Log("Triangulating horizDistance: " + horizDistance);
@@ -152,7 +153,7 @@ public class Triangulation : MonoBehaviour {
     }
 
     public static int VerticalDistance(Vector3 position01, Vector3 position02) {
-        if (vertAligned == true) {
+        if (vertAligned) {
             if (position01.z < position02.z) {
                 vertDistance = Mathf.RoundToInt(position02.z - position01.z);
                 // Debug.Log("Triangulating vertDistance: " + vertDistance);
