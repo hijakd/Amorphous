@@ -117,11 +117,10 @@ public class GameManager : MonoBehaviour {
 
         obsMaterial = Resources.Load<Material>("Materials/OBS_Mat");                // added for testing
         gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat");            // added for testing
-        purpleMaterial = Resources.Load<Material>("Materials/Purple_Mat");          // added for testing
-        pinkMaterial = Resources.Load<Material>("Materials/Pink_Mat");              // added for testing
+        purpleMaterial = Resources.Load<Material>("Materials/Matt_Purple_Mat");     // added for testing
+        pinkMaterial = Resources.Load<Material>("Materials/Matt_Pink_Mat");         // added for testing
         blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat");      // added for testing
-        greenMaterial = Resources.Load<Material>("Materials/Green_Mat");            // added for testing
-
+        greenMaterial = Resources.Load<Material>("Materials/Matt_Green_Mat");       // added for testing
 
         /* cardinals are the corners of the grid & used for boundary calculations */
         // cardinals.Capacity = 4;
@@ -283,6 +282,7 @@ public class GameManager : MonoBehaviour {
         /* delete contents of slicedPath to eliminate junk data in the next step */
         slicedPath.Clear();
         
+        /* find the first column of the maze grid */
         slicedPath = SliceNSort.SliceListColumns(drawnPath, halfWidth); // width gives the number of columns
         /* find the value of the first column */
         columnNumber = FindFirstColumn(slicedPath);
@@ -305,6 +305,9 @@ public class GameManager : MonoBehaviour {
             EndLevel();
         }
     }
+    
+    
+    /** Utility functions for the GameManager **/
 
     /* find/return the value of the first row of the maze path */
     private int FindFirstRow(List<Vector3> list) {
@@ -377,6 +380,7 @@ public class GameManager : MonoBehaviour {
     public void EndLevel() {
         Debug.Log("display winText");
         winText.gameObject.SetActive(true);
+        restartButton.gameObject.SetActive(true);
     }
 
     public void RestartGame() {
@@ -393,30 +397,5 @@ public class GameManager : MonoBehaviour {
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);
     }*/
-
-    /*
-     public List<Vector3> scanForHorizontalBoundaries(List<Vector3> boundaries) {
-        int xValueTemp = Mathf.RoundToInt(boundaries[0].x);
-        int xValueCounter = 0;
-        int i = 0;
-        HashSet<Vector3> boundariesTemp = new HashSet<Vector3>();
-
-        boundariesTemp.Add(boundaries[0]);
-
-        while (xValueCounter < boundaries.Count) {
-            while (boundaries[i].x == xValueTemp) {
-                xValueCounter++;
-                i++;
-            }
-
-            boundariesTemp.Add(boundaries[xValueCounter]);
-            xValueTemp++;
-        }
-
-        List<Vector3> boundariesList = boundariesTemp.ToList();
-
-        return boundariesList;
-    }
-    */
-
+    
 }

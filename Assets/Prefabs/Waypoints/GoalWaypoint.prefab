@@ -41,12 +41,12 @@ PrefabInstance:
     - target: {fileID: 1702086607470497620, guid: 4ff2529bab3f4d7488b1e48662dc4ddc,
         type: 3}
       propertyPath: m_Name
-      value: Goal Waypoint
+      value: GoalWaypoint
       objectReference: {fileID: 0}
     - target: {fileID: 2037157906416693614, guid: 4ff2529bab3f4d7488b1e48662dc4ddc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 31
       objectReference: {fileID: 0}
     - target: {fileID: 2037157906416693614, guid: 4ff2529bab3f4d7488b1e48662dc4ddc,
         type: 3}
@@ -56,7 +56,7 @@ PrefabInstance:
     - target: {fileID: 2037157906416693614, guid: 4ff2529bab3f4d7488b1e48662dc4ddc,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -13
       objectReference: {fileID: 0}
     - target: {fileID: 2037157906416693614, guid: 4ff2529bab3f4d7488b1e48662dc4ddc,
         type: 3}
@@ -97,7 +97,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 8e694cd037deb7c48ad464111d2d9335, type: 2}
+      objectReference: {fileID: 2100000, guid: 583d41a454356d649907cb45337790ac, type: 2}
     - target: {fileID: 8960541557660758338, guid: 4ff2529bab3f4d7488b1e48662dc4ddc,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
