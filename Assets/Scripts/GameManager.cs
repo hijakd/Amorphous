@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour {
     private Material pinkMaterial;              // added for testing
     private Material blueMaterial;              // added for testing
     private Material greenMaterial;             // added for testing
+    private Material goalMaterial;
     private MazeCell[] maze;
     
 
@@ -322,7 +323,9 @@ public class GameManager : MonoBehaviour {
         return column;
     }
 
-    
+    private void BlendColours() {
+        
+    } 
     
     
     private void ResetCount() {
