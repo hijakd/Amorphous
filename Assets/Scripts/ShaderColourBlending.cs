@@ -1,22 +1,28 @@
+using System;
 using UnityEngine;
 
-public class ShaderColourBlending : MonoBehaviour
-{
-    private Material material;
+public class ShaderColourBlending : MonoBehaviour {
 
-    public void ResetWhite() {
-        material.SetColor("_Color", Color.white);
-    }
+    private static Material materialInstance;
     
-    public void ResetBlack() {
-        material.SetColor("_Color", Color.black);
+    private void Start() {
+        materialInstance = gameObject.GetComponent<Renderer>().material;
     }
 
-    public void BlendColour(Material otherMaterial) {
-        Color colour = Color.Lerp(material.color, otherMaterial.color, 0.5f); ;
-        
-        material.SetColor("_Colour", colour);
+    public static void ResetWhite() {
+        materialInstance.SetColor("_Color", Color.white);
     }
 
-    
+    public static void ResetBlack() {
+        materialInstance.SetColor("_Color", Color.black);
+    }
+
+    public static void BlendColour(Color otherColor) {
+        Color blendedColour = Color.Lerp(materialInstance.color, otherColor, 0.5f);
+        Debug.Log("Blending colours, " + otherColor + "\nblended colour is: " + blendedColour);
+        materialInstance.SetColor("_Color", blendedColour);
+
+    }
+
+
 }

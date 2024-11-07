@@ -160,8 +160,8 @@ MonoBehaviour:
   - {fileID: 7754419566860733638, guid: 3d5bb6f788317c74eaf67fa3a2010c07, type: 3}
   - {fileID: 3351476046705320498, guid: 83fd6a674b54a46469e0f4780426997e, type: 3}
   - {fileID: 1428840922709220998, guid: 0d7d4116c7c29f94db40815268bfe935, type: 3}
-  gridHeight: 80
-  gridWidth: 80
+  gridHeight: 40
+  gridWidth: 40
   waypoints:
   - {fileID: 5680095113538993511, guid: 0e44c59dcb0a4c041a41c42d57067127, type: 3}
   - {fileID: 1061367405469846895, guid: 6946421c02ac20941a7e4a38cfefeb0f, type: 3}

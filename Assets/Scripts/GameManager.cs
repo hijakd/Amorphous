@@ -162,6 +162,9 @@ public class GameManager : MonoBehaviour {
         midPoints.Add(Vector3.Lerp(destinations[1], destinations[2], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[2], destinations[3], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[3], goalPosition, 0.5f));
+
+        
+        
     }
 
     void Start() {
@@ -177,6 +180,8 @@ public class GameManager : MonoBehaviour {
         SpawnObject.Spawn(waypoints[1], destinations[1]);
         SpawnObject.Spawn(waypoints[2], destinations[2]);
         SpawnObject.Spawn(waypoints[3], destinations[3]);
+        
+        
 
         for (int i = 0; i < midPoints.Count; i++) {
             lcms.Add(FindLcms(midPoints[i], distances[i]));
@@ -297,6 +302,8 @@ public class GameManager : MonoBehaviour {
             slicedPath.Clear();
             columnNumber--;
         }
+        
+        ShaderColourBlending.ResetWhite();
         
     }
 

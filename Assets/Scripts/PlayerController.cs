@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,8 +37,9 @@ public class PlayerController : MonoBehaviour {
         focalPoint.transform.position = transform.position;
 
         // controls.Player.Look.performed += ctx => SendMessage(ctx.ReadValue<Vector2>());
+        
     }
-    
+
     void FixedUpdate()
     {
         /* get camera directional vectors & normalize them */
@@ -105,6 +105,9 @@ public class PlayerController : MonoBehaviour {
         
         if (other.gameObject.CompareTag("Waypoint")) {
             Debug.Log("Found a Waypoint");
+            Debug.Log("Waypoint colour is: " + other.gameObject.GetComponent<Renderer>().material.color);
+            ShaderColourBlending.BlendColour(other.gameObject.GetComponent<Renderer>().material.color);
+            
         }
         if (other.gameObject.CompareTag("Goal")) {
             Debug.Log("Found the Goal");
