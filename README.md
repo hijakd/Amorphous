@@ -1,7 +1,5 @@
 # Amorphous #
 
-----------
-
 A procedurally generated maze, this is intended to be maze puzzle type of game, inspired by "Archer Maclean's Mercury".
 
 There is intended to be some form of keys/waypoints that can be used to modify access to the goal of the level, such as finding a specific colour or blend of colour.
@@ -29,6 +27,14 @@ To unlock the goal, the player will need to find a specific colour or blend of c
 
 By collecting ColourBlobs the Players colour will change, this could be a swap of colours or a blending of colours, so they can access the goal.
 
+
+----------
+## TODO: ##
+
+* change camera implementation to make use of CineMachine, as this should have more flexibility & be more efficient than the current implementation. It may also address the issue of the player moving without providing input.
+
+* add function to randomise the wall materials from a list.
+ 
 
 ----------
 
