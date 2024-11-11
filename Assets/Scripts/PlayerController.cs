@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour {
         playerRb.AddForce(relativeMovement * speed * Time.deltaTime);
         focalPoint.transform.position = transform.position;
 
-        RotateCamera();
+        // RotateCamera();
         
         playerForwardText.text = "Forward: " + forwardMovement.ToString();
         playerRightText.text = "Right: " + rightMovement.ToString();
@@ -123,8 +123,8 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void RotateCamera() {
-        camera.transform.RotateAround(focalPoint.transform.position, Vector3.up, look.x);
-    }
+    // void RotateCamera() {
+    //     camera.transform.RotateAround(focalPoint.transform.position, Vector3.up, look.x);
+    // }
 
 }
