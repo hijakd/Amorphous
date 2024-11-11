@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,6 +26,9 @@ public class PlayerController : MonoBehaviour {
     public float speed = 10;
     public float rotationSpeed = 10;
     public float lookSpeed = 10;
+    public TextMeshProUGUI playerForwardText;
+    public TextMeshProUGUI playerRightText;
+    public TextMeshProUGUI relativeMovementText;
     
     void Awake() {
         playerRb = GetComponent<Rigidbody>();
@@ -59,6 +63,10 @@ public class PlayerController : MonoBehaviour {
         focalPoint.transform.position = transform.position;
 
         RotateCamera();
+        
+        playerForwardText.text = "Forward: " + forwardMovement.ToString();
+        playerRightText.text = "Right: " + rightMovement.ToString();
+        relativeMovementText.text = "Relative: " + relativeMovement.ToString();
     }
 
     private void OnEnable() {

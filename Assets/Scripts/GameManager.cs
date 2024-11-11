@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour {
     public List<GameObject> waypoints; 
     public TextMeshProUGUI winText;
     public TextMeshProUGUI gameOverText;
+    public TextMeshProUGUI clockText;
     public bool isGameActive;
     public static bool goalFound;
     public Button restartButton;
@@ -312,6 +313,8 @@ public class GameManager : MonoBehaviour {
         if (goalFound) {
             EndLevel();
         }
+        
+        clockText.text = DateTime.Now.ToString("HH:mm:ss");
     }
     
     
