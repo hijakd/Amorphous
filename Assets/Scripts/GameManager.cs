@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour {
     public TextMeshProUGUI winText;
     public TextMeshProUGUI gameOverText;
     public TextMeshProUGUI clockText;
+    public TextMeshProUGUI goalColourText;
+    public Button goalColourButton;
+    public Image goalColourPatch;
     public bool isGameActive;
     public static bool goalFound;
     public Button restartButton;
@@ -32,6 +35,8 @@ public class GameManager : MonoBehaviour {
     public static Vector2 xMinMax;
     public static Vector2 yMinMax;
     
+    private Color goalColor;
+    private ColorBlock goalColorBlock;
     private List<GameObject> cardinals;
     private List<Vector3> selectableCoords;
     private List<Vector3> intersections;
@@ -164,7 +169,13 @@ public class GameManager : MonoBehaviour {
         midPoints.Add(Vector3.Lerp(destinations[2], destinations[3], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[3], goalPosition, 0.5f));
 
+        goalColor = new Color(0, 0, 0);
+        for (int i = 0; i < waypoints.Count; i++) {
+            goalColor = Color.Lerp(goalColor, waypoints[i].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+        }
         
+        goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColor;
+        // goalColourPatch.GetComponent<Renderer>().color = goalColor;
         
     }
 
@@ -304,7 +315,7 @@ public class GameManager : MonoBehaviour {
             columnNumber--;
         }
         
-        ShaderColourBlending.ResetWhite();
+        // ShaderColourBlending.ResetWhite();
         
     }
 
@@ -315,6 +326,12 @@ public class GameManager : MonoBehaviour {
         }
         
         clockText.text = DateTime.Now.ToString("HH:mm:ss");
+        goalColourText.text = goalColor.ToString();
+        goalColourText.GetComponent<Text>().color = goalColor;
+        // goalColourButton.gameObject.GetComponent<Renderer>().material.color = goalColor;
+        // goalColorBlock = goalColourButton.colors;
+        goalColorBlock.normalColor = goalColor;
+        goalColourButton.colors = goalColorBlock;
     }
     
     

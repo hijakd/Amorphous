@@ -44,8 +44,7 @@ public class PlayerController : MonoBehaviour {
         
     }
 
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         /* get camera directional vectors & normalize them */
         cameraForward = camera.transform.forward;
         cameraRight = camera.transform.right;
