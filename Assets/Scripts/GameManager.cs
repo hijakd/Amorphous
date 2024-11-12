@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour {
     
     private Color goalColor;
     private ColorBlock goalColorBlock;
+    private List<Color> mixedColors;
     private List<GameObject> cardinals;
     private List<Vector3> selectableCoords;
     private List<Vector3> intersections;
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour {
     private int columnNumber;
     private List<int> distances;
     private List<int> lcms;
+    private String objectColour = ".gameObject.GetComponentInChildren<Renderer>().material.color";
     private Vector2 randVariance;
     private Vector3 farthestCorner;
     private Vector3 goalPosition;
@@ -118,6 +120,7 @@ public class GameManager : MonoBehaviour {
         lcms = new List<int>();
         destinations = new List<Vector3>();
         midPoints = new List<Vector3>();
+        mixedColors = new List<Color>();
 
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
@@ -169,10 +172,64 @@ public class GameManager : MonoBehaviour {
         midPoints.Add(Vector3.Lerp(destinations[2], destinations[3], 0.5f));
         midPoints.Add(Vector3.Lerp(destinations[3], goalPosition, 0.5f));
 
-        goalColor = new Color(0, 0, 0);
-        for (int i = 0; i < waypoints.Count; i++) {
-            goalColor = Color.Lerp(goalColor, waypoints[i].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
-        }
+        // goalColor = new Color(0, 0, 0);
+        goalColor = new Color(1, 1, 1);
+        // for (int i = 0; i < waypoints.Count; i++) {
+        //     goalColor = Color.Lerp(goalColor, waypoints[i].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+        // }
+        // for (int i = waypoints.Count; i >= 0; i--) {
+        //     goalColor = Color.Lerp(goalColor, waypoints[i].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+        // }
+        Color tmp01 = ColourChanger.Add(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //0
+        Color tmp02 = ColourChanger.Add(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //1
+        Color tmp03 = ColourChanger.Add(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //2
+        Color tmp04 = ColourChanger.Add(waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //3
+        Color tmp05 = ColourChanger.Add(waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //4
+        Color tmp06 = ColourChanger.Add(waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //5
+        Color tmp07 = ColourChanger.Blend(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //6
+        Color tmp08 = ColourChanger.Blend(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //7
+        Color tmp09 = ColourChanger.Blend(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //8
+        Color tmp10 = ColourChanger.Blend(waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //9
+        Color tmp11 = ColourChanger.Blend(waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //10
+        Color tmp12 = ColourChanger.Blend(waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //11
+        
+        // mixedColors.Add(tmp01 = ColourChanger.Add(waypoints[0], waypoints[1])); //0
+        // mixedColors.Add(tmp02 = ColourChanger.Add(waypoints[0], waypoints[2])); //1
+        // mixedColors.Add(tmp03 = ColourChanger.Add(waypoints[0], waypoints[3])); //2
+        // mixedColors.Add(tmp04 = ColourChanger.Add(waypoints[1], waypoints[2])); //3
+        // mixedColors.Add(tmp05 = ColourChanger.Add(waypoints[1], waypoints[3])); //4
+        // mixedColors.Add(tmp06 = ColourChanger.Add(waypoints[2], waypoints[3])); //5
+        // mixedColors.Add(tmp07 = ColourChanger.Blend(waypoints[0], waypoints[1])); //6
+        // mixedColors.Add(tmp08 = ColourChanger.Blend(waypoints[0], waypoints[2])); //7
+        // mixedColors.Add(tmp09 = ColourChanger.Blend(waypoints[0], waypoints[3])); //8
+        // mixedColors.Add(tmp10 = ColourChanger.Blend(waypoints[1], waypoints[2])); //9
+        // mixedColors.Add(tmp11 = ColourChanger.Blend(waypoints[1], waypoints[3])); //10
+        // mixedColors.Add(tmp12 = ColourChanger.Blend(waypoints[2], waypoints[3])); //11
+        
+        mixedColors.Add(tmp01); //0
+        mixedColors.Add(tmp02); //1
+        mixedColors.Add(tmp03); //2
+        mixedColors.Add(tmp04); //3
+        mixedColors.Add(tmp05); //4
+        mixedColors.Add(tmp06); //5
+        mixedColors.Add(tmp07); //6
+        mixedColors.Add(tmp08); //7
+        mixedColors.Add(tmp09); //8
+        mixedColors.Add(tmp10); //9
+        mixedColors.Add(tmp11); //10
+        mixedColors.Add(tmp12); //11
+        // Color tmp01 = ColourChanger.Add(waypoints[0], waypoints[1]);
+        // Color tmp07 = Color.Lerp(tmp01, tmp02, 0.5f);
+        // Color tmp08 = Color.Lerp(tmp02, tmp03, 0.5f);
+        // Color tmp09 = Color.Lerp(tmp04, tmp05, 0.5f);
+        // goalColor = tmp01;
+        int rndColorIndex = Random.Range(0, mixedColors.Count);
+        goalColor = mixedColors[rndColorIndex];
+        // goalColor = (waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color + waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
+        // goalColor = Color.Lerp(tmp03, tmp04, 0.5f);
+        // goalColor = Color.Lerp(goalColor, waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+        // goalColor = Color.Lerp(goalColor, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+        // goalColor = mixedColors[0];
         
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColor;
         // goalColourPatch.GetComponent<Renderer>().color = goalColor;
@@ -194,7 +251,6 @@ public class GameManager : MonoBehaviour {
         SpawnObject.Spawn(waypoints[3], destinations[3]);
         
         
-
         for (int i = 0; i < midPoints.Count; i++) {
             lcms.Add(FindLcms(midPoints[i], distances[i]));
         }
@@ -326,8 +382,9 @@ public class GameManager : MonoBehaviour {
         }
         
         clockText.text = DateTime.Now.ToString("HH:mm:ss");
+        // goalColor = mixedColors[0];
         goalColourText.text = goalColor.ToString();
-        goalColourText.GetComponent<Text>().color = goalColor;
+        goalColourText.gameObject.GetComponent<TMP_Text>().color = goalColor;
         // goalColourButton.gameObject.GetComponent<Renderer>().material.color = goalColor;
         // goalColorBlock = goalColourButton.colors;
         goalColorBlock.normalColor = goalColor;
@@ -427,11 +484,7 @@ public class GameManager : MonoBehaviour {
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);
     }*/
+
     
-    // void OnGUI() {
-    //     if (GUILayout.Button("Press Me")){ 
-    //         Debug.Log("Hello!");
-    //     }
-    // }
     
 }
