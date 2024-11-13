@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour {
     public TextMeshProUGUI goalColourText;
     public Button goalColourButton;
     public Image goalColourPatch;
+    public Texture boxTexture;
     public bool isGameActive;
     public static bool goalFound;
     public Button restartButton;
@@ -174,12 +176,28 @@ public class GameManager : MonoBehaviour {
 
         // goalColor = new Color(0, 0, 0);
         goalColor = new Color(1, 1, 1);
+        
         // for (int i = 0; i < waypoints.Count; i++) {
         //     goalColor = Color.Lerp(goalColor, waypoints[i].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
         // }
+        
         // for (int i = waypoints.Count; i >= 0; i--) {
         //     goalColor = Color.Lerp(goalColor, waypoints[i].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
         // }
+        
+        /** TODO: create a function/method that can 'select' a colour from a combination of two or more objects colour,
+         * this could be a single-pass or multi-pass 'action' of Add or Blend, or both in the case of multi-pass.
+         * A single-pass action for either Add or Blend has 6 possible results each
+         * 0-1,0-2,0-3,1-2,1-3,2-3
+         * A two-pass action for either Add or Blend adds another 20 possible results each, totalling 26 possibilities
+         * 0-1,0-2,0-3,0-4,0-5,0-6,
+         * 1-2,1-3,1-4,1-5,1-6,
+         * 2-3,2-4,2-5,2-6,
+         * 3-4,3-5,3-6,
+         * 4-5,4-6,
+         * 5-6
+         */
+        
         Color tmp01 = ColourChanger.Add(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //0
         Color tmp02 = ColourChanger.Add(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //1
         Color tmp03 = ColourChanger.Add(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //2
@@ -193,19 +211,7 @@ public class GameManager : MonoBehaviour {
         Color tmp11 = ColourChanger.Blend(waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //10
         Color tmp12 = ColourChanger.Blend(waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //11
         
-        // mixedColors.Add(tmp01 = ColourChanger.Add(waypoints[0], waypoints[1])); //0
-        // mixedColors.Add(tmp02 = ColourChanger.Add(waypoints[0], waypoints[2])); //1
-        // mixedColors.Add(tmp03 = ColourChanger.Add(waypoints[0], waypoints[3])); //2
-        // mixedColors.Add(tmp04 = ColourChanger.Add(waypoints[1], waypoints[2])); //3
-        // mixedColors.Add(tmp05 = ColourChanger.Add(waypoints[1], waypoints[3])); //4
-        // mixedColors.Add(tmp06 = ColourChanger.Add(waypoints[2], waypoints[3])); //5
-        // mixedColors.Add(tmp07 = ColourChanger.Blend(waypoints[0], waypoints[1])); //6
-        // mixedColors.Add(tmp08 = ColourChanger.Blend(waypoints[0], waypoints[2])); //7
-        // mixedColors.Add(tmp09 = ColourChanger.Blend(waypoints[0], waypoints[3])); //8
-        // mixedColors.Add(tmp10 = ColourChanger.Blend(waypoints[1], waypoints[2])); //9
-        // mixedColors.Add(tmp11 = ColourChanger.Blend(waypoints[1], waypoints[3])); //10
-        // mixedColors.Add(tmp12 = ColourChanger.Blend(waypoints[2], waypoints[3])); //11
-        
+
         mixedColors.Add(tmp01); //0
         mixedColors.Add(tmp02); //1
         mixedColors.Add(tmp03); //2
@@ -233,7 +239,9 @@ public class GameManager : MonoBehaviour {
         
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColor;
         // goalColourPatch.GetComponent<Renderer>().color = goalColor;
-        
+
+        // boxTexture;
+
     }
 
     void Start() {
@@ -485,6 +493,8 @@ public class GameManager : MonoBehaviour {
         titleScreen.gameObject.SetActive(false);
     }*/
 
-    
-    
+    private void OnGUI() {
+        GUI.Box(new Rect(252, 42, 42, 42), boxTexture);
+    }
+
 }
