@@ -1,0 +1,17 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/UI/MazeCanvas.uss?fileID=7433441132597879392&amp;guid=6cf6d31f144ebe34bb743c984bd54ede&amp;type=3#MazeCanvas" />
+    <engine:VisualElement name="root" style="flex-grow: 1;">
+        <engine:VisualElement name="header" style="flex-grow: 1; height: 20%; align-items: center; align-self: stretch; justify-content: center; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
+            <engine:VisualElement name="left" class="headerCells headerCellBorder" style="flex-grow: 1; justify-content: center; width: auto; border-left-color: rgb(115, 2, 2); border-right-color: rgb(115, 2, 2); border-top-color: rgb(115, 2, 2); border-bottom-color: rgb(115, 2, 2); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; height: auto;" />
+            <engine:VisualElement name="centerLeft" class="headerCells headerCellBorder" style="flex-grow: 1; justify-content: center; width: auto; border-left-color: rgb(42, 106, 0); border-right-color: rgb(42, 106, 0); border-top-color: rgb(42, 106, 0); border-bottom-color: rgb(42, 106, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; height: auto;" />
+            <engine:VisualElement name="center" class="headerCells headerCellBorder" style="flex-grow: 1; justify-content: center; width: auto; border-left-color: rgb(121, 0, 164); border-right-color: rgb(121, 0, 164); border-top-color: rgb(121, 0, 164); border-bottom-color: rgb(121, 0, 164); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; height: auto;">
+                <engine:Label text="00:00:00" name="time" class="time" />
+            </engine:VisualElement>
+            <engine:VisualElement name="centerRight" class="headerCells headerCellBorder" style="flex-grow: 1; justify-content: center; width: auto; border-left-color: rgb(2, 17, 113); border-right-color: rgb(2, 17, 113); border-top-color: rgb(2, 17, 113); border-bottom-color: rgb(2, 17, 113); height: auto;">
+                <engine:VisualElement name="colourBlip" class="colourBlip" style="flex-grow: 1;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="right" class="headerCells headerCellBorder" style="flex-grow: 1; justify-content: center; width: auto; border-left-color: rgb(140, 114, 3); border-right-color: rgb(140, 114, 3); border-top-color: rgb(140, 114, 3); border-bottom-color: rgb(140, 114, 3); height: auto;" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-grow: 1; height: 80%;" />
+    </engine:VisualElement>
+</engine:UXML>
