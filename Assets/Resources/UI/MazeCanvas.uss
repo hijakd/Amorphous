@@ -66,3 +66,10 @@
     word-spacing: 0;
     -unity-paragraph-spacing: 0;
 }
+
+.border1 {
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+}

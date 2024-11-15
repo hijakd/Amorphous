@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable NotAccessedField.Local
@@ -18,7 +15,6 @@ public class GameManager : MonoBehaviour {
     public GameObject floorTile01;
     public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
-    private GameObject groundPlane;
     public int gridHeight;
     public int gridWidth;
     public List<GameObject> waypoints;
@@ -30,47 +26,26 @@ public class GameManager : MonoBehaviour {
     public Image goalColourPatch;
     public Texture boxTexture;
     public bool isGameActive;
-    public static bool goalFound;
     public Button restartButton;
     public GameObject titleScreen;
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
+    
+    public static bool goalFound;
+    public static int halfHeight;
+    public static int halfWidth;
+    public static Vector2 randVariance;
     public static Vector2 xMinMax;
     public static Vector2 yMinMax;
-
+    public static List<Vector3> selectableCoords;
+    
     private Color goalColor;
     private ColorBlock goalColorBlock;
-    private List<Color> mixedColors;
-    private List<GameObject> cardinals;
-    private List<Vector3> selectableCoords;
-    private List<Vector3> intersections;
-    private List<Vector3> drawnPath;
-    private List<Vector3> shortenedList;
-    private List<Vector3> slicedPath;
     private float xVal;
     private float zVal;
+    private GameObject groundPlane;
     private int count;
-    private int halfHeight;
-    private int halfWidth;
-    private int distance02;
-    private int farCornerDistance;
-    private int lcm01;
-    private int lcm02;
-    private int lcm03;
-    private int combinedLCM;
     private int rowNumber;
     private int columnNumber;
-    private List<int> distances;
-    private List<int> lcms;
-    private String objectColour = ".gameObject.GetComponentInChildren<Renderer>().material.color";
-    private Vector2 randVariance;
-    private Vector3 farthestCorner;
-    private Vector3 goalPosition;
-    private Vector3 pyramidPos;
-    private Vector3 pyramidPos02;
-    private Vector3 spawnPosition;
-    private List<Vector3> destinations;
-    private List<Vector3> midPoints;
-
     private Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
     private Material purpleMaterial; // added for testing
@@ -78,6 +53,22 @@ public class GameManager : MonoBehaviour {
     private Material blueMaterial; // added for testing
     private Material greenMaterial; // added for testing
     private Material goalMaterial;
+    private Vector3 goalPosition;
+    private Vector3 pyramidPos;
+    private Vector3 pyramidPos02;
+    private Vector3 spawnPosition;
+    
+    private List<Color> mixedColors;
+    private List<GameObject> cardinals;
+    private List<int> distances;
+    private List<int> lcms;
+    private List<Vector3> intersections;
+    private List<Vector3> drawnPath;
+    private List<Vector3> shortenedList;
+    private List<Vector3> slicedPath;
+    private List<Vector3> destinations;
+    private List<Vector3> midPoints;
+    
     private MazeCell[] maze;
 
 
@@ -133,7 +124,7 @@ public class GameManager : MonoBehaviour {
         blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat"); // added for testing
         greenMaterial = Resources.Load<Material>("Materials/Matt_Green_Mat"); // added for testing
 
-        /* cardinals are the corners of the grid & used for boundary calculations */
+        /** cardinals are the corners of the grid & used for boundary calculations */
         // cardinals.Capacity = 4;
         SpawnObject.Spawn(cardinals[0], new Vector3(xMinMax.x, 0f, yMinMax.y));
         SpawnObject.Spawn(cardinals[1], new Vector3(xMinMax.y, 0f, yMinMax.y));
@@ -234,7 +225,7 @@ public class GameManager : MonoBehaviour {
         
         // int rndColorIndex = Random.Range(0, mixedColors.Count);
         // goalColor = mixedColors[rndColorIndex];
-        goalColor = BlendColours(waypoints, true);
+        goalColor = GameUtils.BlendColours(waypoints, true);
 
         // goalColor = (waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color + waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
         // goalColor = Color.Lerp(tmp03, tmp04, 0.5f);
@@ -266,24 +257,25 @@ public class GameManager : MonoBehaviour {
 
 
         for (int i = 0; i < midPoints.Count; i++) {
-            lcms.Add(FindLcms(midPoints[i], distances[i]));
+            lcms.Add(GameUtils.FindLcms(midPoints[i], distances[i]));
         }
 
         ResetCount();
+        /** TODO: do this with a loop based on the size of selectableCoods **/
         intersections.Add(spawnPosition);
-        Triangulate(lcms[0]);
+        intersections.Add(Triangulation.Triangulate(lcms[0], selectableCoords.Count));
         intersections.Add(destinations[0]);
-        Triangulate(lcms[1]);
+        intersections.Add(Triangulation.Triangulate(lcms[1], selectableCoords.Count));
         intersections.Add(destinations[1]);
-        Triangulate(lcms[2]);
+        intersections.Add(Triangulation.Triangulate(lcms[2], selectableCoords.Count));
         intersections.Add(destinations[2]);
-        Triangulate(lcms[3]);
+        intersections.Add(Triangulation.Triangulate(lcms[3], selectableCoords.Count));
         intersections.Add(destinations[3]);
-        Triangulate(lcms[4]);
+        intersections.Add(Triangulation.Triangulate(lcms[4], selectableCoords.Count));
         intersections.Add(goalPosition);
 
         /* remove duplicate values from intersections */
-        shortenedList = new List<Vector3>(ShortenList(intersections));
+        shortenedList = new List<Vector3>(GameUtils.ShortenList(intersections));
         intersections.Clear();
         for (int i = 0; i < shortenedList.Count; i++) {
             intersections.Add(shortenedList[i]);
@@ -336,7 +328,7 @@ public class GameManager : MonoBehaviour {
         }
 
         /* remove duplicate values from drawnPath */
-        shortenedList = new List<Vector3>(ShortenList(drawnPath));
+        shortenedList = new List<Vector3>(GameUtils.ShortenList(drawnPath));
         drawnPath.Clear();
         for (int i = 0; i < shortenedList.Count; i++) {
             drawnPath.Add(shortenedList[i]);
@@ -355,7 +347,7 @@ public class GameManager : MonoBehaviour {
         /* find the first row of the maze grid */
         slicedPath = SliceNSort.SliceListRows(drawnPath, halfHeight); // height gives the number of rows
         /* find the value of the first row */
-        rowNumber = FindFirstRow(slicedPath);
+        rowNumber = GameUtils.FindFirstRow(slicedPath);
 
         /* Spawn the east/west walls */
         while (rowNumber >= -halfHeight) {
@@ -374,7 +366,7 @@ public class GameManager : MonoBehaviour {
         /* find the first column of the maze grid */
         slicedPath = SliceNSort.SliceListColumns(drawnPath, halfWidth); // width gives the number of columns
         /* find the value of the first column */
-        columnNumber = FindFirstColumn(slicedPath);
+        columnNumber = GameUtils.FindFirstColumn(slicedPath);
 
         /* Spawn the north/south walls */
         while (columnNumber >= -halfWidth) {
@@ -408,197 +400,195 @@ public class GameManager : MonoBehaviour {
 
 
     /** Utility functions for the GameManager **/
-    /* find/return the value of the first row of the maze path */
-    private int FindFirstRow(List<Vector3> list) {
-        // Debug.Log("Finding first row");
-        int row = Mathf.RoundToInt(list[0].z);
-        return row;
+    
+    private void ResetCount() {
+        count = 0;
     }
+    
+    public void GameOver() {
+        isGameActive = false;
+        restartButton.gameObject.SetActive(true);
+        gameOverText.gameObject.SetActive(true);
+    }
+
+    public void EndLevel() {
+        Debug.Log("display winText");
+        winText.gameObject.SetActive(true);
+        restartButton.gameObject.SetActive(true);
+    }
+
+    public void RestartGame() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void StartGame() {
+        isGameActive = true;
+        titleScreen.gameObject.SetActive(false);
+    }
+
+    /*public void StartGame(int difficulty) {
+        modifier /= difficulty;
+        isGameActive = true;
+        titleScreen.gameObject.SetActive(false);
+    }*/
+    
+    
+    /* find/return the value of the first row of the maze path */
+    // private int FindFirstRow(List<Vector3> list) {
+    //     // Debug.Log("Finding first row");
+    //     int row = Mathf.RoundToInt(list[0].z);
+    //     return row;
+    // }
 
     /* find/return the value of the first column of the maze path */
-    private int FindFirstColumn(List<Vector3> list) {
-        int column = Mathf.RoundToInt(list[0].x);
-        return column;
-    }
+    // private int FindFirstColumn(List<Vector3> list) {
+    //     int column = Mathf.RoundToInt(list[0].x);
+    //     return column;
+    // }
+    
+    /* Blend/Mix the colours of two waypoints */
+    // private Color BlendColours(List<GameObject> objects, bool addOrBlend) {
+    //     Color outputColor;
+    //     int choice = 0;
+    //
+    //     if (addOrBlend) {
+    //         choice = Random.Range(0, 6);
+    //         switch (choice) {
+    //             case 0:
+    //                 outputColor =
+    //                     ColourChanger.Add(objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //0
+    //                 break;
+    //             case 1:
+    //                 outputColor =
+    //                     ColourChanger.Add(objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //1
+    //                 break;
+    //             case 2:
+    //                 outputColor =
+    //                     ColourChanger.Add(objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //2
+    //                 break;
+    //             case 3:
+    //                 outputColor =
+    //                     ColourChanger.Add(objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //3
+    //                 break;
+    //             case 4:
+    //                 outputColor =
+    //                     ColourChanger.Add(objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //4
+    //                 break;
+    //             case 5:
+    //                 outputColor =
+    //                     ColourChanger.Add(objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //5
+    //                 break;
+    //             default:
+    //                 outputColor = Color.black;
+    //                 break;
+    //         }
+    //     }
+    //     else {
+    //         choice = Random.Range(6, 12);
+    //         switch (choice) {
+    //             case 6:
+    //                 outputColor =
+    //                     ColourChanger.Blend(
+    //                         objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //6
+    //                 break;
+    //             case 7:
+    //                 outputColor =
+    //                     ColourChanger.Blend(
+    //                         objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //7
+    //                 break;
+    //             case 8:
+    //                 outputColor =
+    //                     ColourChanger.Blend(
+    //                         objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //8
+    //                 break;
+    //             case 9:
+    //                 outputColor =
+    //                     ColourChanger.Blend(
+    //                         objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //9
+    //                 break;
+    //             case 10:
+    //                 outputColor =
+    //                     ColourChanger.Blend(
+    //                         objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //10
+    //                 break;
+    //             case 11:
+    //                 outputColor =
+    //                     ColourChanger.Blend(
+    //                         objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+    //                         objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //11
+    //                 break;
+    //             default:
+    //                 outputColor = Color.black;
+    //                 break;
+    //         }
+    //     }
+    //     // mixedColors.Add(tmp01); //0
+    //     // mixedColors.Add(tmp02); //1
+    //     // mixedColors.Add(tmp03); //2
+    //     // mixedColors.Add(tmp04); //3
+    //     // mixedColors.Add(tmp05); //4
+    //     // mixedColors.Add(tmp06); //5
+    //     // mixedColors.Add(tmp07); //6
+    //     // mixedColors.Add(tmp08); //7
+    //     // mixedColors.Add(tmp09); //8
+    //     // mixedColors.Add(tmp10); //9
+    //     // mixedColors.Add(tmp11); //10
+    //     // mixedColors.Add(tmp12); //11
+    //     
+    //     return outputColor;
+    // }
 
-    private Color BlendColours(List<GameObject> objects, bool addOrBlend) {
-        Color outputColor;
-        int choice = 0;
+    /* Find an approximate centre between two points */
+    // private void Triangulate(int lcm) {
+    //     while (count < lcm) {
+    //         int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
+    //         int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
+    //         Vector3 coord01 = selectableCoords[select01];
+    //         Vector3 coord02 = selectableCoords[select02];
+    //         intersections.Add(
+    //             Triangulation.Position(coord01, coord02, Random.Range(randVariance.x, randVariance.y)));
+    //         count++;
+    //     }
+    // }
 
-        if (addOrBlend) {
-            choice = Random.Range(0, 6);
-            switch (choice) {
-                case 0:
-                    outputColor =
-                        ColourChanger.Add(objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //0
-                    break;
-                case 1:
-                    outputColor =
-                        ColourChanger.Add(objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //1
-                    break;
-                case 2:
-                    outputColor =
-                        ColourChanger.Add(objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //2
-                    break;
-                case 3:
-                    outputColor =
-                        ColourChanger.Add(objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //3
-                    break;
-                case 4:
-                    outputColor =
-                        ColourChanger.Add(objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //4
-                    break;
-                case 5:
-                    outputColor =
-                        ColourChanger.Add(objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //5
-                    break;
-                default:
-                    outputColor = Color.black;
-                    break;
-            }
-        }
-        else {
-            choice = Random.Range(6, 12);
-            switch (choice) {
-                case 6:
-                    outputColor =
-                        ColourChanger.Blend(
-                            objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //6
-                    break;
-                case 7:
-                    outputColor =
-                        ColourChanger.Blend(
-                            objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //7
-                    break;
-                case 8:
-                    outputColor =
-                        ColourChanger.Blend(
-                            objects[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //8
-                    break;
-                case 9:
-                    outputColor =
-                        ColourChanger.Blend(
-                            objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //9
-                    break;
-                case 10:
-                    outputColor =
-                        ColourChanger.Blend(
-                            objects[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //10
-                    break;
-                case 11:
-                    outputColor =
-                        ColourChanger.Blend(
-                            objects[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                            objects[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //11
-                    break;
-                default:
-                    outputColor = Color.black;
-                    break;
-            }
-        }
-        // mixedColors.Add(tmp01); //0
-        // mixedColors.Add(tmp02); //1
-        // mixedColors.Add(tmp03); //2
-        // mixedColors.Add(tmp04); //3
-        // mixedColors.Add(tmp05); //4
-        // mixedColors.Add(tmp06); //5
-        // mixedColors.Add(tmp07); //6
-        // mixedColors.Add(tmp08); //7
-        // mixedColors.Add(tmp09); //8
-        // mixedColors.Add(tmp10); //9
-        // mixedColors.Add(tmp11); //10
-        // mixedColors.Add(tmp12); //11
-        
-        return outputColor;
-    }
+    /** LCM's will be used to determine the number of intersections between two points **/
+    // private int FindLcms(Vector3 midPoint, int distance) {
+    //     farthestCorner = FindFarCorner.Find(midPoint, halfHeight, halfWidth);
+    //     farCornerDistance = Mathf.RoundToInt(Vector3.Distance(midPoint, farthestCorner));
+    //     distance02 = distance + farCornerDistance;
+    //     lcm01 = GameUtils.ReduceLcm(LCM_GCD.Lcm(distance, farCornerDistance));
+    //     lcm02 = GameUtils.ReduceLcm(LCM_GCD.Lcm(distance, distance02));
+    //     lcm03 = GameUtils.ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
+    //
+    //     return combinedLCM = lcm01 + lcm02 + lcm03;
+    // }
 
+    /* reducing the value of LCM to ensure there is a reasonably usable number */
+    // private int ReduceLcm(int lcm) {
+    //     int tmpLcm = lcm;
+    //     while (tmpLcm >= halfWidth) {
+    //         tmpLcm = tmpLcm / halfWidth;
+    //     }
+    //
+    //     return tmpLcm;
+    // }
 
-    private void ResetCount() {
-            count = 0;
-        }
-
-        /* Find an approximate centre between two points */
-        private void Triangulate(int lcm) {
-            while (count < lcm) {
-                int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
-                int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
-                Vector3 coord01 = selectableCoords[select01];
-                Vector3 coord02 = selectableCoords[select02];
-                intersections.Add(
-                    Triangulation.Position(coord01, coord02, Random.Range(randVariance.x, randVariance.y)));
-                count++;
-            }
-        }
-
-        /** LCM's will be used to determine the number of intersections between two points **/
-        private int FindLcms(Vector3 midPoint, int distance) {
-            farthestCorner = FindFarCorner.Find(midPoint, halfHeight, halfWidth);
-            farCornerDistance = Mathf.RoundToInt(Vector3.Distance(midPoint, farthestCorner));
-            distance02 = distance + farCornerDistance;
-            lcm01 = ReduceLcm(LCM_GCD.Lcm(distance, farCornerDistance));
-            lcm02 = ReduceLcm(LCM_GCD.Lcm(distance, distance02));
-            lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
-
-            return combinedLCM = lcm01 + lcm02 + lcm03;
-        }
-
-        /* reducing the value of LCM to ensure there is a reasonably usable number */
-        private int ReduceLcm(int lcm) {
-            int tmpLcm = lcm;
-            while (tmpLcm >= halfWidth) {
-                tmpLcm = tmpLcm / halfWidth;
-            }
-
-            return tmpLcm;
-        }
-
-        /* remove duplicate Vector3's from a List<Vector3> */
-        private List<Vector3> ShortenList(List<Vector3> pathList) {
-            HashSet<Vector3> tmpList = new HashSet<Vector3>(pathList);
-            List<Vector3> shortList = tmpList.ToList();
-            return shortList;
-        }
-
-
-        public void GameOver() {
-            isGameActive = false;
-            restartButton.gameObject.SetActive(true);
-            gameOverText.gameObject.SetActive(true);
-        }
-
-        public void EndLevel() {
-            Debug.Log("display winText");
-            winText.gameObject.SetActive(true);
-            restartButton.gameObject.SetActive(true);
-        }
-
-        public void RestartGame() {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-
-        public void StartGame() {
-            isGameActive = true;
-            titleScreen.gameObject.SetActive(false);
-        }
-
-        /*public void StartGame(int difficulty) {
-            modifier /= difficulty;
-            isGameActive = true;
-            titleScreen.gameObject.SetActive(false);
-        }*/
-
-        // private void OnGUI() {
-        //     GUI.Box(new Rect(252, 42, 42, 42), boxTexture);
-        // }
-    }
+    /* remove duplicate Vector3's from a List<Vector3> */
+    // private List<Vector3> ShortenList(List<Vector3> pathList) {
+    //     HashSet<Vector3> tmpList = new HashSet<Vector3>(pathList);
+    //     List<Vector3> shortList = tmpList.ToList();
+    //     return shortList;
+    // }
+    
+}
