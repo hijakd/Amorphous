@@ -4,7 +4,7 @@ using UnityEngine;
 // ReSharper disable RedundantAssignment
 
 public class SliceNSort : MonoBehaviour {
-
+    
     /* return a sorted slice/portion of the path array at a given row of the maze grid */
     public static List<Vector3> SliceListRows(List<Vector3> path, int row) {
         int slicingCount = 0;
@@ -19,6 +19,8 @@ public class SliceNSort : MonoBehaviour {
             slicingCount++;
         }
         sortedSlice = SortListRows(slice, Mathf.RoundToInt(GameManager.xMinMax.x));
+        GameManager.firstRowFound = true;
+        
         return sortedSlice;
     }
 
@@ -36,6 +38,8 @@ public class SliceNSort : MonoBehaviour {
             slicingCount++;
         }
         sortedSlice = SortListColumns(slice, Mathf.RoundToInt(GameManager.yMinMax.x));
+        GameManager.firstColFound = true;
+        
         return sortedSlice;
     }
 

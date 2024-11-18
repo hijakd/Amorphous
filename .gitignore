@@ -76,3 +76,15 @@ Assets/TextMesh Pro/Documentation.meta
 Assets/temp.meta
 /Assets/TutorialInfo
 Assets/TutorialInfo.meta
+Assets/Resources/Walls/Wall Tile West.prefab
+Assets/Resources/Walls/Wall Tile South.prefab
+Assets/Resources/Walls/Wall Tile North.prefab
+Assets/Resources/Walls/Wall Tile East.prefab
+Assets/Resources/Materials/GoalBase_mat.mat
+Assets/Prefabs/Waypoints/YellowWaypoint.prefab
+Assets/Prefabs/Waypoints/RedWaypoint.prefab
+Assets/Prefabs/Waypoints/GreenWaypoint.prefab
+Assets/Prefabs/Waypoints/GoalWaypoint.prefab
+Assets/Prefabs/Waypoints/BlueWaypoint.prefab
+Assets/Prefabs/Floor Tile Grey.prefab
+Assets/Prefabs/Floor Tile Green.prefab

@@ -27,7 +27,7 @@ public class SpawnObject : MonoBehaviour {
     
     /* Spawn the east & west walls across a given row of the maze path */
     public static void SpawnEastWestWalls(List<Vector3> path, GameObject[] walls, Material material) {
-        Debug.Log("Spawning East/West Walls");
+        // Debug.Log("Spawning East/West Walls");
 
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
@@ -61,7 +61,7 @@ public class SpawnObject : MonoBehaviour {
 
     /* Spawn the north & south walls along a given column of the maze path */
     public static void SpawnNorthSouthWalls(List<Vector3> path, GameObject[] walls, Material material) {
-        Debug.Log("Spawning North/South Walls");
+        // Debug.Log("Spawning North/South Walls");
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
                 /* spawn the first north wall of the row */

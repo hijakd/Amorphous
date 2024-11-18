@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour {
     private ColorBlock goalColorBlock;
     private List<Color> mixedColors;
     private List<GameObject> cardinals;
-    private List<Vector3> selectableCoords;
+    public static List<Vector3> selectableCoords;
     private List<Vector3> intersections;
     private List<Vector3> drawnPath;
     private List<Vector3> shortenedList;
@@ -61,8 +61,8 @@ public class GameManager : MonoBehaviour {
     private int columnNumber;
     private List<int> distances;
     private List<int> lcms;
-    private String objectColour = ".gameObject.GetComponentInChildren<Renderer>().material.color";
-    private Vector2 randVariance;
+    // private String objectColour = ".gameObject.GetComponentInChildren<Renderer>().material.color";
+    public static Vector2 randVariance;
     private Vector3 farthestCorner;
     private Vector3 goalPosition;
     private Vector3 pyramidPos;
@@ -79,6 +79,11 @@ public class GameManager : MonoBehaviour {
     private Material greenMaterial; // added for testing
     private Material goalMaterial;
     private MazeCell[] maze;
+
+    public static bool firstRowFound = false;
+    public static bool firstColFound = false;
+    // public bool foundFirstRow;
+    // public bool foundFirstCol;
 
 
     private void OnDrawGizmos() {
@@ -99,6 +104,20 @@ public class GameManager : MonoBehaviour {
         // Gizmos.color = Color.green;
         // Gizmos.DrawLine(spawnPosition, pyramidPos);
         // Gizmos.DrawLine(pyramidPos, destination01);
+        // if (intersections.Count > 0) {
+        //     Gizmos.DrawLine(intersections[0], intersections[1]);
+        //     Gizmos.DrawLine(intersections[1], intersections[2]);
+        //     Gizmos.DrawLine(intersections[2], intersections[3]);
+        //     Gizmos.DrawLine(intersections[3], intersections[4]);
+        //     Gizmos.DrawLine(intersections[4], intersections[5]);
+        //     Gizmos.DrawLine(intersections[5], intersections[6]);
+        //     Gizmos.DrawLine(intersections[6], intersections[7]);
+        //     Gizmos.DrawLine(intersections[7], intersections[8]);
+        //     Gizmos.DrawLine(intersections[8], intersections[9]);
+        //     Gizmos.DrawLine(intersections[9], intersections[10]);
+        // }
+        
+
     }
 
     private void Awake() {
@@ -273,16 +292,17 @@ public class GameManager : MonoBehaviour {
         }
 
         ResetCount();
+        int maxRange = Mathf.RoundToInt(selectableCoords.Count);
         intersections.Add(spawnPosition);
-        Triangulate(lcms[0]);
+        Triangulate(lcms[0], maxRange);
         intersections.Add(destinations[0]);
-        Triangulate(lcms[1]);
+        Triangulate(lcms[1], maxRange);
         intersections.Add(destinations[1]);
-        Triangulate(lcms[2]);
+        Triangulate(lcms[2], maxRange);
         intersections.Add(destinations[2]);
-        Triangulate(lcms[3]);
+        Triangulate(lcms[3], maxRange);
         intersections.Add(destinations[3]);
-        Triangulate(lcms[4]);
+        Triangulate(lcms[4], maxRange);
         intersections.Add(goalPosition);
 
         /* remove duplicate values from intersections */
@@ -358,8 +378,9 @@ public class GameManager : MonoBehaviour {
         /* find the first row of the maze grid */
         slicedPath = SliceNSort.SliceListRows(drawnPath, halfHeight); // height gives the number of rows
         /* find the value of the first row */
+        GameUtils.WaitForRowSlice();
         rowNumber = FindFirstRow(slicedPath);
-
+        
         /* Spawn the east/west walls */
         while (rowNumber >= -halfHeight) {
             // Debug.Log("looping rowNumber == " + rowNumber);
@@ -377,6 +398,7 @@ public class GameManager : MonoBehaviour {
         /* find the first column of the maze grid */
         slicedPath = SliceNSort.SliceListColumns(drawnPath, halfWidth); // width gives the number of columns
         /* find the value of the first column */
+        GameUtils.WaitForColSlice();
         columnNumber = FindFirstColumn(slicedPath);
 
         /* Spawn the north/south walls */
@@ -398,6 +420,8 @@ public class GameManager : MonoBehaviour {
         if (goalFound) {
             EndLevel();
         }
+        
+
 
         // clockText.text = DateTime.Now.ToString("HH:mm:ss");
         // goalColor = mixedColors[0];
@@ -531,77 +555,80 @@ public class GameManager : MonoBehaviour {
             count = 0;
         }
 
-        /* Find an approximate centre between two points */
-        private void Triangulate(int lcm) {
-            while (count < lcm) {
-                int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
-                int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
-                Vector3 coord01 = selectableCoords[select01];
-                Vector3 coord02 = selectableCoords[select02];
-                intersections.Add(
-                    Triangulation.Position(coord01, coord02, Random.Range(randVariance.x, randVariance.y)));
-                count++;
-            }
+    /* Find an approximate centre between two points */
+    private void Triangulate(int lcm, int rangeMax) {
+        Debug.Log("Triangulate, rangeMax is: " + rangeMax);
+        while (count < lcm) {
+            int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
+            // int select01 = Mathf.RoundToInt(Random.Range(0, rangeMax));
+            int select02 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
+            // int select02 = Mathf.RoundToInt(Random.Range(0, rangeMax));
+            Vector3 coord01 = selectableCoords[select01];
+            Vector3 coord02 = selectableCoords[select02];
+            intersections.Add(
+                Triangulation.Position(coord01, coord02, Random.Range(randVariance.x, randVariance.y)));
+            count++;
         }
-
-        /** LCM's will be used to determine the number of intersections between two points **/
-        private int FindLcms(Vector3 midPoint, int distance) {
-            farthestCorner = FindFarCorner.Find(midPoint, halfHeight, halfWidth);
-            farCornerDistance = Mathf.RoundToInt(Vector3.Distance(midPoint, farthestCorner));
-            distance02 = distance + farCornerDistance;
-            lcm01 = ReduceLcm(LCM_GCD.Lcm(distance, farCornerDistance));
-            lcm02 = ReduceLcm(LCM_GCD.Lcm(distance, distance02));
-            lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
-
-            return combinedLCM = lcm01 + lcm02 + lcm03;
-        }
-
-        /* reducing the value of LCM to ensure there is a reasonably usable number */
-        private int ReduceLcm(int lcm) {
-            int tmpLcm = lcm;
-            while (tmpLcm >= halfWidth) {
-                tmpLcm = tmpLcm / halfWidth;
-            }
-
-            return tmpLcm;
-        }
-
-        /* remove duplicate Vector3's from a List<Vector3> */
-        private List<Vector3> ShortenList(List<Vector3> pathList) {
-            HashSet<Vector3> tmpList = new HashSet<Vector3>(pathList);
-            List<Vector3> shortList = tmpList.ToList();
-            return shortList;
-        }
-
-
-        public void GameOver() {
-            isGameActive = false;
-            restartButton.gameObject.SetActive(true);
-            gameOverText.gameObject.SetActive(true);
-        }
-
-        public void EndLevel() {
-            Debug.Log("display winText");
-            winText.gameObject.SetActive(true);
-            restartButton.gameObject.SetActive(true);
-        }
-
-        public void RestartGame() {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-
-        public void StartGame() {
-            isGameActive = true;
-            titleScreen.gameObject.SetActive(false);
-        }
-
-        /*public void StartGame(int difficulty) {
-            modifier /= difficulty;
-            isGameActive = true;
-            titleScreen.gameObject.SetActive(false);
-        }*/
-
-        // private void OnGUI() {
-        //     GUI.Box(new Rect(252, 42, 42, 42), boxTexture);
-        // }
     }
+
+    /** LCM's will be used to determine the number of intersections between two points **/
+    private int FindLcms(Vector3 midPoint, int distance) {
+        farthestCorner = FindFarCorner.Find(midPoint, halfHeight, halfWidth);
+        farCornerDistance = Mathf.RoundToInt(Vector3.Distance(midPoint, farthestCorner));
+        distance02 = distance + farCornerDistance;
+        lcm01 = ReduceLcm(LCM_GCD.Lcm(distance, farCornerDistance));
+        lcm02 = ReduceLcm(LCM_GCD.Lcm(distance, distance02));
+        lcm03 = ReduceLcm(LCM_GCD.Lcm(farCornerDistance, distance02));
+
+        return combinedLCM = lcm01 + lcm02 + lcm03;
+    }
+
+    /* reducing the value of LCM to ensure there is a reasonably usable number */
+    private int ReduceLcm(int lcm) {
+        int tmpLcm = lcm;
+        while (tmpLcm >= halfWidth) {
+            tmpLcm = tmpLcm / halfWidth;
+        }
+
+        return tmpLcm;
+    }
+
+    /* remove duplicate Vector3's from a List<Vector3> */
+    private List<Vector3> ShortenList(List<Vector3> pathList) {
+        HashSet<Vector3> tmpList = new HashSet<Vector3>(pathList);
+        List<Vector3> shortList = tmpList.ToList();
+        return shortList;
+    }
+
+
+    public void GameOver() {
+        isGameActive = false;
+        restartButton.gameObject.SetActive(true);
+        gameOverText.gameObject.SetActive(true);
+    }
+
+    public void EndLevel() {
+        Debug.Log("display winText");
+        winText.gameObject.SetActive(true);
+        restartButton.gameObject.SetActive(true);
+    }
+
+    public void RestartGame() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void StartGame() {
+        isGameActive = true;
+        titleScreen.gameObject.SetActive(false);
+    }
+
+    /*public void StartGame(int difficulty) {
+        modifier /= difficulty;
+        isGameActive = true;
+        titleScreen.gameObject.SetActive(false);
+    }*/
+
+    // private void OnGUI() {
+    //     GUI.Box(new Rect(252, 42, 42, 42), boxTexture);
+    // }
+}

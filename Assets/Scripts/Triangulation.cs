@@ -186,4 +186,17 @@ public class Triangulation : MonoBehaviour {
         return horizDistance;
     }
 
+    public static Vector3 Triangulate(int lcm, int rangeMax) {
+        int count = 0;
+        Vector3 lcmPos = new Vector3();
+        while (count < lcm) {
+            int select01 = Mathf.RoundToInt(Random.Range(0, rangeMax));
+            int select02 = Mathf.RoundToInt(Random.Range(0, rangeMax));
+            Vector3 coord01 = GameManager.selectableCoords[select01];
+            Vector3 coord02 = GameManager.selectableCoords[select02];
+            lcmPos = Position(coord01, coord02, Random.Range(GameManager.randVariance.x, GameManager.randVariance.y));
+            count++;
+        }
+        return lcmPos;
+    }
 }
