@@ -244,7 +244,7 @@ public class GameManager : MonoBehaviour {
 
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColor;
 
-        MazeUI.PaintBlip(goalColor);
+        
 
         // goalColourPatch.GetComponent<Renderer>().color = goalColor;
 
@@ -252,6 +252,9 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
+        
+        MazeUI.PaintBlip(goalColor);
+        
         groundPlane.gameObject.SetActive(false);
 
         /** TODO: possibly add an array of alike materials to randomly select from for use on the walls **/
