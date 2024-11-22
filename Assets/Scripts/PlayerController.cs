@@ -29,6 +29,11 @@ public class PlayerController : MonoBehaviour {
     public TextMeshProUGUI playerForwardText;
     public TextMeshProUGUI playerRightText;
     public TextMeshProUGUI relativeMovementText;
+    private bool playersFirstColour = true;
+    public static Color currentColour;
+    private Color previousColour;
+    private Color otherColour;
+    private Color blendColour = Color.white;
     
     void Awake() {
         playerRb = GetComponent<Rigidbody>();
@@ -106,21 +111,28 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
+        previousColour = currentColour;
+        currentColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        
+        
         if (other.gameObject.CompareTag("Pick Up")) {
             other.gameObject.SetActive(false);
         }
         
         if (other.gameObject.CompareTag("Waypoint")) {
-            Debug.Log("Found a Waypoint");
-            Debug.Log("Waypoint colour is: " + other.gameObject.GetComponent<Renderer>().material.color);
-            ShaderColourBlending.BlendColour(other.gameObject.GetComponent<Renderer>().material.color);
             
+            blendColour = ColourChanger.Add(currentColour, previousColour);
+            // MazeUI.PaintPlayerBlip(currentColour);
+            MazeUI.PaintPlayerBlip(blendColour);
+            // currentColour = blendColour;
         }
         if (other.gameObject.CompareTag("Goal")) {
             Debug.Log("Found the Goal");
             GameManager.goalFound = true;
         }
     }
+
+   
 
     // void RotateCamera() {
     //     camera.transform.RotateAround(focalPoint.transform.position, Vector3.up, look.x);

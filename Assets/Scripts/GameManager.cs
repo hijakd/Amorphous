@@ -13,8 +13,8 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
 
-    public GameObject goalObject;
     public GameObject player;
+    public GameObject goalObject;
     public GameObject floorTile01;
     public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
@@ -24,11 +24,6 @@ public class GameManager : MonoBehaviour {
     public List<GameObject> waypoints;
     public TextMeshProUGUI winText;
     public TextMeshProUGUI gameOverText;
-    public TextMeshProUGUI clockText;
-    public TextMeshProUGUI goalColourText;
-    public Button goalColourButton;
-    public Image goalColourPatch;
-    public Texture boxTexture;
     public bool isGameActive;
     public static bool goalFound;
     public Button restartButton;
@@ -38,7 +33,6 @@ public class GameManager : MonoBehaviour {
     public static Vector2 yMinMax;
 
     private Color goalColor;
-    private ColorBlock goalColorBlock;
     private List<Color> mixedColors;
     private List<GameObject> cardinals;
     public static List<Vector3> selectableCoords;
@@ -61,7 +55,6 @@ public class GameManager : MonoBehaviour {
     private int columnNumber;
     private List<int> distances;
     private List<int> lcms;
-    // private String objectColour = ".gameObject.GetComponentInChildren<Renderer>().material.color";
     public static Vector2 randVariance;
     private Vector3 farthestCorner;
     private Vector3 goalPosition;
@@ -82,9 +75,7 @@ public class GameManager : MonoBehaviour {
 
     public static bool firstRowFound = false;
     public static bool firstColFound = false;
-    // public bool foundFirstRow;
-    // public bool foundFirstCol;
-
+    
 
     private void OnDrawGizmos() {
         // visualize the corners of the grid in the Editor
@@ -253,7 +244,8 @@ public class GameManager : MonoBehaviour {
         
         // int rndColorIndex = Random.Range(0, mixedColors.Count);
         // goalColor = mixedColors[rndColorIndex];
-        goalColor = BlendColours(waypoints, true);
+        goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = Color.white;
+        goalColor = ColourChanger.BlendColours(waypoints, true);
 
         // goalColor = (waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color + waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
         // goalColor = Color.Lerp(tmp03, tmp04, 0.5f);
@@ -272,7 +264,7 @@ public class GameManager : MonoBehaviour {
 
     void Start() {
         
-        MazeUI.PaintBlip(goalColor);
+        MazeUI.PaintGoalBlip(goalColor);
         
         groundPlane.gameObject.SetActive(false);
 
@@ -421,16 +413,6 @@ public class GameManager : MonoBehaviour {
             EndLevel();
         }
         
-
-
-        // clockText.text = DateTime.Now.ToString("HH:mm:ss");
-        // goalColor = mixedColors[0];
-        // goalColourText.text = goalColor.ToString();
-        // goalColourText.gameObject.GetComponent<TMP_Text>().color = goalColor;
-        // goalColourButton.gameObject.GetComponent<Renderer>().material.color = goalColor;
-        // goalColorBlock = goalColourButton.colors;
-        // goalColorBlock.normalColor = goalColor;
-        // goalColourButton.colors = goalColorBlock;
     }
 
 
@@ -438,14 +420,16 @@ public class GameManager : MonoBehaviour {
     /* find/return the value of the first row of the maze path */
     private int FindFirstRow(List<Vector3> list) {
         // Debug.Log("Finding first row");
-        int row = Mathf.RoundToInt(list[0].z);
-        return row;
+        // int row = Mathf.RoundToInt(list[0].z);
+        // return row;
+        return Mathf.RoundToInt(list[0].z);
     }
 
     /* find/return the value of the first column of the maze path */
     private int FindFirstColumn(List<Vector3> list) {
-        int column = Mathf.RoundToInt(list[0].x);
-        return column;
+        // int column = Mathf.RoundToInt(list[0].x);
+        // return column;
+        return Mathf.RoundToInt(list[0].x);
     }
 
     private Color BlendColours(List<GameObject> objects, bool addOrBlend) {
@@ -557,7 +541,7 @@ public class GameManager : MonoBehaviour {
 
     /* Find an approximate centre between two points */
     private void Triangulate(int lcm, int rangeMax) {
-        Debug.Log("Triangulate, rangeMax is: " + rangeMax);
+        // Debug.Log("Triangulate, rangeMax is: " + rangeMax);
         while (count < lcm) {
             int select01 = Mathf.RoundToInt(Random.Range(0, selectableCoords.Count));
             // int select01 = Mathf.RoundToInt(Random.Range(0, rangeMax));
@@ -608,9 +592,11 @@ public class GameManager : MonoBehaviour {
     }
 
     public void EndLevel() {
-        Debug.Log("display winText");
-        winText.gameObject.SetActive(true);
-        restartButton.gameObject.SetActive(true);
+        if (PlayerController.currentColour == goalColor) {
+            Debug.Log("display winText");
+            winText.gameObject.SetActive(true);
+            restartButton.gameObject.SetActive(true);
+        }
     }
 
     public void RestartGame() {
