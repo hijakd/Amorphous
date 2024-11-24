@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ColourChanger : MonoBehaviour
 {
@@ -23,12 +25,13 @@ public class ColourChanger : MonoBehaviour
         return blendColor;
     }
     
-    /** Blend/Mix the colours of two waypoints */
+    /** Blend/Mix the colours of two random waypoints */
     public static Color BlendColours(List<GameObject> objects, bool addOrBlend) {
         Color outputColor;
         int choice = 0;
 
         if (addOrBlend) {
+            /* add a "random" pair of waypoints colours together */
             choice = Random.Range(0, 6);
             switch (choice) {
                 case 0:
@@ -67,6 +70,7 @@ public class ColourChanger : MonoBehaviour
             }
         }
         else {
+            /* blend a "random" pair of waypoints colours together */
             choice = Random.Range(6, 12);
             switch (choice) {
                 case 6:
@@ -111,5 +115,19 @@ public class ColourChanger : MonoBehaviour
             }
         }
         return outputColor;
+    }
+
+    /* combine the colours of two given GameObjects/waypoints */
+    public static Color BlendColours(GameObject waypoint01, GameObject waypoint02, bool addOrBlend) {
+        Color output;
+        if (addOrBlend) {
+            output = Add(waypoint01.GetComponentInChildren<Renderer>().sharedMaterial.color,
+                waypoint02.GetComponentInChildren<Renderer>().sharedMaterial.color);
+        }
+        else {
+            output = Blend(waypoint01.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoint02.GetComponentInChildren<Renderer>().sharedMaterial.color);
+        }
+
+        return output;
     }
 }

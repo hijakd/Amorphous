@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
-
+// ReSharper disable InvalidXmlDocComment
 // ReSharper disable InconsistentNaming
 // ReSharper disable NotAccessedField.Local
 // ReSharper disable Unity.RedundantEventFunction
