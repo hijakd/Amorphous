@@ -306,8 +306,9 @@ public class GameManager : MonoBehaviour {
 
         /* delete contents of shortenedList to save unnecessary use of memory */
         shortenedList.Clear();
-
+        
         ResetCount();
+        /* spawn intersection floortiles to visualise the maze generation */
         while (count < intersections.Count) {
             SpawnObject.Spawn(floorTile01, intersections[count]);
             count++;

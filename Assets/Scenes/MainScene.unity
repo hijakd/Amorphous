@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 103129383}
   - component: {fileID: 103129382}
+  - component: {fileID: 103129384}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Blue
@@ -143,7 +144,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103129381}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 853c765da52fb624ebc28ca953f89032, type: 3}
   m_Name: 
@@ -188,6 +189,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &103129384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103129381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68856dd4d16f1aa48964621e52457ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 921098113}
+  goal: {fileID: 5895648694046751752, guid: a4b49dc5dfca8544e9050981753b91b7, type: 3}
+  floorTile: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
+    type: 3}
+  wallPanels:
+  - {fileID: 1947273285586917020, guid: dce1e17de8142fa4cb420b081468d73f, type: 3}
+  - {fileID: 7754419566860733638, guid: 3d5bb6f788317c74eaf67fa3a2010c07, type: 3}
+  - {fileID: 3351476046705320498, guid: 83fd6a674b54a46469e0f4780426997e, type: 3}
+  - {fileID: 1428840922709220998, guid: 0d7d4116c7c29f94db40815268bfe935, type: 3}
+  gridHeight: 40
+  gridWidth: 40
+  waypoints:
+  - {fileID: 5680095113538993511, guid: 0e44c59dcb0a4c041a41c42d57067127, type: 3}
+  - {fileID: 1061367405469846895, guid: 6946421c02ac20941a7e4a38cfefeb0f, type: 3}
+  - {fileID: 2472485937872077536, guid: 4d9743cee7a364b4198038c7929147f2, type: 3}
+  - {fileID: 8851216710939664950, guid: c997274225c9da04a932bb51dafe958f, type: 3}
+  winText: {fileID: 1744664631}
+  gameOverText: {fileID: 144824136}
+  isGameActive: 0
+  restartButton: {fileID: 425114794}
+  titleScreen: {fileID: 0}
+  randomVariance: 0.42
 --- !u!1 &144824134
 GameObject:
   m_ObjectHideFlags: 0

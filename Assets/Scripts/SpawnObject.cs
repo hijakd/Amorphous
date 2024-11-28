@@ -64,15 +64,15 @@ public class SpawnObject : MonoBehaviour {
         // Debug.Log("Spawning North/South Walls");
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
-                /* spawn the first north wall of the row */
+                /* spawn the first south wall of the row */
                 Spawn(walls[2], path[i], material);
             }
             else if (path[i - 1].z < path[i].z - 1) {
-                /* spawn north wall at end of a break in the row */
+                /* spawn south wall at end of a break in the row */
                 Spawn(walls[2], path[i], material);
             }
             else if (i == path.Count - 1) {
-                /* spawn the last south wall of the row if the list ends before the boundary */
+                /* spawn the last north wall of the row if the list ends before the boundary */
                 Spawn(walls[0], path[i], material);
             }
         }
@@ -82,11 +82,11 @@ public class SpawnObject : MonoBehaviour {
 
         for (int j = 0; j < path.Count; j++) {
             if (j == 0) {
-                /* spawn the last south wall of the row */
+                /* spawn the last north wall of the row */
                 Spawn(walls[0], path[j], material);
             }
             else if (path[j - 1].z > path[j].z + 1) {
-                /* spawn south wall at end of a break in the row */
+                /* spawn north wall at end of a break in the row */
                 Spawn(walls[0], path[j], material);
             }
         }

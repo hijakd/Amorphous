@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 // ReSharper disable CompareOfFloatsByEqualityOperator
 
@@ -35,6 +36,32 @@ public class Triangulation : MonoBehaviour {
         }
         else if (position.z > GameManager.yMinMax.y) {
             position.z = GameManager.yMinMax.y;
+        }
+
+        return position;
+    }
+    
+    public static Vector3 PositionG(Vector3 position01, Vector3 position02,
+        float centreMargin) {
+        // position = Vector3.Slerp(position01, position02, Random.Range(0.42f, 0.58f));
+        position = Vector3.Slerp(position01, position02, centreMargin);
+        position.x = Mathf.RoundToInt(position.x);
+        position.y = 0f;
+        position.z = Mathf.RoundToInt(position.z);
+
+        /* check position is within the boundaries, if not clamp them in */
+        if (position.x <= GManager.instance.xMin) {
+            position.x = GManager.instance.xMin;
+        }
+        else if (position.x > GManager.instance.halfWidth) {
+            position.x = GManager.instance.halfWidth;
+        }
+
+        if (position.z <= GManager.instance.yMin) {
+            position.z = GManager.instance.yMin;
+        }
+        else if (position.z > GManager.instance.halfHeight) {
+            position.z = GManager.instance.halfHeight;
         }
 
         return position;
@@ -186,15 +213,55 @@ public class Triangulation : MonoBehaviour {
         return horizDistance;
     }
 
-    public static Vector3 Triangulate(int lcm, int rangeMax) {
+    // public static Vector3 Triangulate(int lcm, int rangeMax) {
+    //     int count = 0;
+    //     Vector3 lcmPos = new Vector3();
+    //     while (count < lcm) {
+    //         int select01 = Mathf.RoundToInt(Random.Range(0, rangeMax));
+    //         int select02 = Mathf.RoundToInt(Random.Range(0, rangeMax));
+    //         Vector3 coord01 = GameManager.selectableCoords[select01];
+    //         Vector3 coord02 = GameManager.selectableCoords[select02];
+    //         lcmPos = Position(coord01, coord02, Random.Range(GameManager.randVariance.x, GameManager.randVariance.y));
+    //         count++;
+    //     }
+    //     return lcmPos;
+    // }
+    
+    // public static Vector3 Triangulate(int lcm, int rangeMax, Vector2 variance) {
+    //     int count = 0;
+    //     Vector3 lcmPos = new Vector3();
+    //     while (count < lcm) {
+    //         int select01 = Mathf.RoundToInt(Random.Range(0, rangeMax));
+    //         int select02 = Mathf.RoundToInt(Random.Range(0, rangeMax));
+    //         Vector3 coord01 = GManager._selectableCoords[select01];
+    //         Vector3 coord02 = GManager._selectableCoords[select02];
+    //         lcmPos = Position(coord01, coord02, Random.Range(variance.x, variance.y));
+    //         count++;
+    //     }
+    //     return lcmPos;
+    // }
+    
+    // public static Vector3 Triangulate(int lcm, int maxRange, Vector2 variance, List<Vector3> selectable) {
+    //     int count = 0;
+    //     Vector3 lcmPos = new Vector3();
+    //     while (count < lcm) {
+    //         int select01 = Mathf.RoundToInt(Random.Range(0, maxRange));
+    //         int select02 = Mathf.RoundToInt(Random.Range(0, maxRange));
+    //         Vector3 coord01 = selectable[select01];
+    //         Vector3 coord02 = selectable[select02];
+    //         lcmPos = Position(coord01, coord02, Random.Range(variance.x, variance.y));
+    //         count++;
+    //     }
+    //     return lcmPos;
+    // }
+    
+    public static Vector3 Triangulate(int lcm, int maxRange, Vector2 variance, List<Vector3> selectable) {
         int count = 0;
         Vector3 lcmPos = new Vector3();
         while (count < lcm) {
-            int select01 = Mathf.RoundToInt(Random.Range(0, rangeMax));
-            int select02 = Mathf.RoundToInt(Random.Range(0, rangeMax));
-            Vector3 coord01 = GameManager.selectableCoords[select01];
-            Vector3 coord02 = GameManager.selectableCoords[select02];
-            lcmPos = Position(coord01, coord02, Random.Range(GameManager.randVariance.x, GameManager.randVariance.y));
+            Vector3 coord01 = selectable[Mathf.RoundToInt(Random.Range(0, maxRange))];
+            Vector3 coord02 = selectable[Mathf.RoundToInt(Random.Range(0, maxRange))];
+            lcmPos = PositionG(coord01, coord02, Random.Range(variance.x, variance.y));
             count++;
         }
         return lcmPos;

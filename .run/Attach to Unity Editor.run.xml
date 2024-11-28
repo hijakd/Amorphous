@@ -1,9 +1,14 @@
 ﻿<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="38896">
+  <configuration default="false" name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="6576">
     <option name="allowRunningInParallel" value="false" />
     <option name="listenPortForConnections" value="false" />
-    <option name="pid" value="38896" />
+    <option name="pid" value="6576" />
     <option name="projectPathOnTarget" />
+    <option name="runtimes">
+      <list>
+        <MonoRuntime />
+      </list>
+    </option>
     <option name="selectedOptions">
       <list />
     </option>
