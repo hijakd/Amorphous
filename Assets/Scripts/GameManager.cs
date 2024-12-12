@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -32,21 +31,20 @@ public class GameManager : MonoBehaviour {
     public GameObject titleScreen;
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
     public static Vector2Int xMinMax, yMinMax;
-
+    public static List<Vector3> selectableCoords;
+    public static Vector2 randVariance;
+    
     private Color goalColor;
     private ColorBlock goalColorBlock;
-    private List<Color> mixedColors;
-    private List<GameObject> cardinals;
-    public static List<Vector3> selectableCoords;
-    private List<Vector3> intersections, drawnPath, shortenedList, slicedPath;
     private float xVal, zVal;
     private int count, rowNumber, columnNumber, gridNorth, gridEast, gridSouth, gridWest;
-    private List<int> distances, lcms;
-    // private String objectColour = ".gameObject.GetComponentInChildren<Renderer>().material.color";
-    public static Vector2 randVariance;
     private Vector3 goalPosition, pyramidPos, pyramidPos02, spawnPosition;
-    private List<Vector3> destinations, midPoints;
-
+    
+    private List<Color> mixedColors;
+    private List<GameObject> cardinals;
+    private List<int> distances, lcms;
+    private List<Vector3> intersections, drawnPath, shortenedList, slicedPath, destinations, midPoints;
+    
     private Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
     private Material purpleMaterial; // added for testing
@@ -58,8 +56,6 @@ public class GameManager : MonoBehaviour {
 
     public static bool firstRowFound = false;
     public static bool firstColFound = false;
-    // public bool foundFirstRow;
-    // public bool foundFirstCol;
 
 
     private void OnDrawGizmos() {
@@ -170,15 +166,7 @@ public class GameManager : MonoBehaviour {
 
         // goalColor = new Color(0, 0, 0);
         goalColor = new Color(1, 1, 1);
-
-        // for (int i = 0; i < waypoints.Count; i++) {
-        //     goalColor = Color.Lerp(goalColor, waypoints[i].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
-        // }
-
-        // for (int i = waypoints.Count; i >= 0; i--) {
-        //     goalColor = Color.Lerp(goalColor, waypoints[i].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
-        // }
-
+        
         /** TODO: create a function/method that can 'select' a colour from a combination of two or more objects colour,
          * this could be a single-pass or multi-pass 'action' of Add or Blend, or both in the case of multi-pass.
          * A single-pass action for either Add or Blend has 6 possible results each
@@ -192,43 +180,7 @@ public class GameManager : MonoBehaviour {
          * 5-6
          */
 
-        // Color tmp01 = ColourChanger.Add(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //0
-        // Color tmp02 = ColourChanger.Add(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //1
-        // Color tmp03 = ColourChanger.Add(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //2
-        // Color tmp04 = ColourChanger.Add(waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //3
-        // Color tmp05 = ColourChanger.Add(waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //4
-        // Color tmp06 = ColourChanger.Add(waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //5
-        // Color tmp07 = ColourChanger.Blend(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //6
-        // Color tmp08 = ColourChanger.Blend(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //7
-        // Color tmp09 = ColourChanger.Blend(waypoints[0].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //8
-        // Color tmp10 = ColourChanger.Blend(waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //9
-        // Color tmp11 = ColourChanger.Blend(waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //10
-        // Color tmp12 = ColourChanger.Blend(waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[3].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color); //11
-        //
-        //
-        // mixedColors.Add(tmp01); //0
-        // mixedColors.Add(tmp02); //1
-        // mixedColors.Add(tmp03); //2
-        // mixedColors.Add(tmp04); //3
-        // mixedColors.Add(tmp05); //4
-        // mixedColors.Add(tmp06); //5
-        // mixedColors.Add(tmp07); //6
-        // mixedColors.Add(tmp08); //7
-        // mixedColors.Add(tmp09); //8
-        // mixedColors.Add(tmp10); //9
-        // mixedColors.Add(tmp11); //10
-        // mixedColors.Add(tmp12); //11
-
-        // Color tmp01 = ColourChanger.Add(waypoints[0], waypoints[1]);
-        // Color tmp07 = Color.Lerp(tmp01, tmp02, 0.5f);
-        // Color tmp08 = Color.Lerp(tmp02, tmp03, 0.5f);
-        // Color tmp09 = Color.Lerp(tmp04, tmp05, 0.5f);
-        // goalColor = tmp01;
         
-        
-        
-        // int rndColorIndex = Random.Range(0, mixedColors.Count);
-        // goalColor = mixedColors[rndColorIndex];
         goalColor = BlendColours(waypoints, true);
 
         // goalColor = (waypoints[2].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color + waypoints[1].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
@@ -238,12 +190,7 @@ public class GameManager : MonoBehaviour {
         // goalColor = mixedColors[0];
 
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColor;
-
         
-
-        // goalColourPatch.GetComponent<Renderer>().color = goalColor;
-
-        // boxTexture;
     }
 
     void Start() {
