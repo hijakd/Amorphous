@@ -6,7 +6,7 @@ using UnityEngine;
 public class SliceNSort : MonoBehaviour {
     
     /* return a sorted slice/portion of the path array at a given row of the maze grid */
-    public static List<Vector3> SliceListRows(List<Vector3> path, int row) {
+    public static List<Vector3> SliceRows(List<Vector3> path, int row, int minimumWidth) {
         int slicingCount = 0;
         List<Vector3> slice = new List<Vector3>();
         List<Vector3> sortedSlice = new List<Vector3>();
@@ -18,14 +18,14 @@ public class SliceNSort : MonoBehaviour {
             }
             slicingCount++;
         }
-        sortedSlice = SortListRows(slice, Mathf.RoundToInt(GameManager.xMinMax.x));
+        sortedSlice = SortRowsList(slice, minimumWidth);
         GameManager.firstRowFound = true;
         
         return sortedSlice;
     }
 
     /* return a sorted slice/portion of the path array at a given column of the maze grid */
-    public static List<Vector3> SliceListColumns(List<Vector3> path, int column) {
+    public static List<Vector3> SliceColumns(List<Vector3> path, int column, int minimumHeight) {
         int slicingCount = 0;
         List<Vector3> slice = new List<Vector3>();
         List<Vector3> sortedSlice = new List<Vector3>();
@@ -37,14 +37,14 @@ public class SliceNSort : MonoBehaviour {
             }
             slicingCount++;
         }
-        sortedSlice = SortListColumns(slice, Mathf.RoundToInt(GameManager.yMinMax.x));
+        sortedSlice = SortColumnsList(slice, minimumHeight);
         GameManager.firstColFound = true;
         
         return sortedSlice;
     }
 
     /* for sorting an array slice based on X axis */
-    private static List<Vector3> SortListRows(List<Vector3> list, int lowestValue) {
+    private static List<Vector3> SortRowsList(List<Vector3> list, int lowestValue) {
         List<Vector3> sorted = new List<Vector3>();
         int sortingCount = 0;
         int listSize = list.Count;
@@ -63,7 +63,7 @@ public class SliceNSort : MonoBehaviour {
     }
 
     /* for sorting an array slice based on Z axis */
-    private static List<Vector3> SortListColumns(List<Vector3> list, int lowestValue) {
+    private static List<Vector3> SortColumnsList(List<Vector3> list, int lowestValue) {
         List<Vector3> sorted = new List<Vector3>();
         int sortingCount = 0;
         int listSize = list.Count;
