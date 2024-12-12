@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour {
 
     PlayerControls controls;
-    public GameObject camera;
+    public new GameObject camera;
     private GameObject focalPoint;
     private GameObject mazeCentre;
     private Rigidbody playerRb;
@@ -111,8 +111,7 @@ public class PlayerController : MonoBehaviour {
         }
         
         if (other.gameObject.CompareTag("Waypoint")) {
-            Debug.Log("Found a Waypoint");
-            Debug.Log("Waypoint colour is: " + other.gameObject.GetComponent<Renderer>().material.color);
+            Debug.Log("Found a Waypoint\nWaypoint colour is: " + other.gameObject.GetComponent<Renderer>().material.color);
             ShaderColourBlending.BlendColour(other.gameObject.GetComponent<Renderer>().material.color);
             
         }
