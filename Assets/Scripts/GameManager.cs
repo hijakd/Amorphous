@@ -58,17 +58,13 @@ public class GameManager : MonoBehaviour {
     private void OnDrawGizmos() {
         // visualize the corners of the grid in the Editor
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, gridHeight / 2),
-            new Vector3(0.75f, 2f, 0.75f)); // NorthWest corner
+        Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, gridHeight / 2), new Vector3(0.75f, 2f, 0.75f)); // NorthWest corner
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, gridHeight / 2),
-            new Vector3(0.75f, 2f, 0.75f)); // NorthEast corner
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, -gridHeight / 2),
-            new Vector3(0.75f, 2f, 0.75f)); // SouthEast corner
+        Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, gridHeight / 2), new Vector3(0.75f, 2f, 0.75f)); // NorthEast corner
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2),
-            new Vector3(0.75f, 2f, 0.75f)); // SouthWest corner
+        Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f)); // SouthEast corner
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f)); // SouthWest corner
 
         // visualize paths between 'intersections'
         // Gizmos.color = Color.blue;
