@@ -23,18 +23,18 @@ public class Triangulation : MonoBehaviour {
         position.z = Mathf.RoundToInt(position.z);
 
         /* check position is within the boundaries, if not clamp them in */
-        if (position.x <= GameManager.xMinMax.x) {
-            position.x = GameManager.xMinMax.x;
+        if (position.x <= GameManager.mazeWidth.x) {
+            position.x = GameManager.mazeWidth.x;
         }
-        else if (position.x > GameManager.xMinMax.y) {
-            position.x = GameManager.xMinMax.y;
+        else if (position.x > GameManager.mazeWidth.y) {
+            position.x = GameManager.mazeWidth.y;
         }
 
-        if (position.z <= GameManager.yMinMax.x) {
-            position.z = GameManager.yMinMax.x;
+        if (position.z <= GameManager.mazeHeight.x) {
+            position.z = GameManager.mazeHeight.x;
         }
-        else if (position.z > GameManager.yMinMax.y) {
-            position.z = GameManager.yMinMax.y;
+        else if (position.z > GameManager.mazeHeight.y) {
+            position.z = GameManager.mazeHeight.y;
         }
 
         return position;

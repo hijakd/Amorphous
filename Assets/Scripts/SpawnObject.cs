@@ -19,8 +19,6 @@ public class SpawnObject : MonoBehaviour {
     public static void Spawn(GameObject gameObject, Vector3 position, Material material) {
         gameObject.transform.position = position;
         gameObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = material;
-
-        // gameObject.
         Instantiate(gameObject);
     }
 
