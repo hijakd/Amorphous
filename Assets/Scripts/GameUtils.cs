@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+// ReSharper disable PossibleLossOfFraction
+// ReSharper disable InvalidXmlDocComment
 
 // ReSharper disable InconsistentNaming
 
@@ -181,8 +183,8 @@ public class GameUtils : MonoBehaviour {
     /* Slerp that is clamped within the maze boundaries, this is intended */
     /* to take a Random.Range() value to create a point close to center */
     /* within approx. 40/60 weighting */
-    public static Vector3 TriangulateIntersection(Vector3 coord01, Vector3 coord02, float centreMargin) {
-        var position = Vector3.Slerp(coord01, coord02, centreMargin);
+    public static Vector3 TriangulateIntersection(Vector3 origin, Vector3 destination, float centreMargin) {
+        var position = Vector3.Slerp(origin, destination, centreMargin);
 
         // normalizing the position
         position.x = Mathf.RoundToInt(position.x);
@@ -192,8 +194,34 @@ public class GameUtils : MonoBehaviour {
         return ClampWithinBoundaries(position);
     }
 
+    public static Vector3 TriangulateIntersection(Vector3 origin, Vector3 destination, float centreMargin, int modifier) {
+        var position = Vector3.Slerp(origin, destination, centreMargin);
+        var modifierX = 0f;
+        var modifierY = 0f;
+        var decimalMultiplier = 10;
+
+        if (modifier > Mathf.Abs(1000) && modifier < Mathf.Abs(10000)) {
+            decimalMultiplier = 1000;
+        } else if (modifier > Mathf.Abs(100) && modifier < Mathf.Abs(1000)) {
+            decimalMultiplier = 100;
+        }
+        
+        /** TODO: possibly change this to randomly switch proportioning **/
+        /* split the modifier by the random variance to be used proportionally across the X & Z axis' */
+        modifierX = (modifier / decimalMultiplier) * centreMargin;
+        modifierY = (modifier / decimalMultiplier) * (1 - centreMargin);
+
+        // normalizing the position
+        position.x = Mathf.RoundToInt(position.x * (modifierX));
+        position.y = 0f;
+        position.z = Mathf.RoundToInt(position.z * (modifierY));
+        
+        return ClampWithinBoundaries(position);
+    }
+    
+    /* check position is within the boundaries, if not clamp them in */
     private static Vector3 ClampWithinBoundaries(Vector3 position) {
-        /* check position is within the boundaries, if not clamp them in */
+        
         if (position.x <= GameManager.mazeWidth.x) {
             position.x = GameManager.mazeWidth.x;
         }

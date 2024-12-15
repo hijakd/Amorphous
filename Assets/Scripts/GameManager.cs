@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour {
     private List<Color> mixedColors;
     private List<GameObject> cardinals;
     private List<int> distances, lcms;
-    private List<Vector3> intersections, drawnPath, shortenedList, slicedPath, destinations, midPoints;
+    [SerializeField] private List<Vector3> intersections, tmpIntersections, drawnPath, shortenedList, slicedPath, destinations, midPoints;
 
     private Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
@@ -101,6 +101,7 @@ public class GameManager : MonoBehaviour {
         destinations = new List<Vector3>();
         // selectableCoords = new List<Vector3>();
         intersections = new List<Vector3>();
+        tmpIntersections = new List<Vector3>(); // for testing TriangulateIntersection()
         drawnPath = new List<Vector3>();
         shortenedList = new List<Vector3>();
         slicedPath = new List<Vector3>();
@@ -154,12 +155,22 @@ public class GameManager : MonoBehaviour {
         }
         
         ResetCount();
+        /* testing differences in results of TriangulateIntersection() */
+        /* populate intersections list using destinations & lcms as seed values for triangulated positions */
+        while (count < lcms.Count) {
+            tmpIntersections.Add(destinations[count]);
+            tmpIntersections.Add(GameUtils.TriangulateIntersection(destinations[count], destinations[count + 1],
+                Random.Range(randVariance.x, randVariance.y)));
+            count++;
+        }
+        
+        ResetCount();
         
         /* populate intersections list using destinations & lcms as seed values for triangulated positions */
         while (count < lcms.Count) {
             intersections.Add(destinations[count]);
             intersections.Add(GameUtils.TriangulateIntersection(destinations[count], destinations[count + 1],
-                Random.Range(randVariance.x, randVariance.y)));
+                Random.Range(randVariance.x, randVariance.y), lcms[count]));
             count++;
         }
 
@@ -168,6 +179,17 @@ public class GameManager : MonoBehaviour {
 
     void Start() {
         
+        ResetCount();
+        while (count < intersections.Count) {
+            GameUtils.Spawn(floorTile01, intersections[count]);
+            count++;
+        }
+        
+        ResetCount();
+        while (count < tmpIntersections.Count) {
+            GameUtils.Spawn(floorTile02, tmpIntersections[count]);
+            count++;
+        }
         
         /* END Start() */
     }
