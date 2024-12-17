@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -5,6 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+
+// ReSharper disable InvalidXmlDocComment
+// ReSharper disable PossibleLossOfFraction
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable NotAccessedField.Local
@@ -14,6 +18,7 @@ public class GameManager : MonoBehaviour {
 
     public GameObject goalObject;
     public GameObject player;
+    public GameObject pyramid;
     public GameObject floorTile01;
     public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
@@ -31,7 +36,7 @@ public class GameManager : MonoBehaviour {
     public static List<Vector3> selectableCoords;
     public static Vector2 randVariance;
 
-    private Color goalColor;
+    private Color goalColour;
     private ColorBlock goalColorBlock;
     private float xVal, zVal;
     private int count, rowNumber, columnNumber, gridNorth, gridEast, gridSouth, gridWest;
@@ -40,7 +45,14 @@ public class GameManager : MonoBehaviour {
     private List<Color> mixedColors;
     private List<GameObject> cardinals;
     private List<int> distances, lcms;
-    [SerializeField] private List<Vector3> intersections, tmpIntersections, drawnPath, shortenedList, slicedPath, destinations, midPoints;
+
+    [SerializeField] private List<Vector3> intersections,
+        /*tmpIntersections,*/
+        drawnPath,
+        shortenedList,
+        slicedPath,
+        destinations,
+        midPoints;
 
     private Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
@@ -49,8 +61,8 @@ public class GameManager : MonoBehaviour {
     private Material blueMaterial; // added for testing
     private Material greenMaterial; // added for testing
     private Material goalMaterial;
-    private MazeCell[] maze;
 
+    public static bool shortListed = false;
     public static bool firstRowFound = false;
     public static bool firstColFound = false;
 
@@ -58,19 +70,23 @@ public class GameManager : MonoBehaviour {
     private void OnDrawGizmos() {
         // visualize the corners of the grid in the Editor
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, gridHeight / 2), new Vector3(0.75f, 2f, 0.75f)); // NorthWest corner
+        Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, gridHeight / 2),
+            new Vector3(0.75f, 2f, 0.75f)); // NorthWest corner
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, gridHeight / 2), new Vector3(0.75f, 2f, 0.75f)); // NorthEast corner
+        Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, gridHeight / 2),
+            new Vector3(0.75f, 2f, 0.75f)); // NorthEast corner
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f)); // SouthEast corner
+        Gizmos.DrawWireCube(new Vector3(gridWidth / 2, 1f, -gridHeight / 2),
+            new Vector3(0.75f, 2f, 0.75f)); // SouthEast corner
         Gizmos.color = Color.magenta;
-        Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2), new Vector3(0.75f, 2f, 0.75f)); // SouthWest corner
+        Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2),
+            new Vector3(0.75f, 2f, 0.75f)); // SouthWest corner
 
         // visualize paths between 'intersections'
         // Gizmos.color = Color.blue;
-        // for (int i = 0; i < intersections.Count - 1; i++) {
-        //     Gizmos.DrawLine(intersections[i], intersections[i + 1]);
-        // }
+        for (int i = 0; i < intersections.Count - 1; i++) {
+            Gizmos.DrawLine(intersections[i], intersections[i + 1]);
+        }
 
         // Gizmos.color = Color.green;
         // Gizmos.DrawLine(spawnPosition, pyramidPos);
@@ -98,10 +114,12 @@ public class GameManager : MonoBehaviour {
         mazeWidth.x = gridWest = -gridEast;
 
         cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
+        
         destinations = new List<Vector3>();
+
         // selectableCoords = new List<Vector3>();
         intersections = new List<Vector3>();
-        tmpIntersections = new List<Vector3>(); // for testing TriangulateIntersection()
+        // tmpIntersections = new List<Vector3>(); // for testing TriangulateIntersection()
         drawnPath = new List<Vector3>();
         shortenedList = new List<Vector3>();
         slicedPath = new List<Vector3>();
@@ -109,11 +127,13 @@ public class GameManager : MonoBehaviour {
         lcms = new List<int>();
         midPoints = new List<Vector3>();
         mixedColors = new List<Color>();
+        goalColour = new Color();
 
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
 
         gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat"); // added for testing
+
         // obsMaterial = Resources.Load<Material>("Materials/OBS_Mat"); // added for testing
         // purpleMaterial = Resources.Load<Material>("Materials/Matt_Purple_Mat"); // added for testing
         // pinkMaterial = Resources.Load<Material>("Materials/Matt_Pink_Mat"); // added for testing
@@ -127,6 +147,17 @@ public class GameManager : MonoBehaviour {
         GameUtils.Spawn(cardinals[2], new Vector3(gridEast, 0f, gridSouth)); // SouthEast corner
         GameUtils.Spawn(cardinals[3], new Vector3(gridWest, 0f, gridSouth)); // SouthWest corner
 
+
+        goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
+
+        /* END Awake() */
+    }
+
+    void Start() {
+        // Debug.Log("Trying to colour the goalBlip");
+
+        MazeUI.PaintGoalBlip(goalColour);
+
         ResetCount();
 
         /* populate the destinations List with random positions for the player, waypoints & goal */
@@ -134,7 +165,7 @@ public class GameManager : MonoBehaviour {
             destinations.Add(GameUtils.RandomPosition(gridWest, gridEast, gridSouth, gridNorth));
             count++;
         }
-        
+
         ResetCount();
 
         /* populate distance & midpoint Lists */
@@ -144,8 +175,8 @@ public class GameManager : MonoBehaviour {
             count++;
         }
 
-        goalColor = new Color(1, 1, 1);
-        
+        goalColour = new Color(1, 1, 1);
+
         ResetCount();
 
         /** TODO: is lcms redundant?? **/
@@ -153,19 +184,19 @@ public class GameManager : MonoBehaviour {
             lcms.Add(GameUtils.FindLcm(midPoints[count], distances[count], gridNorth, gridEast));
             count++;
         }
-        
+
+        // ResetCount();
+        // /* testing differences in results of TriangulateIntersection() */
+        // /* populate intersections list using destinations & lcms as seed values for triangulated positions */
+        // while (count < lcms.Count) {
+        //     tmpIntersections.Add(destinations[count]);
+        //     tmpIntersections.Add(GameUtils.TriangulateIntersection(destinations[count], destinations[count + 1],
+        //         Random.Range(randVariance.x, randVariance.y)));
+        //     count++;
+        // }
+
         ResetCount();
-        /* testing differences in results of TriangulateIntersection() */
-        /* populate intersections list using destinations & lcms as seed values for triangulated positions */
-        while (count < lcms.Count) {
-            tmpIntersections.Add(destinations[count]);
-            tmpIntersections.Add(GameUtils.TriangulateIntersection(destinations[count], destinations[count + 1],
-                Random.Range(randVariance.x, randVariance.y)));
-            count++;
-        }
-        
-        ResetCount();
-        
+
         /* populate intersections list using destinations & lcms as seed values for triangulated positions */
         while (count < lcms.Count) {
             intersections.Add(destinations[count]);
@@ -173,24 +204,57 @@ public class GameManager : MonoBehaviour {
                 Random.Range(randVariance.x, randVariance.y), lcms[count]));
             count++;
         }
-
-        /* END Awake() */
-    }
-
-    void Start() {
         
+        /* then add the last destination which is for the goal */
+        intersections.Add(destinations[count]);
+
+
         ResetCount();
         while (count < intersections.Count) {
             GameUtils.Spawn(floorTile01, intersections[count]);
             count++;
         }
-        
+
         ResetCount();
-        while (count < tmpIntersections.Count) {
-            GameUtils.Spawn(floorTile02, tmpIntersections[count]);
+        while (count < destinations.Count) {
+            GameUtils.Spawn(floorTile02, destinations[count]);
             count++;
         }
+
+        /* TODO: maybe "shorten" intersections list to remove possible duplicate entries */
+
+        ResetCount();
+        while (count < intersections.Count) {
+            if (count + 1 < intersections.Count) {
+                GameUtils.CheckHorizontal(intersections[count], intersections[count + 1], drawnPath);
+                GameUtils.CheckVertical(drawnPath[^1], intersections[count + 1], drawnPath);
+            }
+            else {
+                GameUtils.CheckHorizontal(intersections[count], intersections[count], drawnPath);
+                GameUtils.CheckVertical(drawnPath[^1], intersections[count], drawnPath);
+            }
+
+            count++;
+        }
+
+        shortenedList = RemoveDuplicates(drawnPath);
+        GameUtils.WaitForListShortening();
+        drawnPath.Clear();
+        foreach (Vector3 step in shortenedList) {
+            drawnPath.Add(step);
+        }
         
+        shortenedList.Clear();
+
+        ResetCount();
+
+        while (count < drawnPath.Count) {
+            GameUtils.Spawn(floorTile02, drawnPath[count]);
+            count++;
+        }
+
+        player.transform.position = destinations[0];
+        GameUtils.Spawn(pyramid, destinations[^1]);
         /* END Start() */
     }
 
@@ -209,7 +273,14 @@ public class GameManager : MonoBehaviour {
         count = 0;
     }
 
+    private static List<Vector3> RemoveDuplicates(List<Vector3> list) {
+        var inputList = new HashSet<Vector3>(list);
+        var shortened = inputList.ToList();
+        shortListed = true;
+        return shortened;
+    }
 
+    
     public void StartGame() {
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);

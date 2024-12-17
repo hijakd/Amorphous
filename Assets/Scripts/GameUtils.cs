@@ -1,13 +1,22 @@
+// #define DEBUGHORIZ
+// #define DEBUGVERT
+
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
+
+
+// ReSharper disable CollectionNeverUpdated.Local
 // ReSharper disable PossibleLossOfFraction
 // ReSharper disable InvalidXmlDocComment
-
 // ReSharper disable InconsistentNaming
 
 public class GameUtils : MonoBehaviour {
+
+    private static Vector3 tmpPosition;
+    private static int count, horizDistance, vertDistance, xPosition;
+    private static bool horizAligned, vertAligned, isForward, isRight, debugHoriz, debugVert;
 
     public static IEnumerator WaitForRowSlice() {
         yield return new WaitUntil(() => GameManager.firstRowFound == true);
@@ -15,6 +24,10 @@ public class GameUtils : MonoBehaviour {
 
     public static IEnumerator WaitForColSlice() {
         yield return new WaitUntil(() => GameManager.firstColFound == true);
+    }
+    
+    public static IEnumerator WaitForListShortening() {
+        yield return new WaitUntil(() => GameManager.shortListed == true);
     }
 
 
@@ -37,7 +50,7 @@ public class GameUtils : MonoBehaviour {
         Instantiate(gameObject);
     }
 
-    /* overloading Spawn function to set rotation */
+    /* overloading Spawn function to set material */
     public static void Spawn(GameObject gameObject, Vector3 position, Material material) {
         gameObject.transform.position = position;
         gameObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = material;
@@ -194,18 +207,21 @@ public class GameUtils : MonoBehaviour {
         return ClampWithinBoundaries(position);
     }
 
-    public static Vector3 TriangulateIntersection(Vector3 origin, Vector3 destination, float centreMargin, int modifier) {
-        var position = Vector3.Slerp(origin, destination, centreMargin);
-        var modifierX = 0f;
-        var modifierY = 0f;
-        var decimalMultiplier = 10;
+    /* overloading the function to use an LCM value as a position modifier */
+    public static Vector3
+        TriangulateIntersection(Vector3 origin, Vector3 destination, float centreMargin, int modifier) {
+        Vector3 position = Vector3.Slerp(origin, destination, centreMargin);
+        float modifierX = 0f;
+        float modifierY = 0f;
+        int decimalMultiplier = 10;
 
         if (modifier > Mathf.Abs(1000) && modifier < Mathf.Abs(10000)) {
             decimalMultiplier = 1000;
-        } else if (modifier > Mathf.Abs(100) && modifier < Mathf.Abs(1000)) {
+        }
+        else if (modifier > Mathf.Abs(100) && modifier < Mathf.Abs(1000)) {
             decimalMultiplier = 100;
         }
-        
+
         /** TODO: possibly change this to randomly switch proportioning **/
         /* split the modifier by the random variance to be used proportionally across the X & Z axis' */
         modifierX = (modifier / decimalMultiplier) * centreMargin;
@@ -215,13 +231,12 @@ public class GameUtils : MonoBehaviour {
         position.x = Mathf.RoundToInt(position.x * (modifierX));
         position.y = 0f;
         position.z = Mathf.RoundToInt(position.z * (modifierY));
-        
+
         return ClampWithinBoundaries(position);
     }
-    
+
     /* check position is within the boundaries, if not clamp them in */
     private static Vector3 ClampWithinBoundaries(Vector3 position) {
-        
         if (position.x <= GameManager.mazeWidth.x) {
             position.x = GameManager.mazeWidth.x;
         }
@@ -237,6 +252,273 @@ public class GameUtils : MonoBehaviour {
         }
 
         return position;
+    }
+
+
+    public static int MeasureHorizontal(Vector3 position01, Vector3 position02) {
+        int distance;
+        if (position01.z < position02.z) {
+            distance = Mathf.RoundToInt(position01.z - position02.z);
+        } else if (position01.z > position02.z) {
+            distance = Mathf.RoundToInt(position02.z - position01.z);
+        }
+        else {
+            distance = 0;
+        }
+
+        return distance;
+    }
+    
+    public static int MeasureVertical(Vector3 position01, Vector3 position02) {
+        int distance;
+        if (position01.x < position02.x) {
+            distance = Mathf.RoundToInt(position01.x - position02.x);
+        } else if (position01.x > position02.x) {
+            distance = Mathf.RoundToInt(position02.x - position01.x);
+        }
+        else {
+            distance = 0;
+        }
+
+        return distance;
+    }
+
+    public static bool HorizontalAlignment(Vector3 position01, Vector3 position02) {
+        if (Mathf.Approximately(position01.z, position02.z) || Mathf.Approximately(position01.z, position02.z - 1) ||
+            Mathf.Approximately(position01.z, position02.z + 1)) {
+            horizAligned = true;
+
+            // Debug.Log("Triangulating horizAligned: " + horizAligned);
+        }
+
+        return horizAligned;
+    }
+
+    public static bool VerticalAlignment(Vector3 position01, Vector3 position02) {
+        if (Mathf.Approximately(position01.x, position02.x) || Mathf.Approximately(position01.x, position02.x - 1) ||
+            Mathf.Approximately(position01.x, position02.x + 1)) {
+            vertAligned = true;
+
+            // Debug.Log("Triangulating vertAligned: " + vertAligned);
+        }
+
+        return vertAligned;
+    }
+
+    /* check if positionB is ahead/north of positonA & by how far */
+    public static bool IsItForward(Vector3 position01, Vector3 position02) {
+        if (vertAligned) {
+            if (position01.z < position02.z) {
+                vertDistance = Mathf.RoundToInt(position02.z - position01.z);
+
+                // Debug.Log("Triangulating vertDistance: " + vertDistance);
+                isForward = true;
+
+                // Debug.Log("Triangulating forward: " + isForward);
+            }
+            else if (position01.z > position02.z) {
+                vertDistance = Mathf.RoundToInt(position01.z - position02.z);
+
+                // Debug.Log("Triangulating vertDistance: " + vertDistance);
+                isForward = false;
+
+                // Debug.Log("Triangulating forward: " + isForward);
+            }
+            else {
+                vertDistance = 0;
+            }
+        }
+
+        return isForward;
+    }
+
+    /* check if positionB is right/east of positonA & by how far */
+    public static bool IsItRight(Vector3 position01, Vector3 position02) {
+        if (horizAligned) {
+            if (position01.x < position02.x) {
+                horizDistance = Mathf.RoundToInt(position02.x - position01.x);
+
+                // Debug.Log("Triangulating horizDistance: " + horizDistance);
+                isRight = true;
+
+                // Debug.Log("Triangulating right: " + isRight);
+            }
+            else if (position01.x > position02.x) {
+                horizDistance = Mathf.RoundToInt(position01.x - position02.x);
+
+                // Debug.Log("Triangulating horizDistance: " + horizDistance);
+                isRight = false;
+
+                // Debug.Log("Triangulating right: " + isRight);
+            }
+            else {
+                horizDistance = 0;
+            }
+        }
+
+        return isRight;
+    }
+
+    public static void CheckHorizontal(Vector3 position01, Vector3 position02, List<Vector3> path) {
+        tmpPosition = new Vector3(0, 0, 0);
+// #if DEBUGHORIZ
+//         Debug.Log("Checking alignment");
+// #endif
+        if (debugHoriz) Debug.Log("Checking alignment");
+        if (HorizontalAlignment(position01, position02)) {
+            if (debugHoriz) Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(position01, position02));
+            if (IsItRight(position01, position02)) {
+                if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(position01, position02) + " Distance is: " + horizDistance);
+                for (count = 0; count <= horizDistance; count++) {
+                    path.Add(new Vector3(position01.x + count, position01.y, position01.z));
+                    if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
+                }
+            }
+            else {
+                if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(position01, position02) + " Distance is: " + horizDistance);
+                for (count = 0; count <= horizDistance; count++) {
+                    path.Add(new Vector3(position01.x - count, position01.y, position01.z));
+                    if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
+                }
+            }
+        }
+        else {
+            if (debugHoriz) Debug.Log("Skipped HorizAlign, creating a right angle position");
+            if (position01.z < position02.z) {
+                tmpPosition.x = position02.x;
+                tmpPosition.z = position01.z;
+                xPosition = 2;
+            }
+            else {
+                tmpPosition.x = position01.x;
+                tmpPosition.z = position02.z;
+                xPosition = 1;
+            }
+
+            if (xPosition == 1) {
+                if (HorizontalAlignment(tmpPosition, position02)) {
+                    if (debugHoriz) Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(tmpPosition, position02));
+                    if (IsItRight(tmpPosition, position02)) {
+                        if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(tmpPosition, position02) + " Distance is: " +
+                                                  horizDistance);
+                        for (count = 0; count <= horizDistance; count++) {
+                            path.Add(new Vector3(tmpPosition.x + count, tmpPosition.y, tmpPosition.z));
+                            if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
+                        }
+                    }
+                    else {
+                        if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(tmpPosition, position02) + " Distance is: " +
+                                                  horizDistance);
+                        for (count = 0; count <= horizDistance; count++) {
+                            path.Add(new Vector3(tmpPosition.x - count, tmpPosition.y, tmpPosition.z));
+                            if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
+                        }
+                    }
+                }
+            }
+
+            if (xPosition == 2) {
+                if (HorizontalAlignment(position01, tmpPosition)) {
+                    if (debugHoriz) Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(position01, tmpPosition));
+                    if (IsItRight(position01, tmpPosition)) {
+                        if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(position01, tmpPosition) + " Distance is: " +
+                                                  horizDistance);
+                        for (count = 0; count <= horizDistance; count++) {
+                            path.Add(new Vector3(position01.x + count, tmpPosition.y, tmpPosition.z));
+                            if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
+                        }
+                    }
+                    else {
+                        if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(position01, tmpPosition) + " Distance is: " +
+                                                  horizDistance);
+                        for (count = 0; count <= horizDistance; count++) {
+                            path.Add(new Vector3(position01.x - count, tmpPosition.y, tmpPosition.z));
+                            if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    public static void CheckVertical(Vector3 position01, Vector3 position02, List<Vector3> path) {
+        /* positions are within horizontal alignment margins */
+        if (VerticalAlignment(position01, position02)) {
+            if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
+            if (IsItForward(position01, position02)) {
+                if (debugVert) Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
+                                         vertDistance);
+                for (count = 0; count <= vertDistance; count++) {
+                    path.Add(new Vector3(position01.x, position01.y, position01.z + count));
+                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
+                }
+            }
+            else {
+                if (debugVert) Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
+                                         vertDistance);
+                for (count = 0; count <= vertDistance; count++) {
+                    path.Add(new Vector3(position01.x, position01.y, position01.z - count));
+                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
+                }
+            }
+        }
+
+        if (position01.z < position02.z) {
+            tmpPosition.x = position02.x;
+            tmpPosition.z = position01.z;
+            xPosition = 2;
+        }
+        else {
+            tmpPosition.x = position01.x;
+            tmpPosition.z = position02.z;
+            xPosition = 1;
+        }
+
+        if (VerticalAlignment(position01, tmpPosition)) {
+            if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
+            if (IsItForward(position01, tmpPosition)) {
+                if (debugVert) Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
+                                         vertDistance);
+                for (count = 0; count <= vertDistance; count++) {
+                    path.Add(new Vector3(tmpPosition.x, tmpPosition.y, position01.z + count));
+                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
+                }
+            }
+            else {
+                for (count = 0; count <= vertDistance; count++) {
+                    path.Add(new Vector3(tmpPosition.x, tmpPosition.y, position01.z - count));
+                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
+                }
+            }
+        }
+
+        if (VerticalAlignment(tmpPosition, position02)) {
+            if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
+            if (IsItForward(tmpPosition, position02)) {
+                if (debugVert) Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
+                                         vertDistance);
+                for (count = 0; count <= vertDistance; count++) {
+                    path.Add(new Vector3(tmpPosition.x, tmpPosition.y, tmpPosition.z + count));
+                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
+                }
+            }
+            else {
+                for (count = 0; count <= vertDistance; count++) {
+                    path.Add(new Vector3(tmpPosition.x, tmpPosition.y, tmpPosition.z - count));
+                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
+
+                }
+            }
+        }
+    }
+
+    public static List<Vector3> RemoveDuplicates(List<Vector3> drawnPath) {
+        var inputList = new HashSet<Vector3>();
+        var shortened = inputList.ToList();
+
+        // GameManager.shortListed = true;
+        return shortened;
     }
 
 }
