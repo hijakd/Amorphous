@@ -169,15 +169,17 @@ MonoBehaviour:
   - {fileID: 8851216710939664950, guid: c997274225c9da04a932bb51dafe958f, type: 3}
   winText: {fileID: 1744664631}
   gameOverText: {fileID: 144824136}
-  clockText: {fileID: 2128158169}
-  goalColourText: {fileID: 414637469}
-  goalColourButton: {fileID: 358895297}
-  goalColourPatch: {fileID: 470044657}
-  boxTexture: {fileID: 2800000, guid: 6f1182adb47b6154ba59f12405d5d95b, type: 3}
   isGameActive: 0
   restartButton: {fileID: 425114794}
   titleScreen: {fileID: 0}
   randomVariance: 0.42
+  intersections: []
+  tmpIntersections: []
+  drawnPath: []
+  shortenedList: []
+  slicedPath: []
+  destinations: []
+  midPoints: []
 --- !u!4 &103129383
 Transform:
   m_ObjectHideFlags: 0
