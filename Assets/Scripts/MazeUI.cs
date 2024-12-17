@@ -18,7 +18,7 @@ public class MazeUI : MonoBehaviour {
     }
     
     public static void PaintGoalBlip(Color colour) {
-        Debug.Log("Getting colour");
+        // Debug.Log("Getting colour");
         goalBlip.style.backgroundColor = colour;
     }
 
