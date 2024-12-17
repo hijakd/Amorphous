@@ -151,6 +151,7 @@ MonoBehaviour:
   goalObject: {fileID: 5895648694046751752, guid: a4b49dc5dfca8544e9050981753b91b7,
     type: 3}
   player: {fileID: 921098113}
+  pyramid: {fileID: 1879861639291899805, guid: 47fc53489bafbde45a767d87ff3e67f7, type: 3}
   floorTile01: {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1,
     type: 3}
   floorTile02: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
@@ -174,7 +175,6 @@ MonoBehaviour:
   titleScreen: {fileID: 0}
   randomVariance: 0.42
   intersections: []
-  tmpIntersections: []
   drawnPath: []
   shortenedList: []
   slicedPath: []
@@ -3224,7 +3224,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5709702984765707602}
-  - component: {fileID: 5709702984765707604}
   - component: {fileID: 5709702984765707603}
   m_Layer: 0
   m_Name: Focal Point
@@ -3297,21 +3296,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &5709702984765707604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4721551704839375913}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ac780960b9001b48814a890ad44e097, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 921098113}
-  offset: {x: 0, y: 0, z: 0}
-  rotationSpeed: 50
 --- !u!114 &8971400968373263135
 MonoBehaviour:
   m_ObjectHideFlags: 0

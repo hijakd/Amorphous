@@ -25,7 +25,7 @@ public class GameUtils : MonoBehaviour {
     public static IEnumerator WaitForColSlice() {
         yield return new WaitUntil(() => GameManager.firstColFound == true);
     }
-    
+
     public static IEnumerator WaitForListShortening() {
         yield return new WaitUntil(() => GameManager.shortListed == true);
     }
@@ -255,35 +255,60 @@ public class GameUtils : MonoBehaviour {
     }
 
 
+    public static void PlotHorizontalPath(Vector3 origin, Vector3 destination, List<Vector3> path) {
+        var hDistance = MeasureHorizontal(origin, destination);
+        if (OriginIsWest(origin, destination)) {
+            Debug.Log("origin is to the west, the destination is: " + hDistance + " steps away");
+            for (count = 0; count <= hDistance; count++) {
+                path.Add(new Vector3(origin.x + count, origin.y, origin.z));
+            }
+        }
+        else {
+            Debug.Log("origin is to the east, the destination is: " + hDistance + " steps away");
+            for (count = hDistance; count >= 0; count--) {
+                path.Add(new Vector3(origin.x - count, origin.y, origin.z));
+            }
+        }
+    }
+
+    public static void PlotVerticalPath(Vector3 origin, Vector3 destination, List<Vector3> path) {
+        var vDistance = MeasureVertical(origin, destination);
+        if (OriginIsSouth(origin, destination)) {
+            Debug.Log("origin is to the north, the destination is: " + vDistance + " steps away");
+            for (count = vDistance; count >= 0; count--) {
+                path.Add(new Vector3(destination.x, destination.y, destination.z - count));
+            }
+        }
+        else {
+            Debug.Log("origin is to the south, the destination is: " + vDistance + " steps away");
+            for (count = 0; count <= vDistance; count++) {
+                path.Add(new Vector3(destination.x, destination.y, destination.z + count));
+            }
+        }
+    }
+
     public static int MeasureHorizontal(Vector3 position01, Vector3 position02) {
-        int distance;
-        if (position01.z < position02.z) {
-            distance = Mathf.RoundToInt(position01.z - position02.z);
-        } else if (position01.z > position02.z) {
-            distance = Mathf.RoundToInt(position02.z - position01.z);
-        }
-        else {
-            distance = 0;
-        }
-
-        return distance;
+        // int distance = Mathf.Abs(Mathf.RoundToInt(position01.x - position02.x));
+        // return distance;
+        return Mathf.Abs(Mathf.RoundToInt(position01.x - position02.x));
     }
-    
+
     public static int MeasureVertical(Vector3 position01, Vector3 position02) {
-        int distance;
-        if (position01.x < position02.x) {
-            distance = Mathf.RoundToInt(position01.x - position02.x);
-        } else if (position01.x > position02.x) {
-            distance = Mathf.RoundToInt(position02.x - position01.x);
-        }
-        else {
-            distance = 0;
-        }
-
-        return distance;
+        // int distance;
+        // if (position01.z < position02.z) {
+        //     distance = Mathf.RoundToInt(position01.z - position02.z);
+        // }
+        // else if (position01.z > position02.z) {
+        //     distance = Mathf.RoundToInt(position02.z - position01.z);
+        // }
+        // else {
+        //     distance = 0;
+        // }
+        // return distance;
+        return Mathf.Abs(Mathf.RoundToInt(position01.z - position02.z));
     }
 
-    public static bool HorizontalAlignment(Vector3 position01, Vector3 position02) {
+    private static bool HorizontalAlignment(Vector3 position01, Vector3 position02) {
         if (Mathf.Approximately(position01.z, position02.z) || Mathf.Approximately(position01.z, position02.z - 1) ||
             Mathf.Approximately(position01.z, position02.z + 1)) {
             horizAligned = true;
@@ -294,7 +319,7 @@ public class GameUtils : MonoBehaviour {
         return horizAligned;
     }
 
-    public static bool VerticalAlignment(Vector3 position01, Vector3 position02) {
+    private static bool VerticalAlignment(Vector3 position01, Vector3 position02) {
         if (Mathf.Approximately(position01.x, position02.x) || Mathf.Approximately(position01.x, position02.x - 1) ||
             Mathf.Approximately(position01.x, position02.x + 1)) {
             vertAligned = true;
@@ -306,7 +331,7 @@ public class GameUtils : MonoBehaviour {
     }
 
     /* check if positionB is ahead/north of positonA & by how far */
-    public static bool IsItForward(Vector3 position01, Vector3 position02) {
+    private static bool IsItForward(Vector3 position01, Vector3 position02) {
         if (vertAligned) {
             if (position01.z < position02.z) {
                 vertDistance = Mathf.RoundToInt(position02.z - position01.z);
@@ -333,7 +358,7 @@ public class GameUtils : MonoBehaviour {
     }
 
     /* check if positionB is right/east of positonA & by how far */
-    public static bool IsItRight(Vector3 position01, Vector3 position02) {
+    private static bool IsItRight(Vector3 position01, Vector3 position02) {
         if (horizAligned) {
             if (position01.x < position02.x) {
                 horizDistance = Mathf.RoundToInt(position02.x - position01.x);
@@ -359,8 +384,19 @@ public class GameUtils : MonoBehaviour {
         return isRight;
     }
 
+    private static bool OriginIsWest(Vector3 position01, Vector3 position02) {
+        bool isWest = position01.x < position02.x;
+        return isWest;
+    }
+
+    private static bool OriginIsSouth(Vector3 position01, Vector3 position02) {
+        bool isSouth = position01.z < position02.z;
+        return isSouth;
+    }
+
     public static void CheckHorizontal(Vector3 position01, Vector3 position02, List<Vector3> path) {
         tmpPosition = new Vector3(0, 0, 0);
+
 // #if DEBUGHORIZ
 //         Debug.Log("Checking alignment");
 // #endif
@@ -368,14 +404,18 @@ public class GameUtils : MonoBehaviour {
         if (HorizontalAlignment(position01, position02)) {
             if (debugHoriz) Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(position01, position02));
             if (IsItRight(position01, position02)) {
-                if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(position01, position02) + " Distance is: " + horizDistance);
+                if (debugHoriz)
+                    Debug.Log("Check if is right: " + IsItRight(position01, position02) + " Distance is: " +
+                              horizDistance);
                 for (count = 0; count <= horizDistance; count++) {
                     path.Add(new Vector3(position01.x + count, position01.y, position01.z));
                     if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
                 }
             }
             else {
-                if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(position01, position02) + " Distance is: " + horizDistance);
+                if (debugHoriz)
+                    Debug.Log("Check if is right: " + IsItRight(position01, position02) + " Distance is: " +
+                              horizDistance);
                 for (count = 0; count <= horizDistance; count++) {
                     path.Add(new Vector3(position01.x - count, position01.y, position01.z));
                     if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
@@ -397,18 +437,21 @@ public class GameUtils : MonoBehaviour {
 
             if (xPosition == 1) {
                 if (HorizontalAlignment(tmpPosition, position02)) {
-                    if (debugHoriz) Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(tmpPosition, position02));
+                    if (debugHoriz)
+                        Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(tmpPosition, position02));
                     if (IsItRight(tmpPosition, position02)) {
-                        if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(tmpPosition, position02) + " Distance is: " +
-                                                  horizDistance);
+                        if (debugHoriz)
+                            Debug.Log("Check if is right: " + IsItRight(tmpPosition, position02) + " Distance is: " +
+                                      horizDistance);
                         for (count = 0; count <= horizDistance; count++) {
                             path.Add(new Vector3(tmpPosition.x + count, tmpPosition.y, tmpPosition.z));
                             if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
                         }
                     }
                     else {
-                        if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(tmpPosition, position02) + " Distance is: " +
-                                                  horizDistance);
+                        if (debugHoriz)
+                            Debug.Log("Check if is right: " + IsItRight(tmpPosition, position02) + " Distance is: " +
+                                      horizDistance);
                         for (count = 0; count <= horizDistance; count++) {
                             path.Add(new Vector3(tmpPosition.x - count, tmpPosition.y, tmpPosition.z));
                             if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
@@ -419,18 +462,21 @@ public class GameUtils : MonoBehaviour {
 
             if (xPosition == 2) {
                 if (HorizontalAlignment(position01, tmpPosition)) {
-                    if (debugHoriz) Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(position01, tmpPosition));
+                    if (debugHoriz)
+                        Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(position01, tmpPosition));
                     if (IsItRight(position01, tmpPosition)) {
-                        if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(position01, tmpPosition) + " Distance is: " +
-                                                  horizDistance);
+                        if (debugHoriz)
+                            Debug.Log("Check if is right: " + IsItRight(position01, tmpPosition) + " Distance is: " +
+                                      horizDistance);
                         for (count = 0; count <= horizDistance; count++) {
                             path.Add(new Vector3(position01.x + count, tmpPosition.y, tmpPosition.z));
                             if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
                         }
                     }
                     else {
-                        if (debugHoriz) Debug.Log("Check if is right: " + IsItRight(position01, tmpPosition) + " Distance is: " +
-                                                  horizDistance);
+                        if (debugHoriz)
+                            Debug.Log("Check if is right: " + IsItRight(position01, tmpPosition) + " Distance is: " +
+                                      horizDistance);
                         for (count = 0; count <= horizDistance; count++) {
                             path.Add(new Vector3(position01.x - count, tmpPosition.y, tmpPosition.z));
                             if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
@@ -447,16 +493,18 @@ public class GameUtils : MonoBehaviour {
         if (VerticalAlignment(position01, position02)) {
             if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
             if (IsItForward(position01, position02)) {
-                if (debugVert) Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
-                                         vertDistance);
+                if (debugVert)
+                    Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
+                              vertDistance);
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(position01.x, position01.y, position01.z + count));
                     if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
                 }
             }
             else {
-                if (debugVert) Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
-                                         vertDistance);
+                if (debugVert)
+                    Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
+                              vertDistance);
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(position01.x, position01.y, position01.z - count));
                     if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
@@ -478,8 +526,9 @@ public class GameUtils : MonoBehaviour {
         if (VerticalAlignment(position01, tmpPosition)) {
             if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
             if (IsItForward(position01, tmpPosition)) {
-                if (debugVert) Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
-                                         vertDistance);
+                if (debugVert)
+                    Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
+                              vertDistance);
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, position01.z + count));
                     if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
@@ -496,8 +545,9 @@ public class GameUtils : MonoBehaviour {
         if (VerticalAlignment(tmpPosition, position02)) {
             if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
             if (IsItForward(tmpPosition, position02)) {
-                if (debugVert) Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
-                                         vertDistance);
+                if (debugVert)
+                    Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
+                              vertDistance);
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, tmpPosition.z + count));
                     if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
@@ -507,7 +557,6 @@ public class GameUtils : MonoBehaviour {
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, tmpPosition.z - count));
                     if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
-
                 }
             }
         }

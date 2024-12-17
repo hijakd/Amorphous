@@ -223,28 +223,32 @@ public class GameManager : MonoBehaviour {
 
         /* TODO: maybe "shorten" intersections list to remove possible duplicate entries */
 
+        /* testing simpler path plotting function */
+        // GameUtils.PlotHorizontalPath(intersections[count], intersections[count + 1], drawnPath);
+        // GameUtils.PlotVerticalPath(intersections[count], intersections[count + 1], drawnPath);
+        
         ResetCount();
         while (count < intersections.Count) {
             if (count + 1 < intersections.Count) {
-                GameUtils.CheckHorizontal(intersections[count], intersections[count + 1], drawnPath);
-                GameUtils.CheckVertical(drawnPath[^1], intersections[count + 1], drawnPath);
+                GameUtils.PlotHorizontalPath(intersections[count], intersections[count + 1], drawnPath);
+                GameUtils.PlotVerticalPath(intersections[count], intersections[count + 1], drawnPath);
             }
             else {
-                GameUtils.CheckHorizontal(intersections[count], intersections[count], drawnPath);
-                GameUtils.CheckVertical(drawnPath[^1], intersections[count], drawnPath);
+                GameUtils.PlotHorizontalPath(intersections[count], intersections[count], drawnPath);
+                GameUtils.PlotVerticalPath(intersections[count], intersections[count], drawnPath);
             }
-
+        
             count++;
         }
-
-        shortenedList = RemoveDuplicates(drawnPath);
-        GameUtils.WaitForListShortening();
-        drawnPath.Clear();
-        foreach (Vector3 step in shortenedList) {
-            drawnPath.Add(step);
-        }
         
-        shortenedList.Clear();
+        // shortenedList = RemoveDuplicates(drawnPath);
+        // GameUtils.WaitForListShortening();
+        // drawnPath.Clear();
+        // foreach (Vector3 step in shortenedList) {
+        //     drawnPath.Add(step);
+        // }
+        //
+        // shortenedList.Clear();
 
         ResetCount();
 
