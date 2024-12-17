@@ -250,15 +250,46 @@ public class GameManager : MonoBehaviour {
         //
         // shortenedList.Clear();
 
-        ResetCount();
+        /* find the first row of the maze grid */
+        slicedPath = SliceNSort.SliceRows(drawnPath, gridNorth, gridEast);
+        /* find the value of the first row */
+        GameUtils.WaitForRowSlice();
+        if (slicedPath.Count > 0) {
+            rowNumber = Mathf.RoundToInt(slicedPath[0].z);
+        }
+        
 
+        /* spawn the east/west walls */
+        // while (rowNumber >= gridSouth) {
+        //     slicedPath = SliceNSort.SliceRows(drawnPath, rowNumber, gridEast);
+        //     GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
+        //     rowNumber--;
+        // }
+        
+        /* delete the contents of slicedPath to eliminate junk data in the next step */
+        // slicedPath.Clear();
+
+
+        ResetCount();
+        /* spawn the floor tiles for the maze path */
         while (count < drawnPath.Count) {
             GameUtils.Spawn(floorTile02, drawnPath[count]);
             count++;
         }
-
+        
+        // ResetCount();
+        // while (count < slicedPath.Count) {
+            // GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
+        // }
+        
+        /* reposition the player, spawn the waypoints and goal */
         player.transform.position = destinations[0];
-        GameUtils.Spawn(pyramid, destinations[^1]);
+        for (count = 1; count <= destinations.Count - 2; count++) {
+            GameUtils.Spawn(waypoints[count - 1], destinations[count]);
+        }
+        // GameUtils.Spawn(pyramid, destinations[^1]);
+        GameUtils.Spawn(goalObject, destinations[^1]);
+        
         /* END Start() */
     }
 
