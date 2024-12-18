@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+
 using UnityEngine;
 // ReSharper disable CompareOfFloatsByEqualityOperator
 // ReSharper disable RedundantAssignment
 
 public class SliceNSort : MonoBehaviour {
-    
+
     /* return a sorted slice/portion of the path array at a given row of the maze grid */
     public static List<Vector3> SliceRows(List<Vector3> path, int row, int minimumWidth) {
+
         int slicingCount = 0;
         List<Vector3> slice = new List<Vector3>();
         List<Vector3> sortedSlice = new List<Vector3>();
@@ -30,7 +32,7 @@ public class SliceNSort : MonoBehaviour {
         List<Vector3> slice = new List<Vector3>();
         List<Vector3> sortedSlice = new List<Vector3>();
 
-        // Debug.Log("Slicing columns List");
+        Debug.Log("Slicing columns List");
         while (slicingCount < path.Count) {
             if (path[slicingCount].x == column) {
                 slice.Add(path[slicingCount]);
@@ -68,6 +70,7 @@ public class SliceNSort : MonoBehaviour {
         int sortingCount = 0;
         int listSize = list.Count;
 
+        Debug.Log("Sorting Sliced List");
         while (sortingCount < listSize) {
             for (int i = 0; i < listSize; i++) {
                 if (list[i].z == lowestValue) {

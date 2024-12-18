@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
+// ReSharper disable HeuristicUnreachableCode
 // ReSharper disable CollectionNeverUpdated.Local
 // ReSharper disable PossibleLossOfFraction
 // ReSharper disable InvalidXmlDocComment
@@ -60,7 +60,6 @@ public class GameUtils : MonoBehaviour {
     /* Spawn the east & west walls across a given row of the maze path */
     public static void SpawnEastWestWalls(List<Vector3> path, GameObject[] walls, Material material) {
         // Debug.Log("Spawning East/West Walls");
-
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
                 /* spawn the first west wall of the row */
@@ -256,15 +255,22 @@ public class GameUtils : MonoBehaviour {
 
 
     public static void PlotHorizontalPath(Vector3 origin, Vector3 destination, List<Vector3> path) {
+        bool pDebug = false;
         var hDistance = MeasureHorizontal(origin, destination);
         if (OriginIsWest(origin, destination)) {
-            Debug.Log("origin is to the west, the destination is: " + hDistance + " steps away");
+            if (pDebug) {
+                Debug.Log("origin is to the west, the destination is: " + hDistance + " steps away");
+            }
+
             for (count = 0; count <= hDistance; count++) {
                 path.Add(new Vector3(origin.x + count, origin.y, origin.z));
             }
         }
         else {
-            Debug.Log("origin is to the east, the destination is: " + hDistance + " steps away");
+            if (pDebug) {
+                Debug.Log("origin is to the east, the destination is: " + hDistance + " steps away");
+            }
+
             for (count = hDistance; count >= 0; count--) {
                 path.Add(new Vector3(origin.x - count, origin.y, origin.z));
             }
@@ -272,15 +278,22 @@ public class GameUtils : MonoBehaviour {
     }
 
     public static void PlotVerticalPath(Vector3 origin, Vector3 destination, List<Vector3> path) {
+        bool pDebug = false;
         var vDistance = MeasureVertical(origin, destination);
         if (OriginIsSouth(origin, destination)) {
-            Debug.Log("origin is to the north, the destination is: " + vDistance + " steps away");
+            if (pDebug) {
+                Debug.Log("origin is to the north, the destination is: " + vDistance + " steps away");
+            }
+
             for (count = vDistance; count >= 0; count--) {
                 path.Add(new Vector3(destination.x, destination.y, destination.z - count));
             }
         }
         else {
-            Debug.Log("origin is to the south, the destination is: " + vDistance + " steps away");
+            if (pDebug) {
+                Debug.Log("origin is to the south, the destination is: " + vDistance + " steps away");
+            }
+
             for (count = 0; count <= vDistance; count++) {
                 path.Add(new Vector3(destination.x, destination.y, destination.z + count));
             }
@@ -570,4 +583,73 @@ public class GameUtils : MonoBehaviour {
         return shortened;
     }
 
+    // public static List<Vector3> SliceRows(List<Vector3> list, int rowToSlice) {
+    //     bool sDebug = false;
+    //     int counter = 0;
+    //     var slice = new List<Vector3>();
+    //     var sortedSlice = new List<Vector3>();
+    //
+    //     if (sDebug) {
+    //         Debug.Log("Slicing data received, with " + list.Count + " entries");
+    //     }
+    //
+    //     counter = ContainsRowValue(list, rowToSlice);
+    //
+    //     while (counter < list.Count) {
+    //         if (list[counter].z == rowToSlice) {
+    //             slice.Add(list[counter]);
+    //         }
+    //
+    //         counter++;
+    //     }
+    //
+    //     if (sDebug) {
+    //         Debug.Log("Slicing data reduced to " + slice.Count + " entries");
+    //     }
+    //
+    //     return slice;
+    // }
+
+    // public static List<Vector3> SliceRows(List<Vector3> list, int rowToSlice, int lowestRowValue) {
+    public static List<Vector3> SliceRows(List<Vector3> list, int rowToSlice) {
+        int sortingCount = 0;
+        int searchValue = rowToSlice;
+        List<Vector3> sorted = new List<Vector3>();
+
+        // Debug.Log("Sorting Sliced List");
+        while (sortingCount < list.Count) {
+            for (int i = 0; i < list.Count; i++) {
+                if (searchValue == Mathf.RoundToInt(list[i].z)) {
+                    sorted.Add(list[i]);
+                    sortingCount++;
+                }
+            }
+            searchValue--;
+        }
+
+        // sorted.Reverse();
+
+        return sorted;
+    }
+
+
+    private static int ContainsRowValue(List<Vector3> list, int rowToFind) {
+        int rowIndex = 0;
+        bool rowFound = false;
+        
+        while (!rowFound && rowIndex < list.Count) {
+            Debug.Log("searching for the first row at " + rowIndex);
+            if (rowToFind == Mathf.RoundToInt(list[rowIndex].z)) {
+                rowFound = true;
+                // return rowIndex;
+            }
+            
+            rowIndex++; 
+        }
+        Debug.Log("found the first row at " + rowIndex);
+
+        return rowIndex;
+    }
+
 }
+
