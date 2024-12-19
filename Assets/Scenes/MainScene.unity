@@ -176,6 +176,10 @@ MonoBehaviour:
   randomVariance: 0.42
   rowNumber: 0
   lastRowNumber: 0
+  bigX: 0
+  littleX: 0
+  bigZ: 0
+  littleZ: 0
   tmpXs: 
   tmpZs: 
   intersections: []

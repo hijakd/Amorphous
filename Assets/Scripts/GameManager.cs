@@ -263,43 +263,29 @@ public class GameManager : MonoBehaviour {
         // slicedPath = GameUtils.SortAndSliceRows(drawnPath, _north);
         // GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
 
-        // _firstRowNumber = Mathf.RoundToInt(drawnPath[^1].x);
-        // _lastRowNumber = Mathf.RoundToInt(drawnPath[0].x);
-
+        /*
         tmpZs = GameUtils.FindTheZs(drawnPath);
         tmpXs = GameUtils.FindTheXs(drawnPath);
-
+        
         Debug.Log("before looping\nfirstRowNumber = " + _firstRowNumber);
-
+        
         bigZ = GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath));
         littleZ = GameUtils.FindSmallestValue(GameUtils.FindTheZs(drawnPath));
         
         bigX = GameUtils.FindLargestValue(GameUtils.FindTheXs(drawnPath));
         littleX = GameUtils.FindSmallestValue(GameUtils.FindTheXs(drawnPath));
+        */
         
-        // for (int i = 0; i < tmpZs.Count; i++) {
-        //     if (tmpZs[i] > _firstRowNumber) {
-        //         _firstRowNumber = tmpZs[i];
-        //     }
-        //     
-        //     if (tmpZs[i]  < _lastRowNumber) {
-        //         _lastRowNumber = tmpZs[i];
-        //     }
-        //     
-        //     Debug.Log("\nfirstRowNumber = " + _firstRowNumber + "\nlastRowNumber = " + _lastRowNumber);
-        //
-        //     // if (Mathf.RoundToInt(drawnPath[i].x) > _firstColumnNumber) {
-        //     //     _firstRowNumber = Mathf.RoundToInt(drawnPath[i].x);
-        //     // }
-        //     //
-        //     // if (Mathf.RoundToInt(drawnPath[i].x) < _lastColumnNumber) {
-        //     //     _lastRowNumber = Mathf.RoundToInt(drawnPath[i].x);
-        //     // }
-        // }
-
-        slicedPath = GameUtils.SliceRow(drawnPath, _firstRowNumber);
-        sortedList = GameUtils.SortRows(slicedPath, _north);
-        shortenedList = RemoveDuplicates(sortedList);
+        bigZ = GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath));
+        
+        /* testing the use of the functions for finding the largest Z value */
+        // slicedPath = GameUtils.SliceRow(drawnPath, _firstRowNumber);
+        // slicedPath = GameUtils.SliceRow(drawnPath, GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath)));
+        // shortenedList = RemoveDuplicates(slicedPath);
+        // shortenedList = RemoveDuplicates(GameUtils.SliceRow(drawnPath, GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath))));
+        // sortedList = GameUtils.SortRows(shortenedList, _north);
+        sortedList = GameUtils.SortRows(RemoveDuplicates(GameUtils.SliceRow(drawnPath, GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath)))), _north);
+        
 
         // slicedPath = GameUtils.SliceRow(sortedList, _firstRowNumber);
 
