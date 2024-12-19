@@ -55,6 +55,6 @@ public class MazeUI : MonoBehaviour {
     }
     
     void FixedUpdate() {
-        timeText.text = System.DateTime.Now.ToString("HH:mm:ss");
+        timeText.text = DateTime.Now.ToString("HH:mm:ss");
     }
 }

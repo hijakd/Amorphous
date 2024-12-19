@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour {
     public int gridHeight;
     public int gridWidth;
     public List<GameObject> waypoints;
-    public TextMeshProUGUI winText, gameOverText, telemetryText;
+    public TextMeshProUGUI winText, gameOverText;
     public bool isGameActive;
     public static bool goalFound;
     public Button restartButton;
@@ -39,8 +39,9 @@ public class GameManager : MonoBehaviour {
     private Color goalColour;
     private ColorBlock goalColorBlock;
     private float xVal, zVal;
-    private int count, rowNumber, columnNumber/*, gridNorth, gridEast, gridSouth, gridWest*/;
-    [SerializeField] private int  gridNorth, gridEast, gridSouth, gridWest;
+    private int count, /*rowNumber,*/ columnNumber, gridNorth, gridEast, gridSouth, gridWest;
+    // private int gridNorth, gridEast, gridSouth, gridWest;
+    [SerializeField] private int rowNumber;
     private Vector3 goalPosition, pyramidPos, pyramidPos02, spawnPosition;
 
     private List<Color> mixedColors;
@@ -55,18 +56,22 @@ public class GameManager : MonoBehaviour {
         destinations,
         midPoints;
 
-    private Material obsMaterial; // added for testing
+    public static Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
-    private Material purpleMaterial; // added for testing
-    private Material pinkMaterial; // added for testing
-    private Material blueMaterial; // added for testing
+    public static Material purpleMaterial; // added for testing
+    public static Material pinkMaterial; // added for testing
+    public static Material blueMaterial; // added for testing
     private Material greenMaterial; // added for testing
     private Material goalMaterial;
 
     public static bool shortListed = false;
     public static bool firstRowFound = false;
     public static bool firstColFound = false;
-    public static string telemetryData = "";
+    public static int _north { get; private set; }
+    public static int _east { get; private set; }
+    public static int _south { get; private set; }
+    public static int _west { get; private set; }
+    // public static string telemetryData = "";
     
 
 
@@ -111,10 +116,11 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
         groundPlane = GameObject.Find("GroundPlane");
 
-        mazeHeight.y = gridNorth = gridHeight / 2;
-        mazeWidth.y = gridEast = gridWidth / 2;
-        mazeHeight.x = gridSouth = -gridNorth;
-        mazeWidth.x = gridWest = -gridEast;
+        _north = mazeHeight.y = gridNorth = gridHeight / 2;
+        _east = mazeWidth.y = gridEast = gridWidth / 2;
+        _south = mazeHeight.x = gridSouth = -gridNorth;
+        _west = mazeWidth.x = gridWest = -gridEast;
+       
 
         cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
         
@@ -136,12 +142,10 @@ public class GameManager : MonoBehaviour {
         randVariance.y = 1f - randomVariance;
 
         gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat"); // added for testing
-        
-
-        // obsMaterial = Resources.Load<Material>("Materials/OBS_Mat"); // added for testing
-        // purpleMaterial = Resources.Load<Material>("Materials/Matt_Purple_Mat"); // added for testing
-        // pinkMaterial = Resources.Load<Material>("Materials/Matt_Pink_Mat"); // added for testing
-        // blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat"); // added for testing
+        obsMaterial = Resources.Load<Material>("Materials/OBS_Mat"); // added for testing
+        purpleMaterial = Resources.Load<Material>("Materials/Matt_Purple_Mat"); // added for testing
+        pinkMaterial = Resources.Load<Material>("Materials/Matt_Pink_Mat"); // added for testing
+        blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat"); // added for testing
         // greenMaterial = Resources.Load<Material>("Materials/Matt_Green_Mat"); // added for testing
 
         /* cardinals are the corners of the grid & used for boundary calculations */
@@ -157,7 +161,7 @@ public class GameManager : MonoBehaviour {
         /* END Awake() */
     }
 
-    void Start() {
+    private void Start() {
         // Debug.Log("Trying to colour the goalBlip");
 
         MazeUI.PaintGoalBlip(goalColour);
@@ -183,22 +187,11 @@ public class GameManager : MonoBehaviour {
 
         ResetCount();
 
-        /** TODO: is lcms redundant?? **/
         while (count < midPoints.Count) {
             lcms.Add(GameUtils.FindLcm(midPoints[count], distances[count], gridNorth, gridEast));
             count++;
         }
-
-        // ResetCount();
-        // /* testing differences in results of TriangulateIntersection() */
-        // /* populate intersections list using destinations & lcms as seed values for triangulated positions */
-        // while (count < lcms.Count) {
-        //     tmpIntersections.Add(destinations[count]);
-        //     tmpIntersections.Add(GameUtils.TriangulateIntersection(destinations[count], destinations[count + 1],
-        //         Random.Range(randVariance.x, randVariance.y)));
-        //     count++;
-        // }
-
+        
         ResetCount();
 
         /* populate intersections list using destinations & lcms as seed values for triangulated positions */
@@ -231,6 +224,7 @@ public class GameManager : MonoBehaviour {
         // GameUtils.PlotHorizontalPath(intersections[count], intersections[count + 1], drawnPath);
         // GameUtils.PlotVerticalPath(intersections[count], intersections[count + 1], drawnPath);
         
+        /* plot the paths between the intersections */
         ResetCount();
         while (count < intersections.Count) {
             if (count + 1 < intersections.Count) {
@@ -256,24 +250,23 @@ public class GameManager : MonoBehaviour {
         if (slicedPath.Count > 0) {
             slicedPath.Clear();
         }
-        // slicedPath = GameUtils.SliceRows(drawnPath, gridNorth, gridWest);
-        slicedPath = GameUtils.SliceRows(drawnPath, gridNorth);
+
+        rowNumber = Mathf.RoundToInt(drawnPath[0].z) < gridNorth ? Mathf.RoundToInt(drawnPath[0].z) : gridNorth;
         
         
-        // /* find the first row of the maze grid */
-        // slicedPath = SliceNSort.SliceRows(drawnPath, gridNorth, gridWest);
-        // /* find the value of the first row */
-        // GameUtils.WaitForRowSlice();
+        /* find the first row of the maze grid */
+        slicedPath = GameUtils.SortAndSliceRows(drawnPath, gridNorth);
+        GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
+        
+        /* find the value of the second row */
         // if (slicedPath.Count > 0) {
-        //     rowNumber = Mathf.RoundToInt(slicedPath[0].z);
+        //     rowNumber = Mathf.RoundToInt(slicedPath[0].z) - 1;
         // }
         
-        
-        
-
         /* spawn the east/west walls */
         // while (rowNumber >= gridSouth) {
-        //     slicedPath = SliceNSort.SliceRows(drawnPath, rowNumber, gridEast);
+        //     // while (rowNumber >= gridNorth) {
+        //     slicedPath = GameUtils.SortAndSliceRows(drawnPath, rowNumber);
         //     GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
         //     rowNumber--;
         // }
@@ -307,10 +300,6 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-
-        // if (telemetryData.Length > 0) {
-        //     telemetryText.text = telemetryData;
-        // }
         
         
         

@@ -170,15 +170,10 @@ MonoBehaviour:
   - {fileID: 8851216710939664950, guid: c997274225c9da04a932bb51dafe958f, type: 3}
   winText: {fileID: 1744664631}
   gameOverText: {fileID: 144824136}
-  telemetryText: {fileID: 218774384}
   isGameActive: 0
   restartButton: {fileID: 425114794}
   titleScreen: {fileID: 0}
   randomVariance: 0.42
-  gridNorth: 0
-  gridEast: 0
-  gridSouth: 0
-  gridWest: 0
   intersections: []
   drawnPath: []
   shortenedList: []
