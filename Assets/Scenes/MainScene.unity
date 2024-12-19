@@ -176,12 +176,15 @@ MonoBehaviour:
   randomVariance: 0.42
   rowNumber: 0
   lastRowNumber: 0
+  tmpXs: 
+  tmpZs: 
   intersections: []
-  drawnPath: []
-  shortenedList: []
-  slicedPath: []
   destinations: []
   midPoints: []
+  drawnPath: []
+  slicedPath: []
+  sortedList: []
+  shortenedList: []
 --- !u!4 &103129383
 Transform:
   m_ObjectHideFlags: 0

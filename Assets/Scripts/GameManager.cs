@@ -58,15 +58,10 @@ public class GameManager : MonoBehaviour {
     private List<Color> mixedColors;
     private List<GameObject> cardinals;
     private List<int> distances, lcms;
+    
+    [SerializeField] private List<int> tmpXs, tmpZs;
 
-    [SerializeField] private List<Vector3> intersections,
-        /*tmpIntersections,*/
-        destinations,
-        midPoints,
-        drawnPath,
-        sortedList,
-        shortenedList,
-        slicedPath;
+    [SerializeField] private List<Vector3> intersections, destinations, midPoints, drawnPath, slicedPath, sortedList, shortenedList;
 
     public static Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
@@ -138,9 +133,12 @@ public class GameManager : MonoBehaviour {
         distances = new List<int>();
         lcms = new List<int>();
         midPoints = new List<Vector3>();
-        sortedList = new List<Vector3>(); 
+        sortedList = new List<Vector3>();
         mixedColors = new List<Color>();
         goalColour = new Color();
+        
+        tmpZs = new List<int>();
+        tmpXs = new List<int>();
 
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
@@ -248,8 +246,6 @@ public class GameManager : MonoBehaviour {
         // }
         //
         // shortenedList.Clear();
-        
-        
 
 
         if (slicedPath.Count > 0) {
@@ -269,29 +265,37 @@ public class GameManager : MonoBehaviour {
         // _firstRowNumber = Mathf.RoundToInt(drawnPath[^1].x);
         // _lastRowNumber = Mathf.RoundToInt(drawnPath[0].x);
 
-        for (int i = 0; i < drawnPath.Count; i++) {
-            if (Mathf.RoundToInt(drawnPath[i].x) > _firstRowNumber) {
-                _firstRowNumber = Mathf.RoundToInt(drawnPath[i].x);
-            }
+        tmpZs = GameUtils.FindTheZs(drawnPath);
+        tmpXs = GameUtils.FindTheXs(drawnPath);
 
-            if (Mathf.RoundToInt(drawnPath[i].x) < _lastRowNumber) {
-                _lastRowNumber = Mathf.RoundToInt(drawnPath[i].x);
+        Debug.Log("before looping\nfirstRowNumber = " + _firstRowNumber);
+        
+        for (int i = 0; i < tmpZs.Count; i++) {
+            if (tmpZs[i] > _firstRowNumber) {
+                _firstRowNumber = tmpZs[i];
             }
+            
+            if (tmpZs[i]  < _lastRowNumber) {
+                _lastRowNumber = tmpZs[i];
+            }
+            
+            Debug.Log("\nfirstRowNumber = " + _firstRowNumber + "\nlastRowNumber = " + _lastRowNumber);
 
-            // if (Mathf.RoundToInt(drawnPath[i].z) > _firstColumnNumber) {
-            //     _firstRowNumber = Mathf.RoundToInt(drawnPath[i].z);
+            // if (Mathf.RoundToInt(drawnPath[i].x) > _firstColumnNumber) {
+            //     _firstRowNumber = Mathf.RoundToInt(drawnPath[i].x);
             // }
             //
-            // if (Mathf.RoundToInt(drawnPath[i].z) < _lastColumnNumber) {
-            //     _lastRowNumber = Mathf.RoundToInt(drawnPath[i].z);
+            // if (Mathf.RoundToInt(drawnPath[i].x) < _lastColumnNumber) {
+            //     _lastRowNumber = Mathf.RoundToInt(drawnPath[i].x);
             // }
         }
-        
-        
-        sortedList = GameUtils.SortRows(drawnPath, _north);
+
+        slicedPath = GameUtils.SliceRow(drawnPath, _firstRowNumber);
+        sortedList = GameUtils.SortRows(slicedPath, _north);
         shortenedList = RemoveDuplicates(sortedList);
-        slicedPath = GameUtils.SliceRow(sortedList, _firstRowNumber);
-        
+
+        // slicedPath = GameUtils.SliceRow(sortedList, _firstRowNumber);
+
         // GameUtils.SpawnEastWestWalls(GameUtils.SortAndSliceRows(sortedList, _firstRowNumber), wallPanels, gypMaterial);
 
         // var rowNum = _firstRowNumber - 1;

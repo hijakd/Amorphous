@@ -602,7 +602,7 @@ public class GameUtils : MonoBehaviour {
     /* begin parsing the pathList by sorting the Z values in descending order  */
     public static List<Vector3> SortRows(List<Vector3> pathList, int rowHeight) {
         int counter = 0;
-        int searchValue = rowHeight;
+        int searchValue = -rowHeight;
         List<Vector3> sorted = new();
 
         // Debug.Log("EARLY SortAndSliceRows");
@@ -615,7 +615,7 @@ public class GameUtils : MonoBehaviour {
                 }
             }
 
-            searchValue--;
+            searchValue++;
         }
 
         // GameManager._rowNumber = searchValue;
@@ -752,4 +752,17 @@ public class GameUtils : MonoBehaviour {
         return sorted;
     }
 
+    public static List<int> FindTheZs(List<Vector3> path) {
+        List<int> foundZs = path.Select(slice => Mathf.RoundToInt(slice.z)).ToList();
+        HashSet<int> shortened = new(foundZs);
+        
+        return shortened.ToList();
+    }
+    
+    public static List<int> FindTheXs(List<Vector3> path) {
+        List<int> foundXs = path.Select(slice => Mathf.RoundToInt(slice.x)).ToList();
+        HashSet<int> shortened = new(foundXs);
+        
+        return shortened.ToList();
+    }
 }
