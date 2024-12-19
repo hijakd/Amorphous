@@ -765,4 +765,16 @@ public class GameUtils : MonoBehaviour {
         
         return shortened.ToList();
     }
+
+    public static int FindLargestValue(List<int> values) {
+        int tmpValue = GameManager._west < GameManager._south ? GameManager._south : GameManager._west;
+        
+        return values.Prepend(tmpValue).Max();
+    }
+    
+    public static int FindSmallestValue(List<int> values) {
+        int tmpValue = GameManager._north < GameManager._east ? GameManager._east : GameManager._north;
+        
+        return values.Prepend(tmpValue).Min();
+    }
 }

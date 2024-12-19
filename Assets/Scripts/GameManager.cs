@@ -52,7 +52,8 @@ public class GameManager : MonoBehaviour {
     private ColorBlock goalColorBlock;
     private float xVal, zVal;
     private int count, /*rowNumber,*/ columnNumber;
-    [SerializeField] private int rowNumber, lastRowNumber;
+    [SerializeField] private int rowNumber, lastRowNumber, bigX, littleX, bigZ, littleZ;
+    
     private Vector3 goalPosition, pyramidPos, pyramidPos02, spawnPosition;
 
     private List<Color> mixedColors;
@@ -269,26 +270,32 @@ public class GameManager : MonoBehaviour {
         tmpXs = GameUtils.FindTheXs(drawnPath);
 
         Debug.Log("before looping\nfirstRowNumber = " + _firstRowNumber);
-        
-        for (int i = 0; i < tmpZs.Count; i++) {
-            if (tmpZs[i] > _firstRowNumber) {
-                _firstRowNumber = tmpZs[i];
-            }
-            
-            if (tmpZs[i]  < _lastRowNumber) {
-                _lastRowNumber = tmpZs[i];
-            }
-            
-            Debug.Log("\nfirstRowNumber = " + _firstRowNumber + "\nlastRowNumber = " + _lastRowNumber);
 
-            // if (Mathf.RoundToInt(drawnPath[i].x) > _firstColumnNumber) {
-            //     _firstRowNumber = Mathf.RoundToInt(drawnPath[i].x);
-            // }
-            //
-            // if (Mathf.RoundToInt(drawnPath[i].x) < _lastColumnNumber) {
-            //     _lastRowNumber = Mathf.RoundToInt(drawnPath[i].x);
-            // }
-        }
+        bigZ = GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath));
+        littleZ = GameUtils.FindSmallestValue(GameUtils.FindTheZs(drawnPath));
+        
+        bigX = GameUtils.FindLargestValue(GameUtils.FindTheXs(drawnPath));
+        littleX = GameUtils.FindSmallestValue(GameUtils.FindTheXs(drawnPath));
+        
+        // for (int i = 0; i < tmpZs.Count; i++) {
+        //     if (tmpZs[i] > _firstRowNumber) {
+        //         _firstRowNumber = tmpZs[i];
+        //     }
+        //     
+        //     if (tmpZs[i]  < _lastRowNumber) {
+        //         _lastRowNumber = tmpZs[i];
+        //     }
+        //     
+        //     Debug.Log("\nfirstRowNumber = " + _firstRowNumber + "\nlastRowNumber = " + _lastRowNumber);
+        //
+        //     // if (Mathf.RoundToInt(drawnPath[i].x) > _firstColumnNumber) {
+        //     //     _firstRowNumber = Mathf.RoundToInt(drawnPath[i].x);
+        //     // }
+        //     //
+        //     // if (Mathf.RoundToInt(drawnPath[i].x) < _lastColumnNumber) {
+        //     //     _lastRowNumber = Mathf.RoundToInt(drawnPath[i].x);
+        //     // }
+        // }
 
         slicedPath = GameUtils.SliceRow(drawnPath, _firstRowNumber);
         sortedList = GameUtils.SortRows(slicedPath, _north);
