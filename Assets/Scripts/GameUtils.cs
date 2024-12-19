@@ -247,18 +247,18 @@ public class GameUtils : MonoBehaviour {
 
     /* check position is within the boundaries, if not clamp them in */
     private static Vector3 ClampWithinBoundaries(Vector3 position) {
-        if (position.x <= GameManager.mazeWidth.x) {
-            position.x = GameManager.mazeWidth.x;
+        if (position.x <= GameManager._west) {
+            position.x = GameManager._west;
         }
-        else if (position.x > GameManager.mazeWidth.y) {
-            position.x = GameManager.mazeWidth.y;
+        else if (position.x > GameManager._east) {
+            position.x = GameManager._east;
         }
 
-        if (position.z <= GameManager.mazeHeight.x) {
-            position.z = GameManager.mazeHeight.x;
+        if (position.z <= GameManager._south) {
+            position.z = GameManager._south;
         }
-        else if (position.z > GameManager.mazeHeight.y) {
-            position.z = GameManager.mazeHeight.y;
+        else if (position.z > GameManager._north) {
+            position.z = GameManager._north;
         }
 
         return position;

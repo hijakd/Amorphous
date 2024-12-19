@@ -39,8 +39,7 @@ public class GameManager : MonoBehaviour {
     private Color goalColour;
     private ColorBlock goalColorBlock;
     private float xVal, zVal;
-    private int count, /*rowNumber,*/ columnNumber, gridNorth, gridEast, gridSouth, gridWest;
-    // private int gridNorth, gridEast, gridSouth, gridWest;
+    private int count, /*rowNumber,*/ columnNumber;
     [SerializeField] private int rowNumber;
     private Vector3 goalPosition, pyramidPos, pyramidPos02, spawnPosition;
 
@@ -116,10 +115,10 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
         groundPlane = GameObject.Find("GroundPlane");
 
-        _north = mazeHeight.y = gridNorth = gridHeight / 2;
-        _east = mazeWidth.y = gridEast = gridWidth / 2;
-        _south = mazeHeight.x = gridSouth = -gridNorth;
-        _west = mazeWidth.x = gridWest = -gridEast;
+        _north = gridHeight / 2;
+        _east = gridWidth / 2;
+        _south = -_north;
+        _west = -_east;
        
 
         cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
@@ -150,10 +149,10 @@ public class GameManager : MonoBehaviour {
 
         /* cardinals are the corners of the grid & used for boundary calculations */
         // cardinals.Capacity = 4;
-        GameUtils.Spawn(cardinals[0], new Vector3(gridWest, 0f, gridNorth)); // NorthWest corner
-        GameUtils.Spawn(cardinals[1], new Vector3(gridEast, 0f, gridNorth)); // NorthEast corner
-        GameUtils.Spawn(cardinals[2], new Vector3(gridEast, 0f, gridSouth)); // SouthEast corner
-        GameUtils.Spawn(cardinals[3], new Vector3(gridWest, 0f, gridSouth)); // SouthWest corner
+        GameUtils.Spawn(cardinals[0], new Vector3(_west, 0f, _north)); // NorthWest corner
+        GameUtils.Spawn(cardinals[1], new Vector3(_east, 0f, _north)); // NorthEast corner
+        GameUtils.Spawn(cardinals[2], new Vector3(_east, 0f, _south)); // SouthEast corner
+        GameUtils.Spawn(cardinals[3], new Vector3(_west, 0f, _south)); // SouthWest corner
 
 
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
@@ -170,7 +169,7 @@ public class GameManager : MonoBehaviour {
 
         /* populate the destinations List with random positions for the player, waypoints & goal */
         while (count < waypoints.Count + 2) {
-            destinations.Add(GameUtils.RandomPosition(gridWest, gridEast, gridSouth, gridNorth));
+            destinations.Add(GameUtils.RandomPosition(_west, _east, _south, _north));
             count++;
         }
 
@@ -188,7 +187,7 @@ public class GameManager : MonoBehaviour {
         ResetCount();
 
         while (count < midPoints.Count) {
-            lcms.Add(GameUtils.FindLcm(midPoints[count], distances[count], gridNorth, gridEast));
+            lcms.Add(GameUtils.FindLcm(midPoints[count], distances[count], _north, _east));
             count++;
         }
         
@@ -251,11 +250,11 @@ public class GameManager : MonoBehaviour {
             slicedPath.Clear();
         }
 
-        rowNumber = Mathf.RoundToInt(drawnPath[0].z) < gridNorth ? Mathf.RoundToInt(drawnPath[0].z) : gridNorth;
+        rowNumber = Mathf.RoundToInt(drawnPath[0].z) < _north ? Mathf.RoundToInt(drawnPath[0].z) : _north;
         
         
         /* find the first row of the maze grid */
-        slicedPath = GameUtils.SortAndSliceRows(drawnPath, gridNorth);
+        slicedPath = GameUtils.SortAndSliceRows(drawnPath, _north);
         GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
         
         /* find the value of the second row */
@@ -264,8 +263,8 @@ public class GameManager : MonoBehaviour {
         // }
         
         /* spawn the east/west walls */
-        // while (rowNumber >= gridSouth) {
-        //     // while (rowNumber >= gridNorth) {
+        // while (rowNumber >= _south) {
+        //     // while (rowNumber >= _north) {
         //     slicedPath = GameUtils.SortAndSliceRows(drawnPath, rowNumber);
         //     GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
         //     rowNumber--;
