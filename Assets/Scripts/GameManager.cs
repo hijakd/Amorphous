@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour {
     private ColorBlock goalColorBlock;
     private float xVal, zVal;
     private int count, /*rowNumber,*/ columnNumber;
-    [SerializeField] private int rowNumber, lastRowNumber, bigX, littleX, bigZ, littleZ;
+    [SerializeField] private int rowNumber, lastRowNumber/*, bigX, littleX, bigZ, littleZ*/;
     
     private Vector3 goalPosition, pyramidPos, pyramidPos02, spawnPosition;
 
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour {
     private List<GameObject> cardinals;
     private List<int> distances, lcms;
     
-    [SerializeField] private List<int> tmpXs, tmpZs;
+    // [SerializeField] private List<int> tmpXs, tmpZs;
 
     [SerializeField] private List<Vector3> intersections, destinations, midPoints, drawnPath, slicedPath, sortedList, shortenedList;
 
@@ -138,8 +138,8 @@ public class GameManager : MonoBehaviour {
         mixedColors = new List<Color>();
         goalColour = new Color();
         
-        tmpZs = new List<int>();
-        tmpXs = new List<int>();
+        // tmpZs = new List<int>();
+        // tmpXs = new List<int>();
 
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
@@ -276,7 +276,7 @@ public class GameManager : MonoBehaviour {
         littleX = GameUtils.FindSmallestValue(GameUtils.FindTheXs(drawnPath));
         */
         
-        bigZ = GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath));
+        // bigZ = GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath));
         
         /* testing the use of the functions for finding the largest Z value */
         // slicedPath = GameUtils.SliceRow(drawnPath, _firstRowNumber);
@@ -284,6 +284,10 @@ public class GameManager : MonoBehaviour {
         // shortenedList = RemoveDuplicates(slicedPath);
         // shortenedList = RemoveDuplicates(GameUtils.SliceRow(drawnPath, GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath))));
         // sortedList = GameUtils.SortRows(shortenedList, _north);
+        
+        /* this finds the Z values in drawnPath, reduces it to the largest value,
+         * uses that to Slice drawnPath, removes any duplicates, 
+         * then finally sorting them in descending order */
         sortedList = GameUtils.SortRows(RemoveDuplicates(GameUtils.SliceRow(drawnPath, GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath)))), _north);
         
 
