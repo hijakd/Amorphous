@@ -599,7 +599,7 @@ public class GameUtils : MonoBehaviour {
         return shortened;
     }
 
-    /* begin parsing the pathList by sorting the Z values in descending order  */
+    /* sorting the pathList by the Z values in descending order  */
     public static List<Vector3> SortRows(List<Vector3> pathList, int rowHeight) {
         int counter = 0;
         int searchValue = -rowHeight;
@@ -663,61 +663,7 @@ public class GameUtils : MonoBehaviour {
 
         return SliceRow(sorted, rowToSlice).ToList();
     }
-
-
-    // /* 'Slice' the list down to the specified row/Z value, then calling RemoveDuplicates to return unique values only */
-    // private static List<Vector3> SliceRow(List<Vector3> sorted, int rowToSlice) {
-    //     int counter = 0;
-    //     int rowValue = rowToSlice > Mathf.RoundToInt(sorted[0].z) ? Mathf.RoundToInt(sorted[0].z) : rowToSlice;
-    //     List<Vector3> sliced = new();
-    //     // List<Vector3> sortedSlice = new();
-    //     
-    //     while (counter < sorted.Count) {
-    //         if (Mathf.RoundToInt(sorted[counter].z) == rowValue) {
-    //             sliced.Add(sorted[counter]);
-    //         }
-    //         counter++;
-    //     }
-    //
-    //     List<Vector3> shortenedSlice = RemoveDuplicates(sliced);
-    //     return SortV3ListOnX(shortenedSlice);
-    // }
-
-
-    private static int ContainsRowValue(List<Vector3> list, int rowToFind) {
-        int rowIndex = 0;
-        bool rowFound = false;
-
-        while (!rowFound && rowIndex < list.Count) {
-            Debug.Log("searching for the first row at " + rowIndex);
-            if (rowToFind == Mathf.RoundToInt(list[rowIndex].z)) {
-                rowFound = true;
-
-                // return rowIndex;
-            }
-
-            rowIndex++;
-        }
-
-        Debug.Log("found the first row at " + rowIndex);
-
-        return rowIndex;
-    }
-
-    // static List<Vector3> SortListV3OnX(List<Vector3> data)
-    // {
-    //     if (data.Count < 2) return data.ToList();  //Or throw error, or return null
-    //
-    //     var min = data.OrderBy(x => x.x).First();
-    //     var max = data.OrderByDescending(x => x.x).First();
-    //
-    //     data.Remove(min);
-    //     data.Remove(max);
-    //
-    //     data.Insert(0, min);
-    //     data.Add(max);
-    //     return data.ToList();
-    // }
+    
 
     static List<Vector3> SortV3ListOnX(List<Vector3> list) {
         if (list.Count < 2) return list.ToList();
