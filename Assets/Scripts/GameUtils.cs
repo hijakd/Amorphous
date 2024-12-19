@@ -16,7 +16,7 @@ public class GameUtils : MonoBehaviour {
 
     private static Vector3 tmpPosition;
     private static int count, horizDistance, vertDistance, xPosition;
-    private static bool horizAligned, vertAligned, isForward, isRight, debugHoriz, debugVert;
+    private static bool horizAligned, vertAligned, isForward, isRight, debugHoriz, debugVert, firstRow, firstColumn;
     private const int north = 0;
     private const int east = 1;
     private const int south = 2;
@@ -69,12 +69,14 @@ public class GameUtils : MonoBehaviour {
             if (i == 0) {
                 /* spawn the first east wall of the row */
                 Spawn(walls[west], path[i], material);
+
                 // Spawn(walls[west], path[i], GameManager.obsMaterial);
             }
             else if (path[i - 1].x < path[i].x - 1) {
                 /* spawn east wall at end of a break in the row */
                 Spawn(walls[west], path[i], material);
             }
+
             // else if (i == path.Count - 1) {
             //     /* spawn the last east wall of the row if the list ends before the boundary */
             //     Spawn(walls[east], path[i], GameManager.blueMaterial);
@@ -89,13 +91,15 @@ public class GameUtils : MonoBehaviour {
             if (j == 0) {
                 /* spawn the last east wall of the row */
                 Spawn(walls[east], path[j], material);
+
                 // if (!lastWallSpawned) {
-                    // Spawn(walls[east], path[j], GameManager.pinkMaterial);
+                // Spawn(walls[east], path[j], GameManager.pinkMaterial);
                 // }
             }
             else if (path[j - 1].x > path[j].x + 1) {
                 /* spawn east wall at end of a break in the row */
                 Spawn(walls[east], path[j], material);
+
                 // Spawn(walls[east], path[j], GameManager.purpleMaterial);
             }
         }
@@ -268,7 +272,7 @@ public class GameUtils : MonoBehaviour {
     public static void PlotHorizontalPath(Vector3 origin, Vector3 destination, List<Vector3> path) {
         bool pDebug = false;
         int hDistance = MeasureHorizontal(origin, destination);
-        if (OriginIsWest(origin, destination)) {
+        if (IsOriginWest(origin, destination)) {
             if (pDebug) {
                 Debug.Log("origin is to the west, the destination is: " + hDistance + " steps away");
             }
@@ -291,7 +295,7 @@ public class GameUtils : MonoBehaviour {
     public static void PlotVerticalPath(Vector3 origin, Vector3 destination, List<Vector3> path) {
         bool pDebug = false;
         int vDistance = MeasureVertical(origin, destination);
-        if (OriginIsSouth(origin, destination)) {
+        if (IsOriginSouth(origin, destination)) {
             if (pDebug) {
                 Debug.Log("origin is to the north, the destination is: " + vDistance + " steps away");
             }
@@ -408,12 +412,12 @@ public class GameUtils : MonoBehaviour {
         return isRight;
     }
 
-    private static bool OriginIsWest(Vector3 position01, Vector3 position02) {
+    private static bool IsOriginWest(Vector3 position01, Vector3 position02) {
         bool isWest = position01.x < position02.x;
         return isWest;
     }
 
-    private static bool OriginIsSouth(Vector3 position01, Vector3 position02) {
+    private static bool IsOriginSouth(Vector3 position01, Vector3 position02) {
         bool isSouth = position01.z < position02.z;
         return isSouth;
     }
@@ -595,7 +599,47 @@ public class GameUtils : MonoBehaviour {
         return shortened;
     }
 
-    /* begin parsing the pathList by sorting the Z values in descending order  */        
+    /* begin parsing the pathList by sorting the Z values in descending order  */
+    public static List<Vector3> SortRows(List<Vector3> pathList, int rowHeight) {
+        int counter = 0;
+        int searchValue = rowHeight;
+        List<Vector3> sorted = new();
+
+        // Debug.Log("EARLY SortAndSliceRows");
+        // Debug.Log("Sorting Sliced List");
+        while (counter < pathList.Count) {
+            for (int i = 0; i < pathList.Count; i++) {
+                if (searchValue == Mathf.RoundToInt(pathList[i].z)) {
+                    sorted.Add(pathList[i]);
+                    counter++;
+                }
+            }
+
+            searchValue--;
+        }
+
+        // GameManager._rowNumber = searchValue;
+        // Debug.Log("LATE SortAndSliceRows");
+
+        return sorted.ToList();
+    }
+
+    /* 'Slice' the list down to the specified row/Z value */
+    public static List<Vector3> SliceRow(List<Vector3> sorted, int rowToSlice) {
+        int counter = 0;
+        List<Vector3> sliced = new();
+
+        while (counter < sorted.Count) {
+            if (Mathf.RoundToInt(sorted[counter].z) == rowToSlice) {
+                sliced.Add(sorted[counter]);
+            }
+            counter++;
+        }
+        
+        return sliced.ToList();
+    }
+    
+
     public static List<Vector3> SortAndSliceRows(List<Vector3> pathList, int rowToSlice) {
         int counter = 0;
         int searchValue = rowToSlice;
@@ -610,46 +654,51 @@ public class GameUtils : MonoBehaviour {
                     counter++;
                 }
             }
+
             searchValue--;
         }
-        
+
+        // GameManager._rowNumber = searchValue;
         // Debug.Log("LATE SortAndSliceRows");
 
-        return SliceRow(sorted, rowToSlice);
+        return SliceRow(sorted, rowToSlice).ToList();
     }
 
-    /* 'Slice' the list down to the specified row/Z value, then calling RemoveDuplicates to return unique values only */
-    private static List<Vector3> SliceRow(List<Vector3> sorted, int rowToSlice) {
-        int counter = 0;
-        int rowValue = rowToSlice > Mathf.RoundToInt(sorted[0].z) ? Mathf.RoundToInt(sorted[0].z) : rowToSlice;
-        List<Vector3> sliced = new();
-        // List<Vector3> sortedSlice = new();
-        
-        while (counter < sorted.Count) {
-            if (Mathf.RoundToInt(sorted[counter].z) == rowValue) {
-                sliced.Add(sorted[counter]);
-            }
-            counter++;
-        }
 
-        List<Vector3> shortenedSlice = RemoveDuplicates(sliced);
-        return SortV3ListOnX(shortenedSlice);
-    }
+    // /* 'Slice' the list down to the specified row/Z value, then calling RemoveDuplicates to return unique values only */
+    // private static List<Vector3> SliceRow(List<Vector3> sorted, int rowToSlice) {
+    //     int counter = 0;
+    //     int rowValue = rowToSlice > Mathf.RoundToInt(sorted[0].z) ? Mathf.RoundToInt(sorted[0].z) : rowToSlice;
+    //     List<Vector3> sliced = new();
+    //     // List<Vector3> sortedSlice = new();
+    //     
+    //     while (counter < sorted.Count) {
+    //         if (Mathf.RoundToInt(sorted[counter].z) == rowValue) {
+    //             sliced.Add(sorted[counter]);
+    //         }
+    //         counter++;
+    //     }
+    //
+    //     List<Vector3> shortenedSlice = RemoveDuplicates(sliced);
+    //     return SortV3ListOnX(shortenedSlice);
+    // }
 
 
     private static int ContainsRowValue(List<Vector3> list, int rowToFind) {
         int rowIndex = 0;
         bool rowFound = false;
-        
+
         while (!rowFound && rowIndex < list.Count) {
             Debug.Log("searching for the first row at " + rowIndex);
             if (rowToFind == Mathf.RoundToInt(list[rowIndex].z)) {
                 rowFound = true;
+
                 // return rowIndex;
             }
-            
-            rowIndex++; 
+
+            rowIndex++;
         }
+
         Debug.Log("found the first row at " + rowIndex);
 
         return rowIndex;
@@ -679,7 +728,7 @@ public class GameUtils : MonoBehaviour {
         // foreach (Vector3 t in list) {
         //     Debug.Log("early sorting: " + t);
         // }
-        
+
         while (count < list.Count) {
             for (int i = 0; i < list.Count; i++) {
                 if (minimumXvalue == Mathf.RoundToInt(list[i].x)) {
@@ -687,15 +736,20 @@ public class GameUtils : MonoBehaviour {
                     count++;
                 }
             }
+
             minimumXvalue++;
         }
-        
+
         // foreach (Vector3 t in sorted) {
         //     Debug.Log("late sorting: " + t);
         // }
 
+        // if (!firstRow) {
+        //     GameManager._rowNumber = Mathf.RoundToInt(sorted[^1].x);
+        //     firstRow = true;
+        // }
+
         return sorted;
-
     }
-}
 
+}
