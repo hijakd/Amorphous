@@ -600,9 +600,9 @@ public class GameUtils : MonoBehaviour {
     }
 
     /* sorting the pathList by the Z values in descending order  */
-    public static List<Vector3> SortRows(List<Vector3> pathList, int rowHeight) {
+    public static List<Vector3> SortRows(List<Vector3> pathList, int rowMaxHeight) {
         int counter = 0;
-        int searchValue = -rowHeight;
+        int searchValue = -rowMaxHeight;
         List<Vector3> sorted = new();
 
         // Debug.Log("EARLY SortAndSliceRows");

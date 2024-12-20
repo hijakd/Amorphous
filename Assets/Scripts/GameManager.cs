@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour {
     private ColorBlock goalColorBlock;
     private float xVal, zVal;
     private int count, /*rowNumber,*/ columnNumber;
-    [SerializeField] private int rowNumber, lastRowNumber/*, bigX, littleX, bigZ, littleZ*/;
+    private int rowNumber, lastRowNumber/*, bigX, littleX, bigZ, littleZ*/;
     
     private Vector3 goalPosition, pyramidPos, pyramidPos02, spawnPosition;
 
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour {
     
     // [SerializeField] private List<int> tmpXs, tmpZs;
 
-    [SerializeField] private List<Vector3> intersections, destinations, midPoints, drawnPath, slicedPath, sortedList, shortenedList;
+    private List<Vector3> intersections, destinations, midPoints, drawnPath, slicedPath, sortedList, shortenedList;
 
     public static Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
@@ -90,9 +90,9 @@ public class GameManager : MonoBehaviour {
 
         // visualize paths between 'intersections'
         // Gizmos.color = Color.blue;
-        for (int i = 0; i < intersections.Count - 1; i++) {
-            Gizmos.DrawLine(intersections[i], intersections[i + 1]);
-        }
+        // for (int i = 0; i < intersections.Count - 1; i++) {
+        //     Gizmos.DrawLine(intersections[i], intersections[i + 1]);
+        // }
 
         // Gizmos.color = Color.green;
         // Gizmos.DrawLine(spawnPosition, pyramidPos);
@@ -210,11 +210,11 @@ public class GameManager : MonoBehaviour {
         intersections.Add(destinations[count]);
 
 
-        ResetCount();
-        while (count < intersections.Count) {
-            GameUtils.Spawn(floorTile01, intersections[count]);
-            count++;
-        }
+        // ResetCount();
+        // while (count < intersections.Count) {
+        //     GameUtils.Spawn(floorTile01, intersections[count]);
+        //     count++;
+        // }
 
         ResetCount();
         while (count < destinations.Count) {
@@ -288,7 +288,16 @@ public class GameManager : MonoBehaviour {
         /* this finds the Z values in drawnPath, reduces it to the largest value,
          * uses that to Slice drawnPath, removes any duplicates, 
          * then finally sorting them in descending order */
-        sortedList = GameUtils.SortRows(RemoveDuplicates(GameUtils.SliceRow(drawnPath, GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath)))), _north);
+        // sortedList = GameUtils.SortRows(RemoveDuplicates(GameUtils.SliceRow(drawnPath, GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath)))), _north);
+        
+        _firstRowNumber = GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath));
+        _lastRowNumber = GameUtils.FindSmallestValue(GameUtils.FindTheZs(drawnPath));
+
+        while (_firstRowNumber >= _lastRowNumber) {
+            sortedList = GameUtils.SortRows(RemoveDuplicates(GameUtils.SliceRow(drawnPath, _firstRowNumber)), _north);
+            GameUtils.SpawnEastWestWalls(sortedList, wallPanels, gypMaterial);
+            _firstRowNumber--;
+        }
         
 
         // slicedPath = GameUtils.SliceRow(sortedList, _firstRowNumber);
