@@ -174,12 +174,6 @@ MonoBehaviour:
   restartButton: {fileID: 425114794}
   titleScreen: {fileID: 0}
   randomVariance: 0.42
-  intersections: []
-  drawnPath: []
-  shortenedList: []
-  slicedPath: []
-  destinations: []
-  midPoints: []
 --- !u!4 &103129383
 Transform:
   m_ObjectHideFlags: 0

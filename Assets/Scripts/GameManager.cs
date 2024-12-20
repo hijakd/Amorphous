@@ -32,28 +32,33 @@ public class GameManager : MonoBehaviour {
     public Button restartButton;
     public GameObject titleScreen;
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
-    public static Vector2Int mazeWidth, mazeHeight;
+
     public static List<Vector3> selectableCoords;
     public static Vector2 randVariance;
+    public static bool shortListed = false;
+    public static bool firstRowFound = false;
+    public static bool firstColFound = false;
+    public static int _firstRowNumber { get; private set; }
+    public static int _firstColumnNumber { get; private set; }
+    public static int _lastRowNumber { get; private set; }
+    public static int _lastColumnNumber { get; private set; }
+    public static int _north { get; private set; }
+    public static int _east { get; private set; }
+    public static int _south { get; private set; }
+    public static int _west { get; private set; }
+
 
     private Color goalColour;
     private ColorBlock goalColorBlock;
     private float xVal, zVal;
-    private int count, /*rowNumber,*/ columnNumber, gridEast, gridSouth, gridWest;
-    [SerializeField] private int rowNumber;
+    private int count, columnNumber, rowNumber, lastRowNumber;
+    
     private Vector3 goalPosition, pyramidPos, pyramidPos02, spawnPosition;
 
     private List<Color> mixedColors;
     private List<GameObject> cardinals;
     private List<int> distances, lcms;
-
-    [SerializeField] private List<Vector3> intersections,
-        /*tmpIntersections,*/
-        drawnPath,
-        shortenedList,
-        slicedPath,
-        destinations,
-        midPoints;
+    private List<Vector3> intersections, destinations, midPoints, drawnPath, /*slicedPath,*/ sortedList, shortenedList;
 
     public static Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
@@ -62,16 +67,6 @@ public class GameManager : MonoBehaviour {
     public static Material blueMaterial; // added for testing
     private Material greenMaterial; // added for testing
     private Material goalMaterial;
-
-    public static bool shortListed = false;
-    public static bool firstRowFound = false;
-    public static bool firstColFound = false;
-    public static int _north { get; private set; }
-    public static int _east { get; private set; }
-    public static int _south { get; private set; }
-    public static int _west { get; private set; }
-    // public static string telemetryData = "";
-    
 
 
     private void OnDrawGizmos() {
@@ -91,9 +86,9 @@ public class GameManager : MonoBehaviour {
 
         // visualize paths between 'intersections'
         // Gizmos.color = Color.blue;
-        for (int i = 0; i < intersections.Count - 1; i++) {
-            Gizmos.DrawLine(intersections[i], intersections[i + 1]);
-        }
+        // for (int i = 0; i < intersections.Count - 1; i++) {
+        //     Gizmos.DrawLine(intersections[i], intersections[i + 1]);
+        // }
 
         // Gizmos.color = Color.green;
         // Gizmos.DrawLine(spawnPosition, pyramidPos);
@@ -115,27 +110,21 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
         groundPlane = GameObject.Find("GroundPlane");
 
-        _north = mazeHeight.y = gridHeight / 2;
-        _east = mazeWidth.y = gridEast = gridWidth / 2;
-        _south = mazeHeight.x = gridSouth = -_north;
-        _west = mazeWidth.x = gridWest = -gridEast;
-
-        rowNumber = _north;
-       
+        _lastRowNumber = _north = gridHeight / 2;
+        _lastColumnNumber = _east = gridWidth / 2;
+        _firstRowNumber = _south = -_north;
+        _firstColumnNumber = _west = -_east;
 
         cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
-        
         destinations = new List<Vector3>();
-
-        // selectableCoords = new List<Vector3>();
         intersections = new List<Vector3>();
-        // tmpIntersections = new List<Vector3>(); // for testing TriangulateIntersection()
         drawnPath = new List<Vector3>();
         shortenedList = new List<Vector3>();
-        slicedPath = new List<Vector3>();
+        // slicedPath = new List<Vector3>();
         distances = new List<int>();
         lcms = new List<int>();
         midPoints = new List<Vector3>();
+        sortedList = new List<Vector3>();
         mixedColors = new List<Color>();
         goalColour = new Color();
 
@@ -147,14 +136,15 @@ public class GameManager : MonoBehaviour {
         purpleMaterial = Resources.Load<Material>("Materials/Matt_Purple_Mat"); // added for testing
         pinkMaterial = Resources.Load<Material>("Materials/Matt_Pink_Mat"); // added for testing
         blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat"); // added for testing
+
         // greenMaterial = Resources.Load<Material>("Materials/Matt_Green_Mat"); // added for testing
 
         /* cardinals are the corners of the grid & used for boundary calculations */
         // cardinals.Capacity = 4;
-        GameUtils.Spawn(cardinals[0], new Vector3(gridWest, 0f, _north)); // NorthWest corner
-        GameUtils.Spawn(cardinals[1], new Vector3(gridEast, 0f, _north)); // NorthEast corner
-        GameUtils.Spawn(cardinals[2], new Vector3(gridEast, 0f, _south)); // SouthEast corner
-        GameUtils.Spawn(cardinals[3], new Vector3(gridWest, 0f, _south)); // SouthWest corner
+        GameUtils.Spawn(cardinals[0], new Vector3(_west, 0f, _north)); // NorthWest corner
+        GameUtils.Spawn(cardinals[1], new Vector3(_east, 0f, _north)); // NorthEast corner
+        GameUtils.Spawn(cardinals[2], new Vector3(_east, 0f, _south)); // SouthEast corner
+        GameUtils.Spawn(cardinals[3], new Vector3(_west, 0f, _south)); // SouthWest corner
 
 
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
@@ -171,7 +161,7 @@ public class GameManager : MonoBehaviour {
 
         /* populate the destinations List with random positions for the player, waypoints & goal */
         while (count < waypoints.Count + 2) {
-            destinations.Add(GameUtils.RandomPosition(gridWest, gridEast, _south, _north));
+            destinations.Add(GameUtils.RandomPosition(_west, _east, _south, _north));
             count++;
         }
 
@@ -189,10 +179,10 @@ public class GameManager : MonoBehaviour {
         ResetCount();
 
         while (count < midPoints.Count) {
-            lcms.Add(GameUtils.FindLcm(midPoints[count], distances[count], _north, gridEast));
+            lcms.Add(GameUtils.FindLcm(midPoints[count], distances[count], _north, _east));
             count++;
         }
-        
+
         ResetCount();
 
         /* populate intersections list using destinations & lcms as seed values for triangulated positions */
@@ -202,29 +192,11 @@ public class GameManager : MonoBehaviour {
                 Random.Range(randVariance.x, randVariance.y), lcms[count]));
             count++;
         }
-        
+
         /* then add the last destination which is for the goal */
         intersections.Add(destinations[count]);
-
-
-        ResetCount();
-        while (count < intersections.Count) {
-            GameUtils.Spawn(floorTile01, intersections[count]);
-            count++;
-        }
-
-        ResetCount();
-        while (count < destinations.Count) {
-            GameUtils.Spawn(floorTile02, destinations[count]);
-            count++;
-        }
-
-        /* TODO: maybe "shorten" intersections list to remove possible duplicate entries */
-
-        /* testing simpler path plotting function */
-        // GameUtils.PlotHorizontalPath(intersections[count], intersections[count + 1], drawnPath);
-        // GameUtils.PlotVerticalPath(intersections[count], intersections[count + 1], drawnPath);
         
+
         /* plot the paths between the intersections */
         ResetCount();
         while (count < intersections.Count) {
@@ -236,81 +208,73 @@ public class GameManager : MonoBehaviour {
                 GameUtils.PlotHorizontalPath(intersections[count], intersections[count], drawnPath);
                 GameUtils.PlotVerticalPath(intersections[count], intersections[count], drawnPath);
             }
+
             count++;
         }
+
+        /* remove duplicate values from the drawnPath list */
+        shortenedList = GameUtils.RemoveDuplicates(drawnPath);
+        drawnPath.Clear();
         
-        // shortenedList = RemoveDuplicates(drawnPath);
-        // GameUtils.WaitForListShortening();
-        // drawnPath.Clear();
-        // foreach (Vector3 step in shortenedList) {
-        //     drawnPath.Add(step);
-        // }
-        //
-        // shortenedList.Clear();
-
-
-
-        // rowNumber = Mathf.RoundToInt(drawnPath[0].z) < _north ? Mathf.RoundToInt(drawnPath[0].z) : _north;
-        if (drawnPath.Count > 0) {
-            if (Mathf.RoundToInt(drawnPath[0].z) < _north) {
-                rowNumber = Mathf.RoundToInt(drawnPath[0].z);
-            }
+        /* swap the values back to drawnPath then erase shortenedList */
+        foreach (var step in shortenedList) {
+            drawnPath.Add(step);
         }
         
+        shortenedList.Clear();
         
-        if (slicedPath.Count > 0) {
-            slicedPath.Clear();
-        }
-        
-        /* find the first row of the maze grid */
-        slicedPath = GameUtils.SortAndSliceRows(drawnPath, rowNumber);
-        GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
-        
-        /* find the value of the second row */
-        // if (slicedPath.Count > 0) {
-        //     rowNumber = Mathf.RoundToInt(slicedPath[0].z) - 1;
-        // }
-        
-        /* spawn the east/west walls */
-        // while (rowNumber >= gridSouth) {
-        //     // while (rowNumber >= gridNorth) {
-        //     slicedPath = GameUtils.SortAndSliceRows(drawnPath, rowNumber);
-        //     GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
-        //     rowNumber--;
-        // }
-        
-        /* delete the contents of slicedPath to eliminate junk data in the next step */
-        // slicedPath.Clear();
-
-
         ResetCount();
+        
         /* spawn the floor tiles for the maze path */
         while (count < drawnPath.Count) {
             GameUtils.Spawn(floorTile02, drawnPath[count]);
             count++;
         }
         
-        // ResetCount();
-        // while (count < slicedPath.Count) {
-            // GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
-        // }
+        /* find the value of the first and last rows of the maze grid */
+        _firstRowNumber = GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath));
+        _lastRowNumber = GameUtils.FindSmallestValue(GameUtils.FindTheZs(drawnPath));
+        
+        /* spawn the east/west walls */
+        while (_firstRowNumber >= _lastRowNumber) {
+            sortedList = GameUtils.SortRows(GameUtils.RemoveDuplicates(GameUtils.SliceRow(drawnPath, _firstRowNumber)));
+            GameUtils.SpawnEastWestWalls(sortedList, wallPanels, gypMaterial);
+            _firstRowNumber--;
+        }
+        
+        /* clearing the sortedList before parsing the North/South walls, to eliminate the chances of junk data */
+        sortedList.Clear();
+        
+        /* find the value of the first and last columns of the maze grid */
+        _firstColumnNumber = GameUtils.FindLargestValue(GameUtils.FindTheXs(drawnPath));
+        _lastColumnNumber = GameUtils.FindSmallestValue(GameUtils.FindTheXs(drawnPath));
+
+        /* spawn the north/south walls */
+        while (_firstColumnNumber >= _lastColumnNumber) {
+            sortedList =
+                GameUtils.SortColumns(GameUtils.RemoveDuplicates(GameUtils.SliceColumn(drawnPath, _firstColumnNumber)));
+            GameUtils.SpawnNorthSouthWalls(sortedList, wallPanels, gypMaterial);
+            _firstColumnNumber--;
+        }
         
         /* reposition the player, spawn the waypoints and goal */
         player.transform.position = destinations[0];
         for (count = 1; count <= destinations.Count - 2; count++) {
             GameUtils.Spawn(waypoints[count - 1], destinations[count]);
         }
+
         // GameUtils.Spawn(pyramid, destinations[^1]);
         GameUtils.Spawn(goalObject, destinations[^1]);
-        
+
         /* END Start() */
     }
 
     // Update is called once per frame
     void FixedUpdate() {
-        
-        
-        
+        // rowNumber = _firstRowNumber;
+        // lastRowNumber = _lastRowNumber;
+
+
         if (goalFound) {
             EndLevel();
         }
@@ -328,10 +292,10 @@ public class GameManager : MonoBehaviour {
         var inputList = new HashSet<Vector3>(list);
         var shortened = inputList.ToList();
         shortListed = true;
-        return shortened;
+        return shortened.ToList();
     }
 
-    
+
     public void StartGame() {
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);
