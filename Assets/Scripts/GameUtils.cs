@@ -63,13 +63,13 @@ public class GameUtils : MonoBehaviour {
 
     /* Spawn the east & west walls across a given row of the maze path */
     public static void SpawnEastWestWalls(List<Vector3> path, GameObject[] walls, Material material) {
-        // bool lastWallSpawned = false;
         // Debug.Log("Spawning East/West Walls");
+        // var pathString = path.Aggregate("", (current, step) => current + (step.ToString() + "\n"));
+        // Debug.Log("pathString\n" + pathString);
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
                 /* spawn the first east wall of the row */
                 Spawn(walls[west], path[i], material);
-
                 // Spawn(walls[west], path[i], GameManager.obsMaterial);
             }
             else if (path[i - 1].x < path[i].x - 1) {
@@ -77,11 +77,13 @@ public class GameUtils : MonoBehaviour {
                 Spawn(walls[west], path[i], material);
             }
 
-            // else if (i == path.Count - 1) {
-            //     /* spawn the last east wall of the row if the list ends before the boundary */
-            //     Spawn(walls[east], path[i], GameManager.blueMaterial);
-            //     lastWallSpawned = true;
-            // }
+            else if (i == path.Count - 1) {
+                /* spawn the last west wall of the row if the list ends before the boundary */
+                Spawn(walls[east], path[i], material);
+                // Spawn(walls[east], path[i], GameManager.blueMaterial);
+
+                // lastWallSpawned = true;
+            }
         }
 
         /* reserving the List to spawn the east walls */
@@ -94,12 +96,12 @@ public class GameUtils : MonoBehaviour {
 
                 // if (!lastWallSpawned) {
                 // Spawn(walls[east], path[j], GameManager.pinkMaterial);
+
                 // }
             }
             else if (path[j - 1].x > path[j].x + 1) {
                 /* spawn east wall at end of a break in the row */
                 Spawn(walls[east], path[j], material);
-
                 // Spawn(walls[east], path[j], GameManager.purpleMaterial);
             }
         }
@@ -269,7 +271,7 @@ public class GameUtils : MonoBehaviour {
     }
 
 
-    public static void PlotHorizontalPath(Vector3 origin, Vector3 destination, List<Vector3> path) {
+    public static void PlotHorizontalPath(Vector3 origin, Vector3 destination, List<Vector3> pathToDraw) {
         bool pDebug = false;
         int hDistance = MeasureHorizontal(origin, destination);
         if (IsOriginWest(origin, destination)) {
@@ -278,7 +280,7 @@ public class GameUtils : MonoBehaviour {
             }
 
             for (count = 0; count <= hDistance; count++) {
-                path.Add(new Vector3(origin.x + count, origin.y, origin.z));
+                pathToDraw.Add(new Vector3(origin.x + count, origin.y, origin.z));
             }
         }
         else {
@@ -287,12 +289,12 @@ public class GameUtils : MonoBehaviour {
             }
 
             for (count = hDistance; count >= 0; count--) {
-                path.Add(new Vector3(origin.x - count, origin.y, origin.z));
+                pathToDraw.Add(new Vector3(origin.x - count, origin.y, origin.z));
             }
         }
     }
 
-    public static void PlotVerticalPath(Vector3 origin, Vector3 destination, List<Vector3> path) {
+    public static void PlotVerticalPath(Vector3 origin, Vector3 destination, List<Vector3> pathToDraw) {
         bool pDebug = false;
         int vDistance = MeasureVertical(origin, destination);
         if (IsOriginSouth(origin, destination)) {
@@ -301,7 +303,7 @@ public class GameUtils : MonoBehaviour {
             }
 
             for (count = vDistance; count >= 0; count--) {
-                path.Add(new Vector3(destination.x, destination.y, destination.z - count));
+                pathToDraw.Add(new Vector3(destination.x, destination.y, destination.z - count));
             }
         }
         else {
@@ -310,7 +312,7 @@ public class GameUtils : MonoBehaviour {
             }
 
             for (count = 0; count <= vDistance; count++) {
-                path.Add(new Vector3(destination.x, destination.y, destination.z + count));
+                pathToDraw.Add(new Vector3(destination.x, destination.y, destination.z + count));
             }
         }
     }
@@ -595,11 +597,21 @@ public class GameUtils : MonoBehaviour {
         HashSet<Vector3> inputList = new(pathList);
         List<Vector3> shortened = inputList.ToList();
 
-        // GameManager.shortListed = true;
-        return shortened;
+        GameManager.shortListed = true;
+        return shortened.ToList();
     }
 
-    /* sorting the pathList by the Z values in descending order  */
+    public static List<Vector3> SortRows(List<Vector3> pathList) {
+        /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s */
+        return pathList.OrderBy(v => v.x).ToList();
+    }
+
+    public static List<Vector3> SortColumns(List<Vector3> pathList) {
+        /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s */
+        return pathList.OrderBy(v => v.z).ToList();
+    }
+
+/* sorting the pathList by the Z values in descending order  */
     public static List<Vector3> SortRows(List<Vector3> pathList, int rowMaxHeight) {
         int counter = 0;
         int searchValue = -rowMaxHeight;
@@ -633,12 +645,28 @@ public class GameUtils : MonoBehaviour {
             if (Mathf.RoundToInt(sorted[counter].z) == rowToSlice) {
                 sliced.Add(sorted[counter]);
             }
+
             counter++;
         }
-        
+
         return sliced.ToList();
     }
-    
+
+    /* 'Slice' the list down to the specified column/X value */
+    public static List<Vector3> SliceColumn(List<Vector3> sorted, int columnToSlice) {
+        int counter = 0;
+        List<Vector3> sliced = new();
+
+        while (counter < sorted.Count) {
+            if (Mathf.RoundToInt(sorted[counter].x) == columnToSlice) {
+                sliced.Add(sorted[counter]);
+            }
+
+            counter++;
+        }
+
+        return sliced.ToList();
+    }
 
     public static List<Vector3> SortAndSliceRows(List<Vector3> pathList, int rowToSlice) {
         int counter = 0;
@@ -663,64 +691,33 @@ public class GameUtils : MonoBehaviour {
 
         return SliceRow(sorted, rowToSlice).ToList();
     }
-    
 
-    static List<Vector3> SortV3ListOnX(List<Vector3> list) {
-        if (list.Count < 2) return list.ToList();
-        int count = 0;
-        List<Vector3> sorted = new();
-        int minimumXvalue = GameManager._west;
 
-        // foreach (Vector3 t in list) {
-        //     Debug.Log("early sorting: " + t);
-        // }
-
-        while (count < list.Count) {
-            for (int i = 0; i < list.Count; i++) {
-                if (minimumXvalue == Mathf.RoundToInt(list[i].x)) {
-                    sorted.Add(list[i]);
-                    count++;
-                }
-            }
-
-            minimumXvalue++;
-        }
-
-        // foreach (Vector3 t in sorted) {
-        //     Debug.Log("late sorting: " + t);
-        // }
-
-        // if (!firstRow) {
-        //     GameManager._rowNumber = Mathf.RoundToInt(sorted[^1].x);
-        //     firstRow = true;
-        // }
-
-        return sorted;
-    }
 
     public static List<int> FindTheZs(List<Vector3> path) {
         List<int> foundZs = path.Select(slice => Mathf.RoundToInt(slice.z)).ToList();
         HashSet<int> shortened = new(foundZs);
-        
+
         return shortened.ToList();
     }
-    
+
     public static List<int> FindTheXs(List<Vector3> path) {
         List<int> foundXs = path.Select(slice => Mathf.RoundToInt(slice.x)).ToList();
         HashSet<int> shortened = new(foundXs);
-        
+
         return shortened.ToList();
     }
 
     public static int FindLargestValue(List<int> values) {
         int tmpValue = GameManager._west < GameManager._south ? GameManager._south : GameManager._west;
-        
+
         return values.Prepend(tmpValue).Max();
     }
-    
+
     public static int FindSmallestValue(List<int> values) {
         int tmpValue = GameManager._north < GameManager._east ? GameManager._east : GameManager._north;
-        
+
         return values.Prepend(tmpValue).Min();
     }
+
 }

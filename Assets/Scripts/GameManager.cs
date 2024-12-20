@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour {
     
     // [SerializeField] private List<int> tmpXs, tmpZs;
 
-    private List<Vector3> intersections, destinations, midPoints, drawnPath, slicedPath, sortedList, shortenedList;
+    [SerializeField] private List<Vector3> intersections, destinations, midPoints, drawnPath, slicedPath, sortedList, shortenedList;
 
     public static Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
@@ -216,13 +216,14 @@ public class GameManager : MonoBehaviour {
         //     count++;
         // }
 
-        ResetCount();
-        while (count < destinations.Count) {
-            GameUtils.Spawn(floorTile02, destinations[count]);
-            count++;
-        }
+        // ResetCount();
+        // while (count < destinations.Count) {
+        //     GameUtils.Spawn(floorTile02, destinations[count]);
+        //     count++;
+        // }
 
         /* TODO: maybe "shorten" intersections list to remove possible duplicate entries */
+        
 
         /* plot the paths between the intersections */
         ResetCount();
@@ -239,30 +240,25 @@ public class GameManager : MonoBehaviour {
             count++;
         }
 
-        // shortenedList = RemoveDuplicates(drawnPath);
-        // GameUtils.WaitForListShortening();
-        // drawnPath.Clear();
-        // foreach (Vector3 step in shortenedList) {
-        //     drawnPath.Add(step);
-        // }
-        //
-        // shortenedList.Clear();
-
+        
+        shortenedList = GameUtils.RemoveDuplicates(drawnPath);
+        
+        // Debug.Log("\ndrawnPath count = " + drawnPath.Count + "\nshortenedList count = " + shortenedList.Count);
+        
+        drawnPath.Clear();
+        
+        foreach (var step in shortenedList) {
+            drawnPath.Add(step);
+        }
+        
+        shortenedList.Clear();
+        
 
         if (slicedPath.Count > 0) {
             slicedPath.Clear();
         }
 
-        // if (drawnPath.Count > 0) {
-        //     rowNumber = Mathf.RoundToInt(drawnPath[0].z) < _north ? Mathf.RoundToInt(drawnPath[0].z) : _north;
-        // }
-
-
-        /* find the first row of the maze grid */
-        // slicedPath = GameUtils.SortAndSliceRows(drawnPath, rowNumber);
-        // slicedPath = GameUtils.SortAndSliceRows(drawnPath, _north);
-        // GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
-
+        
         /*
         tmpZs = GameUtils.FindTheZs(drawnPath);
         tmpXs = GameUtils.FindTheXs(drawnPath);
@@ -290,54 +286,40 @@ public class GameManager : MonoBehaviour {
          * then finally sorting them in descending order */
         // sortedList = GameUtils.SortRows(RemoveDuplicates(GameUtils.SliceRow(drawnPath, GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath)))), _north);
         
+        /* find the first row of the maze grid */
         _firstRowNumber = GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath));
         _lastRowNumber = GameUtils.FindSmallestValue(GameUtils.FindTheZs(drawnPath));
-
+        
+        /* spawn the east/west walls */
         while (_firstRowNumber >= _lastRowNumber) {
-            sortedList = GameUtils.SortRows(RemoveDuplicates(GameUtils.SliceRow(drawnPath, _firstRowNumber)), _north);
+            // sortedList = GameUtils.SortRows(GameUtils.RemoveDuplicates(GameUtils.SliceRow(drawnPath, _firstRowNumber)), _north);
+            sortedList = GameUtils.SortRows(GameUtils.RemoveDuplicates(GameUtils.SliceRow(drawnPath, _firstRowNumber)));
+            
             GameUtils.SpawnEastWestWalls(sortedList, wallPanels, gypMaterial);
             _firstRowNumber--;
         }
         
+        sortedList.Clear();
+        
+        _firstColumnNumber = GameUtils.FindLargestValue(GameUtils.FindTheXs(drawnPath));
+        _lastColumnNumber = GameUtils.FindSmallestValue(GameUtils.FindTheXs(drawnPath));
 
-        // slicedPath = GameUtils.SliceRow(sortedList, _firstRowNumber);
-
-        // GameUtils.SpawnEastWestWalls(GameUtils.SortAndSliceRows(sortedList, _firstRowNumber), wallPanels, gypMaterial);
-
-        // var rowNum = _firstRowNumber - 1;
-        // GameUtils.SpawnEastWestWalls(GameUtils.SortAndSliceRows(drawnPath, rowNum), wallPanels, gypMaterial);
-
-        // ResetCount();
-        // for (count = _firstRowNumber; count > _lastRowNumber; _firstRowNumber--) {
-        //     slicedPath = GameUtils.SortAndSliceRows(drawnPath, _firstRowNumber);
-        //     // GameUtils.SpawnEastWestWalls(GameUtils.SortAndSliceRows(drawnPath, _firstRowNumber), wallPanels, gypMaterial);
-        // }
-
-
-        /* spawn the east/west walls */
-        // while (_firstRowNumber >= _lastRowNumber) {
-        //     // while (_rowNumber >= _south) {
-        //     // while (rowNumber >= _north) {
-        //     slicedPath = GameUtils.SortAndSliceRows(drawnPath, _firstRowNumber);
-        //     GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
-        //     _firstRowNumber--;
-        // }
-
-        /* delete the contents of slicedPath to eliminate junk data in the next step */
-        // slicedPath.Clear();
-
+        /* spawn the north/south walls */
+        while (_firstColumnNumber >= _lastColumnNumber) {
+            sortedList =
+                GameUtils.SortColumns(GameUtils.RemoveDuplicates(GameUtils.SliceColumn(drawnPath, _firstColumnNumber)));
+            GameUtils.SpawnNorthSouthWalls(sortedList, wallPanels, gypMaterial);
+            _firstColumnNumber--;
+        }
 
         ResetCount();
+        
         /* spawn the floor tiles for the maze path */
         while (count < drawnPath.Count) {
             GameUtils.Spawn(floorTile02, drawnPath[count]);
             count++;
         }
-
-        // ResetCount();
-        // while (count < slicedPath.Count) {
-        // GameUtils.SpawnEastWestWalls(slicedPath, wallPanels, gypMaterial);
-        // }
+        
 
         /* reposition the player, spawn the waypoints and goal */
         player.transform.position = destinations[0];
@@ -374,7 +356,7 @@ public class GameManager : MonoBehaviour {
         var inputList = new HashSet<Vector3>(list);
         var shortened = inputList.ToList();
         shortListed = true;
-        return shortened;
+        return shortened.ToList();
     }
 
 
