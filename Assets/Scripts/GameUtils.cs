@@ -81,8 +81,6 @@ public class GameUtils : MonoBehaviour {
                 /* spawn the last west wall of the row if the list ends before the boundary */
                 Spawn(walls[east], path[i], material);
                 // Spawn(walls[east], path[i], GameManager.blueMaterial);
-
-                // lastWallSpawned = true;
             }
         }
 
@@ -93,11 +91,7 @@ public class GameUtils : MonoBehaviour {
             if (j == 0) {
                 /* spawn the last east wall of the row */
                 Spawn(walls[east], path[j], material);
-
-                // if (!lastWallSpawned) {
                 // Spawn(walls[east], path[j], GameManager.pinkMaterial);
-
-                // }
             }
             else if (path[j - 1].x > path[j].x + 1) {
                 /* spawn east wall at end of a break in the row */
@@ -112,16 +106,16 @@ public class GameUtils : MonoBehaviour {
         // Debug.Log("Spawning North/South Walls");
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
-                /* spawn the first north wall of the row */
-                Spawn(walls[2], path[i], material);
+                /* spawn the first south wall of the row */
+                Spawn(walls[south], path[i], material);
             }
             else if (path[i - 1].z < path[i].z - 1) {
-                /* spawn north wall at end of a break in the row */
-                Spawn(walls[2], path[i], material);
+                /* spawn south wall at end of a break in the row */
+                Spawn(walls[south], path[i], material);
             }
             else if (i == path.Count - 1) {
-                /* spawn the last south wall of the row if the list ends before the boundary */
-                Spawn(walls[0], path[i], material);
+                /* spawn the last north wall of the row if the list ends before the boundary */
+                Spawn(walls[north], path[i], material);
             }
         }
 
@@ -130,12 +124,12 @@ public class GameUtils : MonoBehaviour {
 
         for (int j = 0; j < path.Count; j++) {
             if (j == 0) {
-                /* spawn the last south wall of the row */
-                Spawn(walls[0], path[j], material);
+                /* spawn the last north wall of the row */
+                Spawn(walls[north], path[j], material);
             }
             else if (path[j - 1].z > path[j].z + 1) {
-                /* spawn south wall at end of a break in the row */
-                Spawn(walls[0], path[j], material);
+                /* spawn north wall at end of a break in the row */
+                Spawn(walls[north], path[j], material);
             }
         }
     }
@@ -317,24 +311,11 @@ public class GameUtils : MonoBehaviour {
         }
     }
 
-    public static int MeasureHorizontal(Vector3 position01, Vector3 position02) {
-        // int distance = Mathf.Abs(Mathf.RoundToInt(position01.x - position02.x));
-        // return distance;
+    private static int MeasureHorizontal(Vector3 position01, Vector3 position02) {
         return Mathf.Abs(Mathf.RoundToInt(position01.x - position02.x));
     }
 
-    public static int MeasureVertical(Vector3 position01, Vector3 position02) {
-        // int distance;
-        // if (position01.z < position02.z) {
-        //     distance = Mathf.RoundToInt(position01.z - position02.z);
-        // }
-        // else if (position01.z > position02.z) {
-        //     distance = Mathf.RoundToInt(position02.z - position01.z);
-        // }
-        // else {
-        //     distance = 0;
-        // }
-        // return distance;
+    private static int MeasureVertical(Vector3 position01, Vector3 position02) {
         return Mathf.Abs(Mathf.RoundToInt(position01.z - position02.z));
     }
 
@@ -609,31 +590,6 @@ public class GameUtils : MonoBehaviour {
     public static List<Vector3> SortColumns(List<Vector3> pathList) {
         /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s */
         return pathList.OrderBy(v => v.z).ToList();
-    }
-
-/* sorting the pathList by the Z values in descending order  */
-    public static List<Vector3> SortRows(List<Vector3> pathList, int rowMaxHeight) {
-        int counter = 0;
-        int searchValue = -rowMaxHeight;
-        List<Vector3> sorted = new();
-
-        // Debug.Log("EARLY SortAndSliceRows");
-        // Debug.Log("Sorting Sliced List");
-        while (counter < pathList.Count) {
-            for (int i = 0; i < pathList.Count; i++) {
-                if (searchValue == Mathf.RoundToInt(pathList[i].z)) {
-                    sorted.Add(pathList[i]);
-                    counter++;
-                }
-            }
-
-            searchValue++;
-        }
-
-        // GameManager._rowNumber = searchValue;
-        // Debug.Log("LATE SortAndSliceRows");
-
-        return sorted.ToList();
     }
 
     /* 'Slice' the list down to the specified row/Z value */
