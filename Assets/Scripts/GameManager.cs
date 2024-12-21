@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -108,28 +107,26 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Awake() {
+        goalColour = new Color();
         groundPlane = GameObject.Find("GroundPlane");
-
-        _lastRowNumber = _north = gridHeight / 2;
-        _lastColumnNumber = _east = gridWidth / 2;
-        _firstRowNumber = _south = -_north;
-        _firstColumnNumber = _west = -_east;
-
+        mixedColors = new List<Color>();
         cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
+        lcms = new List<int>();
+        distances = new List<int>();
         destinations = new List<Vector3>();
         intersections = new List<Vector3>();
         drawnPath = new List<Vector3>();
         shortenedList = new List<Vector3>();
         // slicedPath = new List<Vector3>();
-        distances = new List<int>();
-        lcms = new List<int>();
         midPoints = new List<Vector3>();
         sortedList = new List<Vector3>();
-        mixedColors = new List<Color>();
-        goalColour = new Color();
 
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
+        _lastRowNumber = _north = gridHeight / 2;
+        _lastColumnNumber = _east = gridWidth / 2;
+        _firstRowNumber = _south = -_north;
+        _firstColumnNumber = _west = -_east;
 
         gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat"); // added for testing
         obsMaterial = Resources.Load<Material>("Materials/OBS_Mat"); // added for testing
@@ -146,8 +143,10 @@ public class GameManager : MonoBehaviour {
         GameUtils.Spawn(cardinals[2], new Vector3(_east, 0f, _south)); // SouthEast corner
         GameUtils.Spawn(cardinals[3], new Vector3(_west, 0f, _south)); // SouthWest corner
 
-
+        goalColour = Color.white;
+        goalColour = GameUtils.AddColours(waypoints);
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
+        // goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = GameUtils.AddColours(waypoints);
 
         /* END Awake() */
     }
@@ -288,12 +287,12 @@ public class GameManager : MonoBehaviour {
         count = 0;
     }
 
-    private static List<Vector3> RemoveDuplicates(List<Vector3> list) {
-        var inputList = new HashSet<Vector3>(list);
-        var shortened = inputList.ToList();
-        shortListed = true;
-        return shortened.ToList();
-    }
+    // private static List<Vector3> RemoveDuplicates(List<Vector3> list) {
+    //     var inputList = new HashSet<Vector3>(list);
+    //     var shortened = inputList.ToList();
+    //     shortListed = true;
+    //     return shortened.ToList();
+    // }
 
 
     public void StartGame() {

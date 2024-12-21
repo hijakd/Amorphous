@@ -676,4 +676,17 @@ public class GameUtils : MonoBehaviour {
         return values.Prepend(tmpValue).Min();
     }
 
+    public static Color AddColours(List<GameObject> waypoints) {
+        var waypoint01 = Random.Range(0, waypoints.Count);
+        var waypoint02 = Random.Range(0, waypoints.Count);
+        Color tmpColour = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color + waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        return tmpColour;
+    }
+    
+    public static Color BlendColours(List<GameObject> waypoints) {
+        int index01 = Random.Range(0, waypoints.Count);
+        int index02 = Random.Range(0, waypoints.Count);
+        return ColourChanger.Blend(waypoints[index01], waypoints[index02]);
+    }
+    
 }
