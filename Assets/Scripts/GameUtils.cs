@@ -573,7 +573,7 @@ public class GameUtils : MonoBehaviour {
         }
     }
 
-    /* by parsing a List through a HashSet are eliminated, as HashSets only contain unique values */
+    /* by parsing a List through a HashSet duplicates are eliminated, as HashSets only contain unique values */
     public static List<Vector3> RemoveDuplicates(List<Vector3> pathList) {
         HashSet<Vector3> inputList = new(pathList);
         List<Vector3> shortened = inputList.ToList();
@@ -681,6 +681,11 @@ public class GameUtils : MonoBehaviour {
         var waypoint02 = Random.Range(0, waypoints.Count);
         Color tmpColour = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color + waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
         return tmpColour;
+    }
+
+    public static Color AddColours(Color colour01, Color colour02) {
+        var mixedColour = colour01 + colour02;
+        return mixedColour;
     }
     
     public static Color BlendColours(List<GameObject> waypoints) {

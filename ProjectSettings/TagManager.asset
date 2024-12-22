@@ -21,6 +21,8 @@ TagManager:
   - GroundPlane
   - Waypoint
   - SliceTelemetryText
+  - White
+  - Black
   layers:
   - Default
   - TransparentFX

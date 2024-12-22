@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour {
     public static Color currentColour;
     public static float rotationSpeed;
 
+    private bool playerIsWhite;
     private Color blendColour = Color.white;
     private Color previousColour;
     private Color otherColour;
@@ -45,6 +46,7 @@ public class PlayerController : MonoBehaviour {
         playerRb = GetComponent<Rigidbody>();
         camera = GameObject.Find("Main Camera");
         focalPoint = GameObject.Find("Focal Point");
+        playerIsWhite = true;
         
         /* set focalPoint to players position */
         focalPoint.transform.position = transform.position;
@@ -107,9 +109,28 @@ public class PlayerController : MonoBehaviour {
         if (other.gameObject.CompareTag("Waypoint")) {
             Debug.Log("Player found a waypoint");
             // blendColour = Colouring.Add(currentColour, previousColour);
+            if (playerIsWhite) {
+                blendColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+            }
+            else {
+                // var tmpColour = blendColour;
+                blendColour = GameUtils.AddColours(gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
+                playerIsWhite = !playerIsWhite;
+            }
+            
             MazeUI.PaintPlayerBlip(blendColour);
         }
 
+        if (other.gameObject.CompareTag("White")) {
+            Debug.Log("Player found the white waypoint");
+            playerIsWhite = true;
+            MazeUI.PaintPlayerBlipWhite();
+        }
+
+        if (other.gameObject.CompareTag("Black")) {
+            Debug.Log("Player found the white waypoint");
+            MazeUI.PaintPlayerBlipBlack();
+        }
         if (other.gameObject.CompareTag("Goal")) {
             Debug.Log("Player found the goal");
             // GameManager.instance.goalFound = true;

@@ -155,6 +155,7 @@ public class GameManager : MonoBehaviour {
         // Debug.Log("Trying to colour the goalBlip");
 
         MazeUI.PaintGoalBlip(goalColour);
+        MazeUI.PaintPlayerBlipWhite();
 
         ResetCount();
 

@@ -53,8 +53,17 @@ public class MazeUI : MonoBehaviour {
     public static void PaintPlayerBlip(Color color) {
         playerBlip.style.backgroundColor = color;
     }
+
+    public static void PaintPlayerBlipWhite() {
+        playerBlip.style.backgroundColor = Color.white;
+    }
+    
+    public static void PaintPlayerBlipBlack() {
+        playerBlip.style.backgroundColor = Color.black;
+    }
     
     void FixedUpdate() {
         timeText.text = DateTime.Now.ToString("HH:mm:ss");
     }
+
 }

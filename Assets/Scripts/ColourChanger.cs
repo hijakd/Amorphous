@@ -3,7 +3,8 @@ using UnityEngine;
 public class ColourChanger : MonoBehaviour
 {
     public static Color Add(GameObject waypoint01, GameObject waypoint02) {
-        Color tmpColor = waypoint01.gameObject.GetComponentInChildren<Renderer>().material.color + waypoint02.gameObject.GetComponentInChildren<Renderer>().material.color;
+        Color tmpColor = waypoint01.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color + 
+                         waypoint02.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
         return tmpColor;
     }
     

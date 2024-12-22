@@ -168,6 +168,8 @@ MonoBehaviour:
   - {fileID: 1061367405469846895, guid: 6946421c02ac20941a7e4a38cfefeb0f, type: 3}
   - {fileID: 2472485937872077536, guid: 4d9743cee7a364b4198038c7929147f2, type: 3}
   - {fileID: 8851216710939664950, guid: c997274225c9da04a932bb51dafe958f, type: 3}
+  - {fileID: 3808023427255512795, guid: 44f93f87556194540bffea01332c17c1, type: 3}
+  - {fileID: 8799614159243905661, guid: e4b68580bdef76041ab3e4a871c52bf7, type: 3}
   winText: {fileID: 1744664631}
   gameOverText: {fileID: 144824136}
   isGameActive: 0
