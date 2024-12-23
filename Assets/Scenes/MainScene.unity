@@ -151,7 +151,7 @@ MonoBehaviour:
   goalObject: {fileID: 5895648694046751752, guid: a4b49dc5dfca8544e9050981753b91b7,
     type: 3}
   player: {fileID: 921098113}
-  pyramid: {fileID: 1879861639291899805, guid: 47fc53489bafbde45a767d87ff3e67f7, type: 3}
+  colourReseter: {fileID: 0}
   floorTile01: {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1,
     type: 3}
   floorTile02: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,

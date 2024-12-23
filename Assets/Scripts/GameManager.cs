@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour {
 
     public GameObject goalObject;
     public GameObject player;
-    public GameObject pyramid;
+    public GameObject colourReseter;
     public GameObject floorTile01;
     public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix

@@ -22,25 +22,10 @@ public class GameUtils : MonoBehaviour {
     private const int south = 2;
     private const int west = 3;
 
-    public static IEnumerator WaitForRowSlice() {
-        yield return new WaitUntil(() => GameManager.firstRowFound == true);
-    }
 
-    public static IEnumerator WaitForColSlice() {
-        yield return new WaitUntil(() => GameManager.firstColFound == true);
-    }
-
-    public static IEnumerator WaitForListShortening() {
-        yield return new WaitUntil(() => GameManager.shortListed == true);
-    }
-
-
-    public static Vector3 RandomPosition(int minWidth, int maxWidth, int minHeight, int maxHeight) {
-        // Debug.Log("Generating a random position");
-        return new Vector3(Mathf.Round(Random.Range(minWidth, maxWidth)), 0,
-            Mathf.Round(Random.Range(minHeight, maxHeight)));
-    }
-
+    
+    /** Object spawning functions **/
+    
     /* spawn a given GameObject at a given position */
     public static void Spawn(GameObject gameObject, Vector3 position) {
         gameObject.transform.position = position;
@@ -133,7 +118,10 @@ public class GameUtils : MonoBehaviour {
             }
         }
     }
-
+    
+    
+    /** Math type functions **/
+    
     private static Vector3 FarthestCorner(Vector3 inputPosition, int mazeHeight, int mazeWidth) {
         int xTmp, zTmp;
         if (inputPosition.x >= 0) {
@@ -201,7 +189,34 @@ public class GameUtils : MonoBehaviour {
         int lcm03 = ReduceLCM(LCM(farthestDistance, otherDistance), mazeHeight, mazeWidth);
         return lcm01 + lcm02 + lcm03;
     }
+    
+    private static int MeasureHorizontal(Vector3 position01, Vector3 position02) {
+        return Mathf.Abs(Mathf.RoundToInt(position01.x - position02.x));
+    }
 
+    private static int MeasureVertical(Vector3 position01, Vector3 position02) {
+        return Mathf.Abs(Mathf.RoundToInt(position01.z - position02.z));
+    }
+    
+    public static int FindLargestValue(List<int> values) {
+        int tmpValue = GameManager._west < GameManager._south ? GameManager._south : GameManager._west;
+        return values.Prepend(tmpValue).Max();
+    }
+
+    public static int FindSmallestValue(List<int> values) {
+        int tmpValue = GameManager._north < GameManager._east ? GameManager._east : GameManager._north;
+        return values.Prepend(tmpValue).Min();
+    }
+    
+    
+    /** maze position related functions **/
+    
+    public static Vector3 RandomPosition(int minWidth, int maxWidth, int minHeight, int maxHeight) {
+        // Debug.Log("Generating a random position");
+        return new Vector3(Mathf.Round(Random.Range(minWidth, maxWidth)), 0,
+            Mathf.Round(Random.Range(minHeight, maxHeight)));
+    }
+    
     /* create an approximately "center" position between two points using */
     /* Slerp that is clamped within the maze boundaries, this is intended */
     /* to take a Random.Range() value to create a point close to center */
@@ -244,27 +259,7 @@ public class GameUtils : MonoBehaviour {
 
         return ClampWithinBoundaries(position);
     }
-
-    /* check position is within the boundaries, if not clamp them in */
-    private static Vector3 ClampWithinBoundaries(Vector3 position) {
-        if (position.x <= GameManager._west) {
-            position.x = GameManager._west;
-        }
-        else if (position.x > GameManager._east) {
-            position.x = GameManager._east;
-        }
-
-        if (position.z <= GameManager._south) {
-            position.z = GameManager._south;
-        }
-        else if (position.z > GameManager._north) {
-            position.z = GameManager._north;
-        }
-
-        return position;
-    }
-
-
+    
     public static void PlotHorizontalPath(Vector3 origin, Vector3 destination, List<Vector3> pathToDraw) {
         bool pDebug = false;
         int hDistance = MeasureHorizontal(origin, destination);
@@ -310,15 +305,7 @@ public class GameUtils : MonoBehaviour {
             }
         }
     }
-
-    private static int MeasureHorizontal(Vector3 position01, Vector3 position02) {
-        return Mathf.Abs(Mathf.RoundToInt(position01.x - position02.x));
-    }
-
-    private static int MeasureVertical(Vector3 position01, Vector3 position02) {
-        return Mathf.Abs(Mathf.RoundToInt(position01.z - position02.z));
-    }
-
+    
     private static bool HorizontalAlignment(Vector3 position01, Vector3 position02) {
         if (Mathf.Approximately(position01.z, position02.z) || Mathf.Approximately(position01.z, position02.z - 1) ||
             Mathf.Approximately(position01.z, position02.z + 1)) {
@@ -498,7 +485,6 @@ public class GameUtils : MonoBehaviour {
         }
     }
 
-
     public static void CheckVertical(Vector3 position01, Vector3 position02, List<Vector3> path) {
         /* positions are within horizontal alignment margins */
         if (VerticalAlignment(position01, position02)) {
@@ -573,15 +559,28 @@ public class GameUtils : MonoBehaviour {
         }
     }
 
-    /* by parsing a List through a HashSet duplicates are eliminated, as HashSets only contain unique values */
-    public static List<Vector3> RemoveDuplicates(List<Vector3> pathList) {
-        HashSet<Vector3> inputList = new(pathList);
-        List<Vector3> shortened = inputList.ToList();
+    /* check position is within the boundaries, if not clamp them in */
+    private static Vector3 ClampWithinBoundaries(Vector3 position) {
+        if (position.x <= GameManager._west) {
+            position.x = GameManager._west;
+        }
+        else if (position.x > GameManager._east) {
+            position.x = GameManager._east;
+        }
 
-        GameManager.shortListed = true;
-        return shortened.ToList();
-    }
+        if (position.z <= GameManager._south) {
+            position.z = GameManager._south;
+        }
+        else if (position.z > GameManager._north) {
+            position.z = GameManager._north;
+        }
 
+        return position;
+    }    
+    
+    
+    /** maze grid segment selection & sorting functions **/
+    
     public static List<Vector3> SortRows(List<Vector3> pathList) {
         /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s */
         return pathList.OrderBy(v => v.x).ToList();
@@ -647,9 +646,7 @@ public class GameUtils : MonoBehaviour {
 
         return SliceRow(sorted, rowToSlice).ToList();
     }
-
-
-
+    
     public static List<int> FindTheZs(List<Vector3> path) {
         List<int> foundZs = path.Select(slice => Mathf.RoundToInt(slice.z)).ToList();
         HashSet<int> shortened = new(foundZs);
@@ -663,19 +660,11 @@ public class GameUtils : MonoBehaviour {
 
         return shortened.ToList();
     }
+    
 
-    public static int FindLargestValue(List<int> values) {
-        int tmpValue = GameManager._west < GameManager._south ? GameManager._south : GameManager._west;
-
-        return values.Prepend(tmpValue).Max();
-    }
-
-    public static int FindSmallestValue(List<int> values) {
-        int tmpValue = GameManager._north < GameManager._east ? GameManager._east : GameManager._north;
-
-        return values.Prepend(tmpValue).Min();
-    }
-
+    /** Colour changing/blending functions **/
+    
+    
     public static Color AddColours(List<GameObject> waypoints) {
         var waypoint01 = Random.Range(0, waypoints.Count);
         var waypoint02 = Random.Range(0, waypoints.Count);
@@ -684,14 +673,46 @@ public class GameUtils : MonoBehaviour {
     }
 
     public static Color AddColours(Color colour01, Color colour02) {
-        var mixedColour = colour01 + colour02;
+        Color mixedColour = colour01 + colour02;
         return mixedColour;
     }
     
     public static Color BlendColours(List<GameObject> waypoints) {
         int index01 = Random.Range(0, waypoints.Count);
         int index02 = Random.Range(0, waypoints.Count);
-        return ColourChanger.Blend(waypoints[index01], waypoints[index02]);
+        Color blendedColour =
+            Color.Lerp(waypoints[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+        return blendedColour;
     }
+    
+    public static Color BlendColours(Color colour01, Color colour02) {
+        Color blendedColour = Color.Lerp(colour01, colour02, 0.5f);
+        return blendedColour;
+    }
+    
+    /** misc. functions **/
+    
+    /* by parsing a List through a HashSet duplicates are eliminated, as HashSets only contain unique values */
+    public static List<Vector3> RemoveDuplicates(List<Vector3> pathList) {
+        HashSet<Vector3> inputList = new(pathList);
+        List<Vector3> shortened = inputList.ToList();
+
+        GameManager.shortListed = true;
+        return shortened.ToList();
+    }
+    
+    public static IEnumerator WaitForRowSlice() {
+        yield return new WaitUntil(() => GameManager.firstRowFound == true);
+    }
+
+    public static IEnumerator WaitForColSlice() {
+        yield return new WaitUntil(() => GameManager.firstColFound == true);
+    }
+
+    public static IEnumerator WaitForListShortening() {
+        yield return new WaitUntil(() => GameManager.shortListed == true);
+    }
+
+
     
 }
