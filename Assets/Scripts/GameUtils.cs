@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 // ReSharper disable HeuristicUnreachableCode
 // ReSharper disable CollectionNeverUpdated.Local
@@ -23,9 +24,7 @@ public class GameUtils : MonoBehaviour {
     private const int west = 3;
 
 
-    
     /** Object spawning functions **/
-    
     /* spawn a given GameObject at a given position */
     public static void Spawn(GameObject gameObject, Vector3 position) {
         gameObject.transform.position = position;
@@ -55,6 +54,7 @@ public class GameUtils : MonoBehaviour {
             if (i == 0) {
                 /* spawn the first east wall of the row */
                 Spawn(walls[west], path[i], material);
+
                 // Spawn(walls[west], path[i], GameManager.obsMaterial);
             }
             else if (path[i - 1].x < path[i].x - 1) {
@@ -65,6 +65,7 @@ public class GameUtils : MonoBehaviour {
             else if (i == path.Count - 1) {
                 /* spawn the last west wall of the row if the list ends before the boundary */
                 Spawn(walls[east], path[i], material);
+
                 // Spawn(walls[east], path[i], GameManager.blueMaterial);
             }
         }
@@ -76,11 +77,13 @@ public class GameUtils : MonoBehaviour {
             if (j == 0) {
                 /* spawn the last east wall of the row */
                 Spawn(walls[east], path[j], material);
+
                 // Spawn(walls[east], path[j], GameManager.pinkMaterial);
             }
             else if (path[j - 1].x > path[j].x + 1) {
                 /* spawn east wall at end of a break in the row */
                 Spawn(walls[east], path[j], material);
+
                 // Spawn(walls[east], path[j], GameManager.purpleMaterial);
             }
         }
@@ -118,10 +121,15 @@ public class GameUtils : MonoBehaviour {
             }
         }
     }
-    
-    
+
+    public static void SpawnColourResetter(GameObject gameObject, Vector3 position) {
+        // position.y = 0.275f;
+        position.y = 0.05f;
+        gameObject.transform.position = position;
+        Instantiate(gameObject);
+    }
+
     /** Math type functions **/
-    
     private static Vector3 FarthestCorner(Vector3 inputPosition, int mazeHeight, int mazeWidth) {
         int xTmp, zTmp;
         if (inputPosition.x >= 0) {
@@ -189,7 +197,7 @@ public class GameUtils : MonoBehaviour {
         int lcm03 = ReduceLCM(LCM(farthestDistance, otherDistance), mazeHeight, mazeWidth);
         return lcm01 + lcm02 + lcm03;
     }
-    
+
     private static int MeasureHorizontal(Vector3 position01, Vector3 position02) {
         return Mathf.Abs(Mathf.RoundToInt(position01.x - position02.x));
     }
@@ -197,7 +205,7 @@ public class GameUtils : MonoBehaviour {
     private static int MeasureVertical(Vector3 position01, Vector3 position02) {
         return Mathf.Abs(Mathf.RoundToInt(position01.z - position02.z));
     }
-    
+
     public static int FindLargestValue(List<int> values) {
         int tmpValue = GameManager._west < GameManager._south ? GameManager._south : GameManager._west;
         return values.Prepend(tmpValue).Max();
@@ -207,16 +215,31 @@ public class GameUtils : MonoBehaviour {
         int tmpValue = GameManager._north < GameManager._east ? GameManager._east : GameManager._north;
         return values.Prepend(tmpValue).Min();
     }
-    
-    
+
+
     /** maze position related functions **/
-    
     public static Vector3 RandomPosition(int minWidth, int maxWidth, int minHeight, int maxHeight) {
         // Debug.Log("Generating a random position");
         return new Vector3(Mathf.Round(Random.Range(minWidth, maxWidth)), 0,
             Mathf.Round(Random.Range(minHeight, maxHeight)));
     }
-    
+
+    public static Vector3 ResetterPosition(List<Vector3> possiblePositions, List<Vector3> invalidPositions) {
+        List<Vector3> allowedPositions = new();
+
+        for (int i = 0; i < invalidPositions.Count; i++) {
+            foreach (var pos in possiblePositions) {
+                if (pos != invalidPositions[i]) {
+                    allowedPositions.Add(pos);
+                }
+            }
+        }
+
+        Vector3 position = allowedPositions[Mathf.RoundToInt(Random.Range(0, allowedPositions.Count))];
+
+        return position;
+    }
+
     /* create an approximately "center" position between two points using */
     /* Slerp that is clamped within the maze boundaries, this is intended */
     /* to take a Random.Range() value to create a point close to center */
@@ -259,7 +282,7 @@ public class GameUtils : MonoBehaviour {
 
         return ClampWithinBoundaries(position);
     }
-    
+
     public static void PlotHorizontalPath(Vector3 origin, Vector3 destination, List<Vector3> pathToDraw) {
         bool pDebug = false;
         int hDistance = MeasureHorizontal(origin, destination);
@@ -305,7 +328,7 @@ public class GameUtils : MonoBehaviour {
             }
         }
     }
-    
+
     private static bool HorizontalAlignment(Vector3 position01, Vector3 position02) {
         if (Mathf.Approximately(position01.z, position02.z) || Mathf.Approximately(position01.z, position02.z - 1) ||
             Mathf.Approximately(position01.z, position02.z + 1)) {
@@ -576,11 +599,10 @@ public class GameUtils : MonoBehaviour {
         }
 
         return position;
-    }    
-    
-    
+    }
+
+
     /** maze grid segment selection & sorting functions **/
-    
     public static List<Vector3> SortRows(List<Vector3> pathList) {
         /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s */
         return pathList.OrderBy(v => v.x).ToList();
@@ -646,7 +668,7 @@ public class GameUtils : MonoBehaviour {
 
         return SliceRow(sorted, rowToSlice).ToList();
     }
-    
+
     public static List<int> FindTheZs(List<Vector3> path) {
         List<int> foundZs = path.Select(slice => Mathf.RoundToInt(slice.z)).ToList();
         HashSet<int> shortened = new(foundZs);
@@ -660,15 +682,14 @@ public class GameUtils : MonoBehaviour {
 
         return shortened.ToList();
     }
-    
+
 
     /** Colour changing/blending functions **/
-    
-    
     public static Color AddColours(List<GameObject> waypoints) {
         var waypoint01 = Random.Range(0, waypoints.Count);
         var waypoint02 = Random.Range(0, waypoints.Count);
-        Color tmpColour = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color + waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        Color tmpColour = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color +
+                          waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
         return tmpColour;
     }
 
@@ -676,22 +697,22 @@ public class GameUtils : MonoBehaviour {
         Color mixedColour = colour01 + colour02;
         return mixedColour;
     }
-    
+
     public static Color BlendColours(List<GameObject> waypoints) {
         int index01 = Random.Range(0, waypoints.Count);
         int index02 = Random.Range(0, waypoints.Count);
         Color blendedColour =
-            Color.Lerp(waypoints[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, waypoints[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+            Color.Lerp(waypoints[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+                waypoints[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
         return blendedColour;
     }
-    
+
     public static Color BlendColours(Color colour01, Color colour02) {
         Color blendedColour = Color.Lerp(colour01, colour02, 0.5f);
         return blendedColour;
     }
-    
+
     /** misc. functions **/
-    
     /* by parsing a List through a HashSet duplicates are eliminated, as HashSets only contain unique values */
     public static List<Vector3> RemoveDuplicates(List<Vector3> pathList) {
         HashSet<Vector3> inputList = new(pathList);
@@ -700,7 +721,7 @@ public class GameUtils : MonoBehaviour {
         GameManager.shortListed = true;
         return shortened.ToList();
     }
-    
+
     public static IEnumerator WaitForRowSlice() {
         yield return new WaitUntil(() => GameManager.firstRowFound == true);
     }
@@ -714,5 +735,4 @@ public class GameUtils : MonoBehaviour {
     }
 
 
-    
 }

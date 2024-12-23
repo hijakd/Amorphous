@@ -23,6 +23,7 @@ TagManager:
   - SliceTelemetryText
   - White
   - Black
+  - ColourResetter
   layers:
   - Default
   - TransparentFX

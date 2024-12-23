@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour {
 
     public GameObject goalObject;
     public GameObject player;
-    public GameObject colourReseter;
+    public GameObject colourResetter;
     public GameObject floorTile01;
     public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour {
     private float xVal, zVal;
     private int count, columnNumber, rowNumber, lastRowNumber;
     
-    private Vector3 goalPosition, pyramidPos, pyramidPos02, spawnPosition;
+    private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition;
 
     private List<Color> mixedColors;
     private List<GameObject> cardinals;
@@ -147,6 +147,7 @@ public class GameManager : MonoBehaviour {
         goalColour = GameUtils.AddColours(waypoints);
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
         // goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = GameUtils.AddColours(waypoints);
+        
 
         /* END Awake() */
     }
@@ -222,6 +223,9 @@ public class GameManager : MonoBehaviour {
         }
         
         shortenedList.Clear();
+
+        resetterPosition = GameUtils.ResetterPosition(drawnPath, destinations);
+        
         
         ResetCount();
         
@@ -263,8 +267,10 @@ public class GameManager : MonoBehaviour {
             GameUtils.Spawn(waypoints[count - 1], destinations[count]);
         }
 
-        // GameUtils.Spawn(pyramid, destinations[^1]);
         GameUtils.Spawn(goalObject, destinations[^1]);
+        
+        GameUtils.SpawnColourResetter(colourResetter, resetterPosition);
+        
 
         /* END Start() */
     }
