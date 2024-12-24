@@ -56,7 +56,6 @@ public class GameManager : MonoBehaviour {
     private ColorBlock goalColorBlock;
     private float xVal, zVal;
     private int count, columnNumber, rowNumber, lastRowNumber;
-    private string colourChangeOption;
     
     private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition;
 
@@ -134,7 +133,7 @@ public class GameManager : MonoBehaviour {
         _lastColumnNumber = _east = gridWidth / 2;
         _firstRowNumber = _south = -_north;
         _firstColumnNumber = _west = -_east;
-        colourChangeOption = "add";
+
 
         wallMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
         
@@ -153,7 +152,7 @@ public class GameManager : MonoBehaviour {
         // GameUtils.Spawn(cardinals[3], new Vector3(_west, 0f, _south)); // SouthWest corner
 
         goalColour = Color.white;
-        goalColour = GameUtils.ChangeColours(colourChangeOption, waypoints);
+        goalColour = GameUtils.ChangeColours("add", waypoints);
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
         
 

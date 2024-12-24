@@ -23,8 +23,6 @@ public class PlayerController : MonoBehaviour {
     private GameObject focalPoint;
     private PlayerControls controls;
     private Rigidbody playerRb;
-
-    private string _colourChangeOption;
     
     private Vector2 move;
     private Vector2 look;
@@ -49,7 +47,7 @@ public class PlayerController : MonoBehaviour {
         camera = GameObject.Find("Main Camera");
         focalPoint = GameObject.Find("Focal Point");
         playerIsWhite = true;
-        _colourChangeOption = "switch";
+
         
         /* set focalPoint to players position */
         focalPoint.transform.position = transform.position;
@@ -115,10 +113,9 @@ public class PlayerController : MonoBehaviour {
                 blendedColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
             }
             else {
-                _colourChangeOption = "add";
                 // blendColour = GameUtils.AddColoursTogether(gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
                 // blendColour = GameUtils.ChangeColours("switch", gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
-                blendedColour = GameUtils.ChangeColours(_colourChangeOption, gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
+                blendedColour = GameUtils.ChangeColours("add", gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
                 playerIsWhite = !playerIsWhite;
             }
             
