@@ -1,4 +1,4 @@
-using TMPro;
+using System;
 using UnityEngine;
 
 
@@ -7,37 +7,34 @@ using UnityEngine;
 // ReSharper disable InconsistentNaming
 
 public class PlayerController : MonoBehaviour {
-    
+
     public new GameObject camera;
     public float speed = 10f;
     public float lookSpeed = 10f;
 
     private static Color currentColour;
+
     // public static float rotationSpeed;
 
     private bool playerIsWhite;
     private Color blendedColour = Color.white;
     private Color previousColour;
     private Color otherColour;
-    
+
     private GameObject focalPoint;
     private PlayerControls controls;
     private Rigidbody playerRb;
-    
+
     private Vector2 move;
     private Vector2 look;
-    
+
     private Vector3 cameraForward;
     private Vector3 cameraRight;
     private Vector3 forwardMovement;
     private Vector3 rightMovement;
     private Vector3 relativeMovement;
     private Vector3 playerPos;
-    
-    // public TextMeshProUGUI playerForwardText;
-    // public TextMeshProUGUI playerRightText;
-    // public TextMeshProUGUI relativeMovementText;
-    // public TextMeshProUGUI playerPositionText;
+    public static string playerColourChangeOption;
 
 
     private void Awake() {
@@ -47,8 +44,9 @@ public class PlayerController : MonoBehaviour {
         camera = GameObject.Find("Main Camera");
         focalPoint = GameObject.Find("Focal Point");
         playerIsWhite = true;
+        playerColourChangeOption = "add";
 
-        
+
         /* set focalPoint to players position */
         focalPoint.transform.position = transform.position;
 
@@ -72,11 +70,6 @@ public class PlayerController : MonoBehaviour {
         playerRb.AddForce(relativeMovement * speed * Time.deltaTime);
         focalPoint.transform.position = transform.position;
 
-        
-        // playerForwardText.text = "Forward: " + forwardMovement.ToString();
-        // playerRightText.text = "Right: " + rightMovement.ToString();
-        // relativeMovementText.text = "Relative: " + relativeMovement.ToString();
-        // playerPositionText.text = "Position: " + playerPos.ToString();
 
         /* END FixedUpdate() */
     }
@@ -100,7 +93,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        previousColour = currentColour;
+        previousColour = gameObject.GetComponentInChildren<Renderer>().material.color;
         currentColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
 
         if (other.gameObject.CompareTag("Pick Up")) {
@@ -110,15 +103,30 @@ public class PlayerController : MonoBehaviour {
         if (other.gameObject.CompareTag("Waypoint")) {
             // Debug.Log("Player found a waypoint");
             if (playerIsWhite) {
-                blendedColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-            }
-            else {
-                // blendColour = GameUtils.AddColoursTogether(gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
-                // blendColour = GameUtils.ChangeColours("switch", gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
-                blendedColour = GameUtils.ChangeColours("add", gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
+                // blendedColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+                blendedColour = currentColour;
                 playerIsWhite = !playerIsWhite;
             }
-            
+            else {
+                switch (playerColourChangeOption) {
+                    case "switch":
+                        Debug.Log("player colour is switching");
+                        blendedColour = GameUtils.ChangeColours("switch", previousColour, currentColour);
+                        break;
+                    case "add":
+                        Debug.Log("player colour is adding");
+                        blendedColour = GameUtils.ChangeColours("add", previousColour, currentColour);
+                        break;
+
+                    case "blend":
+                        Debug.Log("player colour is blending");
+                        blendedColour = GameUtils.ChangeColours("blend", previousColour, currentColour);
+                        break;
+                }
+
+                
+            }
+
             MazeUI.PaintPlayerBlip(blendedColour);
         }
 
@@ -137,19 +145,18 @@ public class PlayerController : MonoBehaviour {
             // Debug.Log("Player found the black waypoint");
             MazeUI.PaintPlayerBlipBlack();
         }
+
         if (other.gameObject.CompareTag("Goal")) {
             // Debug.Log("Player found the goal");
             if (blendedColour == other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color) {
                 // Debug.Log("Player found the goal unlocked");
                 GameManager.goalFound = true;
             }
-            
-            
         }
     }
 
     private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.CompareTag("Goal")){
+        if (other.gameObject.CompareTag("Goal")) {
             Debug.Log("Player collided with the goal");
         }
     }

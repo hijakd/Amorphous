@@ -22,6 +22,7 @@ public class GameUtils : MonoBehaviour {
     private const int east = 1;
     private const int south = 2;
     private const int west = 3;
+    private static Color previousWaypointColour;
 
 
     /** Object spawning functions **/
@@ -677,6 +678,8 @@ public class GameUtils : MonoBehaviour {
 
 
     /** Colour changing/blending functions **/
+    
+    /** TODO: modify Add & Blend func() so they can use just the current and last waypoint colours, while "discarding" the 2nd last waypoint colour **/
     public static Color ChangeColours(string AddOrBlend, List<GameObject> waypoints) {
         Color returningColour = new();
         switch (AddOrBlend) {
@@ -718,8 +721,18 @@ public class GameUtils : MonoBehaviour {
         return tmpColour;
     }
 
-    private static Color AddColoursTogether(Color colour01, Color colour02) {
-        Color mixedColour = colour01 + colour02;
+    private static Color AddColoursTogether(Color playersColour, Color waypointColor) {
+        Color currentColour = playersColour - previousWaypointColour;
+        Color mixedColour;
+        
+        if (GameManager._easyMode) {
+            mixedColour = currentColour + waypointColor;
+        }
+        else {
+            mixedColour = playersColour + waypointColor;
+        }
+        
+        previousWaypointColour = waypointColor;
         return mixedColour;
     }
 
@@ -732,8 +745,18 @@ public class GameUtils : MonoBehaviour {
         return blendedColour;
     }
 
-    private static Color BlendColoursTogether(Color colour01, Color colour02) {
-        Color blendedColour = Color.Lerp(colour01, colour02, 0.5f);
+    private static Color BlendColoursTogether(Color playersColour, Color waypointColor) {
+        Color currentColour = playersColour - previousWaypointColour;
+        Color blendedColour;
+
+        if (GameManager._easyMode) {
+            blendedColour = Color.Lerp(currentColour, waypointColor, 0.5f);
+        }
+        else {
+            blendedColour = Color.Lerp(playersColour, waypointColor, 0.5f);
+        }
+        
+        previousWaypointColour = waypointColor;
         return blendedColour;
     }
 
