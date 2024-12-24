@@ -225,19 +225,11 @@ public class GameUtils : MonoBehaviour {
     }
 
     public static Vector3 ResetterPosition(List<Vector3> possiblePositions, List<Vector3> invalidPositions) {
-        List<Vector3> allowedPositions = new();
+        List<Vector3> allowedPositions = (from t in invalidPositions from pos in possiblePositions where pos != t select pos).ToList();
 
-        for (int i = 0; i < invalidPositions.Count; i++) {
-            foreach (var pos in possiblePositions) {
-                if (pos != invalidPositions[i]) {
-                    allowedPositions.Add(pos);
-                }
-            }
-        }
-
-        Vector3 position = allowedPositions[Mathf.RoundToInt(Random.Range(0, allowedPositions.Count))];
-
-        return position;
+        // Vector3 position = allowedPositions[Mathf.RoundToInt(Random.Range(0, allowedPositions.Count))];
+        // return position;
+        return allowedPositions[Mathf.RoundToInt(Random.Range(0, allowedPositions.Count))];
     }
 
     /* create an approximately "center" position between two points using */
@@ -685,20 +677,39 @@ public class GameUtils : MonoBehaviour {
 
 
     /** Colour changing/blending functions **/
-    public static Color AddColours(List<GameObject> waypoints) {
-        var waypoint01 = Random.Range(0, waypoints.Count);
-        var waypoint02 = Random.Range(0, waypoints.Count);
+    
+    public static Color ChangeColours(string switchAddOrBlend, Color playersColor, Color waypointColor) {
+        Color returningColour = new();
+        switch (switchAddOrBlend) {
+            case "switch" :
+                returningColour = waypointColor;
+                break;
+            case "add" :
+                returningColour = AddColoursTogether(playersColor, waypointColor);
+                break;
+            case "blend" :
+                returningColour = BlendColoursTogether(playersColor, waypointColor);
+                break;
+            
+        }
+
+        return returningColour;
+    }
+    
+    public static Color AddColoursTogether(List<GameObject> waypoints) {
+        int waypoint01 = Random.Range(0, waypoints.Count);
+        int waypoint02 = Random.Range(0, waypoints.Count);
         Color tmpColour = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color +
                           waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
         return tmpColour;
     }
 
-    public static Color AddColours(Color colour01, Color colour02) {
+    private static Color AddColoursTogether(Color colour01, Color colour02) {
         Color mixedColour = colour01 + colour02;
         return mixedColour;
     }
 
-    public static Color BlendColours(List<GameObject> waypoints) {
+    public static Color BlendColoursTogether(List<GameObject> waypoints) {
         int index01 = Random.Range(0, waypoints.Count);
         int index02 = Random.Range(0, waypoints.Count);
         Color blendedColour =
@@ -707,7 +718,7 @@ public class GameUtils : MonoBehaviour {
         return blendedColour;
     }
 
-    public static Color BlendColours(Color colour01, Color colour02) {
+    private static Color BlendColoursTogether(Color colour01, Color colour02) {
         Color blendedColour = Color.Lerp(colour01, colour02, 0.5f);
         return blendedColour;
     }
@@ -733,6 +744,8 @@ public class GameUtils : MonoBehaviour {
     public static IEnumerator WaitForListShortening() {
         yield return new WaitUntil(() => GameManager.shortListed == true);
     }
+
+
 
 
 }
