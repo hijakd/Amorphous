@@ -22,7 +22,7 @@ public class GameUtils : MonoBehaviour {
     private const int east = 1;
     private const int south = 2;
     private const int west = 3;
-    private static Color previousWaypointColour;
+    // private static Color previousWaypointColour;
 
 
     /** Object spawning functions **/
@@ -712,6 +712,24 @@ public class GameUtils : MonoBehaviour {
 
         return returningColour;
     }
+    
+    public static Color ChangeColours(string switchAddOrBlend, Color playersColor, Color currentWaypointColor, Color previousWaypointColour) {
+        Color returningColour = new();
+        switch (switchAddOrBlend) {
+            case "switch" :
+                returningColour = currentWaypointColor;
+                break;
+            case "add" :
+                returningColour = AddColoursTogether(playersColor, currentWaypointColor, previousWaypointColour);
+                break;
+            case "blend" :
+                returningColour = BlendColoursTogether(playersColor, currentWaypointColor, previousWaypointColour);
+                break;
+            
+        }
+
+        return returningColour;
+    }
 
     private static Color AddColoursTogether(List<GameObject> waypoints) {
         int waypoint01 = Random.Range(0, waypoints.Count);
@@ -722,19 +740,29 @@ public class GameUtils : MonoBehaviour {
     }
 
     private static Color AddColoursTogether(Color playersColour, Color waypointColor) {
-        Color currentColour = playersColour - previousWaypointColour;
-        Color mixedColour;
-        
-        if (GameManager._easyMode) {
-            mixedColour = currentColour + waypointColor;
-        }
-        else {
-            mixedColour = playersColour + waypointColor;
-        }
-        
-        previousWaypointColour = waypointColor;
+        Color mixedColour = playersColour + waypointColor;
         return mixedColour;
     }
+
+    private static Color AddColoursTogether(Color playersColour, Color currentColour, Color previousColour) {
+        Color mixedColour = playersColour + currentColour - previousColour;
+        return mixedColour;
+    }
+        
+    // private static Color AddColoursTogether(Color playersColour, Color waypointColor) {
+    //     Color currentColour = playersColour - previousWaypointColour;
+    //     Color mixedColour;
+    //     
+    //     if (GameManager._easyMode) {
+    //         mixedColour = currentColour + waypointColor;
+    //     }
+    //     else {
+    //         mixedColour = playersColour + waypointColor;
+    //     }
+    //     
+    //     previousWaypointColour = waypointColor;
+    //     return mixedColour;
+    // }
 
     private static Color BlendColoursTogether(List<GameObject> waypoints) {
         int index01 = Random.Range(0, waypoints.Count);
@@ -745,20 +773,31 @@ public class GameUtils : MonoBehaviour {
         return blendedColour;
     }
 
+    
     private static Color BlendColoursTogether(Color playersColour, Color waypointColor) {
-        Color currentColour = playersColour - previousWaypointColour;
-        Color blendedColour;
-
-        if (GameManager._easyMode) {
-            blendedColour = Color.Lerp(currentColour, waypointColor, 0.5f);
-        }
-        else {
-            blendedColour = Color.Lerp(playersColour, waypointColor, 0.5f);
-        }
-        
-        previousWaypointColour = waypointColor;
+        Color blendedColour = Color.Lerp(playersColour, waypointColor, 0.5f);
         return blendedColour;
     }
+    
+    private static Color BlendColoursTogether(Color playersColour, Color currentColor, Color previousColour) {
+        Color blendedColour = Color.Lerp(playersColour, currentColor, 0.5f) - previousColour;
+        return blendedColour;
+    }
+    
+    // private static Color BlendColoursTogether(Color playersColour, Color waypointColor) {
+    //     Color currentColour = playersColour - previousWaypointColour;
+    //     Color blendedColour;
+    //
+    //     if (GameManager._easyMode) {
+    //         blendedColour = Color.Lerp(currentColour, waypointColor, 0.5f);
+    //     }
+    //     else {
+    //         blendedColour = Color.Lerp(playersColour, waypointColor, 0.5f);
+    //     }
+    //     
+    //     previousWaypointColour = waypointColor;
+    //     return blendedColour;
+    // }
 
     /** misc. functions **/
     /* by parsing a List through a HashSet duplicates are eliminated, as HashSets only contain unique values */

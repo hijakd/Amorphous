@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour {
     // public static float rotationSpeed;
 
     private bool playerIsWhite;
-    private Color blendedColour = Color.white;
+    private Color currentPlayerColour = Color.white;
+    private Color previousPlayerColour;
     private Color previousColour;
     private Color otherColour;
 
@@ -93,41 +94,53 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        previousColour = gameObject.GetComponentInChildren<Renderer>().material.color;
+        previousPlayerColour = gameObject.GetComponentInChildren<Renderer>().material.color;
         currentColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
 
-        if (other.gameObject.CompareTag("Pick Up")) {
-            other.gameObject.SetActive(false);
-        }
+        
 
         if (other.gameObject.CompareTag("Waypoint")) {
             // Debug.Log("Player found a waypoint");
             if (playerIsWhite) {
+                
                 // blendedColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-                blendedColour = currentColour;
+                currentPlayerColour = currentColour;
                 playerIsWhite = !playerIsWhite;
             }
             else {
+                
                 switch (playerColourChangeOption) {
                     case "switch":
                         Debug.Log("player colour is switching");
-                        blendedColour = GameUtils.ChangeColours("switch", previousColour, currentColour);
+                        currentPlayerColour = GameUtils.ChangeColours("switch", currentPlayerColour, currentColour);
                         break;
                     case "add":
+                        if (GameManager._easyMode) {
+                            Debug.Log("player colour is adding in _easyMode");
+                            currentPlayerColour = GameUtils.ChangeColours("add", currentPlayerColour, currentColour, previousColour);
+                            break;
+                        }
                         Debug.Log("player colour is adding");
-                        blendedColour = GameUtils.ChangeColours("add", previousColour, currentColour);
+                        currentPlayerColour = GameUtils.ChangeColours("add", currentPlayerColour, currentColour);
                         break;
 
+
                     case "blend":
+                        if (GameManager._easyMode) {
+                            Debug.Log("player colour is blending in _easyMode");
+                            currentPlayerColour = GameUtils.ChangeColours("blend", currentPlayerColour, currentColour, previousColour);
+                            break;
+                        }
+
                         Debug.Log("player colour is blending");
-                        blendedColour = GameUtils.ChangeColours("blend", previousColour, currentColour);
+                        currentPlayerColour = GameUtils.ChangeColours("blend", currentPlayerColour, currentColour);
                         break;
                 }
 
-                
+                previousColour = currentColour;
             }
 
-            MazeUI.PaintPlayerBlip(blendedColour);
+            MazeUI.PaintPlayerBlip(currentPlayerColour);
         }
 
         if (other.gameObject.CompareTag("ColourResetter")) {
@@ -145,10 +158,14 @@ public class PlayerController : MonoBehaviour {
             // Debug.Log("Player found the black waypoint");
             MazeUI.PaintPlayerBlipBlack();
         }
+        
+        if (other.gameObject.CompareTag("Pick Up")) {
+            other.gameObject.SetActive(false);
+        }
 
         if (other.gameObject.CompareTag("Goal")) {
             // Debug.Log("Player found the goal");
-            if (blendedColour == other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color) {
+            if (currentPlayerColour == other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color) {
                 // Debug.Log("Player found the goal unlocked");
                 GameManager.goalFound = true;
             }
