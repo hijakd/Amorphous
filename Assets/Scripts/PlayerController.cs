@@ -137,9 +137,9 @@ public class PlayerController : MonoBehaviour {
                         break;
                 }
 
-                previousColour = currentColour;
+                
             }
-
+            previousColour = currentColour;
             MazeUI.PaintPlayerBlip(currentPlayerColour);
         }
 
@@ -148,16 +148,16 @@ public class PlayerController : MonoBehaviour {
             MazeUI.PaintPlayerBlipWhite();
         }
 
-        if (other.gameObject.CompareTag("White")) {
-            // Debug.Log("Player found the white waypoint");
-            playerIsWhite = true;
-            MazeUI.PaintPlayerBlipWhite();
-        }
+        // if (other.gameObject.CompareTag("White")) {
+        //     // Debug.Log("Player found the white waypoint");
+        //     playerIsWhite = true;
+        //     MazeUI.PaintPlayerBlipWhite();
+        // }
 
-        if (other.gameObject.CompareTag("Black")) {
-            // Debug.Log("Player found the black waypoint");
-            MazeUI.PaintPlayerBlipBlack();
-        }
+        // if (other.gameObject.CompareTag("Black")) {
+        //     // Debug.Log("Player found the black waypoint");
+        //     MazeUI.PaintPlayerBlipBlack();
+        // }
         
         if (other.gameObject.CompareTag("Pick Up")) {
             other.gameObject.SetActive(false);

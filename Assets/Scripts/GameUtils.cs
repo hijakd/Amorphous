@@ -740,7 +740,14 @@ public class GameUtils : MonoBehaviour {
     }
 
     private static Color AddColoursTogether(Color playersColour, Color waypointColor) {
-        Color mixedColour = playersColour + waypointColor;
+        Color mixedColour;
+        if (waypointColor == Color.white || waypointColor == Color.black) {
+            mixedColour = BlendColoursTogether(playersColour, waypointColor);
+        }
+        else {
+            mixedColour = playersColour + waypointColor;
+        }
+        
         return mixedColour;
     }
 
