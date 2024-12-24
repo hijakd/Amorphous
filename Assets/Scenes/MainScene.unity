@@ -153,10 +153,11 @@ MonoBehaviour:
   player: {fileID: 921098113}
   colourResetter: {fileID: 2726987219958778442, guid: 33796c5761ebcd844811f653fc7f7b91,
     type: 3}
-  floorTile01: {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1,
-    type: 3}
-  floorTile02: {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6,
-    type: 3}
+  floorTiles:
+  - {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1, type: 3}
+  - {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6, type: 3}
+  - {fileID: 1100889974241332231, guid: a4bf1846e41b88b4fb82be54985c5edf, type: 3}
+  - {fileID: 4285910765798275317, guid: bdc1bd1988530fd41a746f334e46755f, type: 3}
   wallPanels:
   - {fileID: 1947273285586917020, guid: dce1e17de8142fa4cb420b081468d73f, type: 3}
   - {fileID: 7754419566860733638, guid: 3d5bb6f788317c74eaf67fa3a2010c07, type: 3}
@@ -174,6 +175,7 @@ MonoBehaviour:
   winText: {fileID: 1744664631}
   gameOverText: {fileID: 144824136}
   isGameActive: 0
+  easyMode: 1
   restartButton: {fileID: 425114794}
   titleScreen: {fileID: 0}
   randomVariance: 0.42
@@ -1947,7 +1949,7 @@ PrefabInstance:
     - target: {fileID: 3993035926326769355, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
       propertyPath: speed
-      value: 50
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 3993035926326769355, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}

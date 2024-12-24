@@ -18,8 +18,9 @@ public class GameManager : MonoBehaviour {
     public GameObject goalObject;
     public GameObject player;
     public GameObject colourResetter;
-    public GameObject floorTile01;
-    public GameObject floorTile02;
+    public GameObject[] floorTiles;
+    // public GameObject floorTile01;
+    // public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     private GameObject groundPlane;
     // private GameObject redWaypoint; // for testing the goal "unlocking"
@@ -247,7 +248,8 @@ public class GameManager : MonoBehaviour {
         
         /* spawn the floor tiles for the maze path */
         while (count < drawnPath.Count) {
-            GameUtils.Spawn(floorTile02, drawnPath[count]);
+            // GameUtils.Spawn(floorTiles[1], drawnPath[count]);
+            GameUtils.Spawn(floorTiles[Mathf.RoundToInt(Random.Range(0, floorTiles.Length))], drawnPath[count]);
             count++;
         }
         
