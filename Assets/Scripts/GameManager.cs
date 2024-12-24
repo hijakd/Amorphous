@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour {
     public List<GameObject> waypoints;
     public TextMeshProUGUI winText, gameOverText;
     public bool isGameActive;
-    public bool easyMode;
+    public bool easyMode = true;
     public static bool _easyMode;
     public static bool goalFound;
     public Button restartButton;
@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour {
         _lastColumnNumber = _east = gridWidth / 2;
         _firstRowNumber = _south = -_north;
         _firstColumnNumber = _west = -_east;
-        _easyMode = easyMode = true;
+        _easyMode = easyMode;
 
 
         wallMaterial = Resources.Load<Material>("Materials/DryWall_Mat");

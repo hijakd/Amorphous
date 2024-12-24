@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour {
                     case "add":
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is adding in _easyMode");
-                            currentPlayerColour = GameUtils.ChangeColours("add", currentPlayerColour, currentColour, previousColour);
+                            currentPlayerColour = GameUtils.ChangeColours("add", currentColour, previousColour);
                             break;
                         }
                         Debug.Log("player colour is adding");
@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour {
                     case "blend":
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is blending in _easyMode");
-                            currentPlayerColour = GameUtils.ChangeColours("blend", currentPlayerColour, currentColour, previousColour);
+                            currentPlayerColour = GameUtils.ChangeColours("blend", currentColour, previousColour);
                             break;
                         }
 
