@@ -9,6 +9,8 @@ public class MazeUI : MonoBehaviour {
     private Label timeText;
     private static VisualElement goalBlip;
     private static VisualElement playerBlip;
+    private static VisualElement hintBlip01;
+    private static VisualElement hintBlip02;
     // private static Label telemetryText;
     // private static string dataTmp = null;
     
@@ -18,6 +20,8 @@ public class MazeUI : MonoBehaviour {
         timeText = uiDoc.rootVisualElement.Q("time") as Label;
         goalBlip = uiDoc.rootVisualElement.Q("goalColourBlip");
         playerBlip = uiDoc.rootVisualElement.Q("playerColourBlip");
+        hintBlip01 = uiDoc.rootVisualElement.Q("hintColourBlip01");
+        hintBlip02 = uiDoc.rootVisualElement.Q("hintColourBlip02");
         // telemetryText = uiDoc.rootVisualElement.Q("telemetry") as Label;
     }
 
@@ -52,6 +56,12 @@ public class MazeUI : MonoBehaviour {
 
     public static void PaintPlayerBlip(Color color) {
         playerBlip.style.backgroundColor = color;
+    }
+    
+    public static void PaintHintBlips(Color color01, Color color02) {
+        hintBlip01.style.backgroundColor = color01;
+        hintBlip02.style.backgroundColor = color02;
+        
     }
 
     public static void PaintPlayerBlipWhite() {

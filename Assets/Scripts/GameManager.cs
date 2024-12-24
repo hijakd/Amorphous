@@ -56,7 +56,8 @@ public class GameManager : MonoBehaviour {
 
 
     private Color goalColour;
-    private ColorBlock goalColorBlock;
+    public static Color hintColour01;
+    public static Color hintColour02;
     private float xVal, zVal;
     private int count, columnNumber, rowNumber, lastRowNumber;
     
@@ -118,6 +119,8 @@ public class GameManager : MonoBehaviour {
 
     private void Awake() {
         goalColour = new Color();
+        hintColour01 = new Color();
+        hintColour02 = new Color();
         groundPlane = GameObject.Find("GroundPlane");
         mixedColors = new List<Color>();
         // cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
@@ -170,6 +173,7 @@ public class GameManager : MonoBehaviour {
 
         MazeUI.PaintGoalBlip(goalColour);
         MazeUI.PaintPlayerBlipWhite();
+        MazeUI.PaintHintBlips(hintColour01, hintColour02);
         
 
         
