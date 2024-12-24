@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour {
     public static int _west { get; private set; }
 
 
-    private Color goalColour;
+    public static Color goalColour;
     public static Color hintColour01;
     public static Color hintColour02;
     private float xVal, zVal;
@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour {
 
         MazeUI.PaintGoalBlip(goalColour);
         MazeUI.PaintPlayerBlipWhite();
-        MazeUI.PaintHintBlips(hintColour01, hintColour02);
+        // MazeUI.PaintHintBlips(hintColour01, hintColour02);
         
 
         

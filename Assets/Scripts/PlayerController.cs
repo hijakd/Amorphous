@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour {
     private PlayerControls controls;
     private Rigidbody playerRb;
 
+    private bool showHint;
     private Vector2 move;
     private Vector2 look;
 
@@ -71,6 +72,12 @@ public class PlayerController : MonoBehaviour {
         playerRb.AddForce(relativeMovement * speed * Time.deltaTime);
         focalPoint.transform.position = transform.position;
 
+        if (showHint) {
+            MazeUI.PaintHintBlips(GameManager.hintColour01, GameManager.hintColour02);
+        }
+        else {
+            MazeUI.PaintHintBlips(currentPlayerColour, GameManager.goalColour);
+        }
 
         /* END FixedUpdate() */
     }
@@ -91,6 +98,11 @@ public class PlayerController : MonoBehaviour {
     public void OnLook() {
         controls.Player.Look.performed += context => look = context.ReadValue<Vector2>();
         controls.Player.Look.canceled += context => look = Vector2.zero;
+    }
+
+    public void OnHint() {
+        controls.Player.Hint.performed += context => showHint = true;
+        controls.Player.Hint.canceled += context => showHint = false;
     }
 
     private void OnTriggerEnter(Collider other) {
