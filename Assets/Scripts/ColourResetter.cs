@@ -18,10 +18,11 @@ public class ColourResetter : MonoBehaviour {
         gameObject.transform.Rotate(new Vector3(0f, rotationSpeed, 0f) * Time.deltaTime);
     }
 
-    private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.CompareTag("Player")) {
-            MazeUI.PaintPlayerBlipWhite();
-        }
-    }
+    // private void OnTriggerEnter(Collision other) {
+    //     if (other.gameObject.CompareTag("Player")) {
+    //         Debug.Log("Player collided with the resetter");
+    //         MazeUI.PaintPlayerBlipWhite();
+    //     }
+    // }
 
 }

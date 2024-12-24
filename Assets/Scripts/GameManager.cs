@@ -22,6 +22,11 @@ public class GameManager : MonoBehaviour {
     public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     private GameObject groundPlane;
+    // private GameObject redWaypoint; // for testing the goal "unlocking"
+    // private GameObject greenWaypoint; // for testing the goal "unlocking"
+    // private GameObject blueWaypoint; // for testing the goal "unlocking"
+    // private GameObject yellowWaypoint; // for testing the goal "unlocking"
+    
     public int gridHeight;
     public int gridWidth;
     public List<GameObject> waypoints;
@@ -33,7 +38,7 @@ public class GameManager : MonoBehaviour {
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
 
     public static List<Vector3> selectableCoords;
-    public static Vector2 randVariance;
+    private static Vector2 randVariance;
     public static bool shortListed = false;
     public static bool firstRowFound = false;
     public static bool firstColFound = false;
@@ -59,13 +64,13 @@ public class GameManager : MonoBehaviour {
     private List<int> distances, lcms;
     private List<Vector3> intersections, destinations, midPoints, drawnPath, /*slicedPath,*/ sortedList, shortenedList;
 
-    public static Material obsMaterial; // added for testing
+    // public static Material obsMaterial; // added for testing
     private Material gypMaterial; // added for testing
-    public static Material purpleMaterial; // added for testing
-    public static Material pinkMaterial; // added for testing
-    public static Material blueMaterial; // added for testing
-    private Material greenMaterial; // added for testing
-    private Material goalMaterial;
+    // public static Material purpleMaterial; // added for testing
+    // public static Material pinkMaterial; // added for testing
+    // public static Material blueMaterial; // added for testing
+    // private Material greenMaterial; // added for testing
+    // private Material goalMaterial;
 
 
     private void OnDrawGizmos() {
@@ -109,6 +114,8 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
         goalColour = new Color();
         groundPlane = GameObject.Find("GroundPlane");
+        
+        // groundPlane = GameObject.Find("GroundPlane");
         mixedColors = new List<Color>();
         cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
         lcms = new List<int>();
@@ -129,11 +136,10 @@ public class GameManager : MonoBehaviour {
         _firstColumnNumber = _west = -_east;
 
         gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat"); // added for testing
-        obsMaterial = Resources.Load<Material>("Materials/OBS_Mat"); // added for testing
-        purpleMaterial = Resources.Load<Material>("Materials/Matt_Purple_Mat"); // added for testing
-        pinkMaterial = Resources.Load<Material>("Materials/Matt_Pink_Mat"); // added for testing
-        blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat"); // added for testing
-
+        // obsMaterial = Resources.Load<Material>("Materials/OBS_Mat"); // added for testing
+        // purpleMaterial = Resources.Load<Material>("Materials/Matt_Purple_Mat"); // added for testing
+        // pinkMaterial = Resources.Load<Material>("Materials/Matt_Pink_Mat"); // added for testing
+        // blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat"); // added for testing
         // greenMaterial = Resources.Load<Material>("Materials/Matt_Green_Mat"); // added for testing
 
         /* cardinals are the corners of the grid & used for boundary calculations */
@@ -144,7 +150,7 @@ public class GameManager : MonoBehaviour {
         GameUtils.Spawn(cardinals[3], new Vector3(_west, 0f, _south)); // SouthWest corner
 
         goalColour = Color.white;
-        goalColour = GameUtils.AddColours(waypoints);
+        // goalColour = GameUtils.AddColours(waypoints);
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
         // goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = GameUtils.AddColours(waypoints);
         
@@ -157,7 +163,9 @@ public class GameManager : MonoBehaviour {
 
         MazeUI.PaintGoalBlip(goalColour);
         MazeUI.PaintPlayerBlipWhite();
+        
 
+        
         ResetCount();
 
         /* populate the destinations List with random positions for the player, waypoints & goal */
@@ -267,6 +275,16 @@ public class GameManager : MonoBehaviour {
             GameUtils.Spawn(waypoints[count - 1], destinations[count]);
         }
 
+        // /* for testing the goal "unlocking" */
+        // redWaypoint = GameObject.Find("RedWaypoint(Clone)"); // for testing the goal "unlocking"
+        // redWaypoint.gameObject.SetActive(false); // for testing the goal "unlocking"
+        // greenWaypoint = GameObject.Find("GreenWaypoint(Clone)"); // for testing the goal "unlocking"
+        // greenWaypoint.gameObject.SetActive(false); // for testing the goal "unlocking"
+        // blueWaypoint = GameObject.Find("BlueWaypoint(Clone)"); // for testing the goal "unlocking"
+        // blueWaypoint.gameObject.SetActive(false); // for testing the goal "unlocking"
+        // yellowWaypoint = GameObject.Find("YellowWaypoint(Clone)"); // for testing the goal "unlocking"
+        // yellowWaypoint.gameObject.SetActive(false); // for testing the goal "unlocking"
+        
         GameUtils.Spawn(goalObject, destinations[^1]);
         
         GameUtils.SpawnColourResetter(colourResetter, resetterPosition);
@@ -275,10 +293,7 @@ public class GameManager : MonoBehaviour {
         /* END Start() */
     }
 
-    // Update is called once per frame
     void FixedUpdate() {
-        // rowNumber = _firstRowNumber;
-        // lastRowNumber = _lastRowNumber;
 
 
         if (goalFound) {
@@ -323,7 +338,7 @@ public class GameManager : MonoBehaviour {
         gameOverText.gameObject.SetActive(true);
     }
 
-    public void EndLevel() {
+    private void EndLevel() {
         Debug.Log("display winText");
         winText.gameObject.SetActive(true);
         restartButton.gameObject.SetActive(true);

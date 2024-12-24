@@ -12,8 +12,8 @@ public class PlayerController : MonoBehaviour {
     public float speed = 10f;
     public float lookSpeed = 10f;
 
-    public static Color currentColour;
-    public static float rotationSpeed;
+    private static Color currentColour;
+    // public static float rotationSpeed;
 
     private bool playerIsWhite;
     private Color blendColour = Color.white;
@@ -40,8 +40,8 @@ public class PlayerController : MonoBehaviour {
     // public TextMeshProUGUI playerPositionText;
 
 
-    void Awake() {
-        rotationSpeed = lookSpeed;
+    private void Awake() {
+        // rotationSpeed = lookSpeed;
         controls = new PlayerControls();
         playerRb = GetComponent<Rigidbody>();
         camera = GameObject.Find("Main Camera");
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void FixedUpdate() {
+    private void FixedUpdate() {
         /* get camera's directional vectors & normalize them */
         cameraForward = camera.transform.forward;
         cameraRight = camera.transform.right;
@@ -107,33 +107,43 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (other.gameObject.CompareTag("Waypoint")) {
-            Debug.Log("Player found a waypoint");
-            // blendColour = Colouring.Add(currentColour, previousColour);
+            // Debug.Log("Player found a waypoint");
             if (playerIsWhite) {
                 blendColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
             }
             else {
                 // var tmpColour = blendColour;
-                blendColour = GameUtils.AddColours(gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
+                // blendColour = GameUtils.AddColoursTogether(gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
+                blendColour = GameUtils.ChangeColours("switch", gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
                 playerIsWhite = !playerIsWhite;
             }
             
             MazeUI.PaintPlayerBlip(blendColour);
         }
 
+        if (other.gameObject.CompareTag("ColourResetter")) {
+            // Debug.Log("Player collided with the resetter");
+            MazeUI.PaintPlayerBlipWhite();
+        }
+
         if (other.gameObject.CompareTag("White")) {
-            Debug.Log("Player found the white waypoint");
+            // Debug.Log("Player found the white waypoint");
             playerIsWhite = true;
             MazeUI.PaintPlayerBlipWhite();
         }
 
         if (other.gameObject.CompareTag("Black")) {
-            Debug.Log("Player found the white waypoint");
+            // Debug.Log("Player found the black waypoint");
             MazeUI.PaintPlayerBlipBlack();
         }
         if (other.gameObject.CompareTag("Goal")) {
-            Debug.Log("Player found the goal");
-            // GameManager.instance.goalFound = true;
+            // Debug.Log("Player found the goal");
+            if (blendColour == other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color) {
+                // Debug.Log("Player found the goal unlocked");
+                GameManager.goalFound = true;
+            }
+            
+            
         }
     }
 
