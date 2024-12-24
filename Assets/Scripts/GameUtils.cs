@@ -677,6 +677,20 @@ public class GameUtils : MonoBehaviour {
 
 
     /** Colour changing/blending functions **/
+    public static Color ChangeColours(string AddOrBlend, List<GameObject> waypoints) {
+        Color returningColour = new();
+        switch (AddOrBlend) {
+            case "add" :
+                returningColour = AddColoursTogether(waypoints);
+                break;
+            case "blend" :
+                returningColour = BlendColoursTogether(waypoints);
+                break;
+            
+        }
+
+        return returningColour;
+    }
     
     public static Color ChangeColours(string switchAddOrBlend, Color playersColor, Color waypointColor) {
         Color returningColour = new();
@@ -695,8 +709,8 @@ public class GameUtils : MonoBehaviour {
 
         return returningColour;
     }
-    
-    public static Color AddColoursTogether(List<GameObject> waypoints) {
+
+    private static Color AddColoursTogether(List<GameObject> waypoints) {
         int waypoint01 = Random.Range(0, waypoints.Count);
         int waypoint02 = Random.Range(0, waypoints.Count);
         Color tmpColour = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color +
@@ -709,7 +723,7 @@ public class GameUtils : MonoBehaviour {
         return mixedColour;
     }
 
-    public static Color BlendColoursTogether(List<GameObject> waypoints) {
+    private static Color BlendColoursTogether(List<GameObject> waypoints) {
         int index01 = Random.Range(0, waypoints.Count);
         int index02 = Random.Range(0, waypoints.Count);
         Color blendedColour =

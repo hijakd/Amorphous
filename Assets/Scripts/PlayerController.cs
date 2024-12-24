@@ -16,13 +16,15 @@ public class PlayerController : MonoBehaviour {
     // public static float rotationSpeed;
 
     private bool playerIsWhite;
-    private Color blendColour = Color.white;
+    private Color blendedColour = Color.white;
     private Color previousColour;
     private Color otherColour;
     
     private GameObject focalPoint;
     private PlayerControls controls;
     private Rigidbody playerRb;
+
+    private string _colourChangeOption;
     
     private Vector2 move;
     private Vector2 look;
@@ -47,6 +49,7 @@ public class PlayerController : MonoBehaviour {
         camera = GameObject.Find("Main Camera");
         focalPoint = GameObject.Find("Focal Point");
         playerIsWhite = true;
+        _colourChangeOption = "switch";
         
         /* set focalPoint to players position */
         focalPoint.transform.position = transform.position;
@@ -109,16 +112,17 @@ public class PlayerController : MonoBehaviour {
         if (other.gameObject.CompareTag("Waypoint")) {
             // Debug.Log("Player found a waypoint");
             if (playerIsWhite) {
-                blendColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+                blendedColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
             }
             else {
-                // var tmpColour = blendColour;
+                _colourChangeOption = "add";
                 // blendColour = GameUtils.AddColoursTogether(gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
-                blendColour = GameUtils.ChangeColours("switch", gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
+                // blendColour = GameUtils.ChangeColours("switch", gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
+                blendedColour = GameUtils.ChangeColours(_colourChangeOption, gameObject.GetComponentInChildren<Renderer>().material.color, other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color);
                 playerIsWhite = !playerIsWhite;
             }
             
-            MazeUI.PaintPlayerBlip(blendColour);
+            MazeUI.PaintPlayerBlip(blendedColour);
         }
 
         if (other.gameObject.CompareTag("ColourResetter")) {
@@ -138,7 +142,7 @@ public class PlayerController : MonoBehaviour {
         }
         if (other.gameObject.CompareTag("Goal")) {
             // Debug.Log("Player found the goal");
-            if (blendColour == other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color) {
+            if (blendedColour == other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color) {
                 // Debug.Log("Player found the goal unlocked");
                 GameManager.goalFound = true;
             }

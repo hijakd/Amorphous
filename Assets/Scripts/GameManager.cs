@@ -56,16 +56,19 @@ public class GameManager : MonoBehaviour {
     private ColorBlock goalColorBlock;
     private float xVal, zVal;
     private int count, columnNumber, rowNumber, lastRowNumber;
+    private string colourChangeOption;
     
     private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition;
 
     private List<Color> mixedColors;
-    private List<GameObject> cardinals;
+    // private List<GameObject> cardinals;
     private List<int> distances, lcms;
-    private List<Vector3> intersections, destinations, midPoints, drawnPath, /*slicedPath,*/ sortedList, shortenedList;
+    private List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
 
+    private static Material wallMaterial;
     // public static Material obsMaterial; // added for testing
-    private Material gypMaterial; // added for testing
+    
+    // private Material gypMaterial; // added for testing
     // public static Material purpleMaterial; // added for testing
     // public static Material pinkMaterial; // added for testing
     // public static Material blueMaterial; // added for testing
@@ -114,17 +117,14 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
         goalColour = new Color();
         groundPlane = GameObject.Find("GroundPlane");
-        
-        // groundPlane = GameObject.Find("GroundPlane");
         mixedColors = new List<Color>();
-        cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
+        // cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
         lcms = new List<int>();
         distances = new List<int>();
         destinations = new List<Vector3>();
         intersections = new List<Vector3>();
         drawnPath = new List<Vector3>();
         shortenedList = new List<Vector3>();
-        // slicedPath = new List<Vector3>();
         midPoints = new List<Vector3>();
         sortedList = new List<Vector3>();
 
@@ -134,8 +134,11 @@ public class GameManager : MonoBehaviour {
         _lastColumnNumber = _east = gridWidth / 2;
         _firstRowNumber = _south = -_north;
         _firstColumnNumber = _west = -_east;
+        colourChangeOption = "add";
 
-        gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat"); // added for testing
+        wallMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
+        
+        // gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat"); // added for testing
         // obsMaterial = Resources.Load<Material>("Materials/OBS_Mat"); // added for testing
         // purpleMaterial = Resources.Load<Material>("Materials/Matt_Purple_Mat"); // added for testing
         // pinkMaterial = Resources.Load<Material>("Materials/Matt_Pink_Mat"); // added for testing
@@ -144,15 +147,14 @@ public class GameManager : MonoBehaviour {
 
         /* cardinals are the corners of the grid & used for boundary calculations */
         // cardinals.Capacity = 4;
-        GameUtils.Spawn(cardinals[0], new Vector3(_west, 0f, _north)); // NorthWest corner
-        GameUtils.Spawn(cardinals[1], new Vector3(_east, 0f, _north)); // NorthEast corner
-        GameUtils.Spawn(cardinals[2], new Vector3(_east, 0f, _south)); // SouthEast corner
-        GameUtils.Spawn(cardinals[3], new Vector3(_west, 0f, _south)); // SouthWest corner
+        // GameUtils.Spawn(cardinals[0], new Vector3(_west, 0f, _north)); // NorthWest corner
+        // GameUtils.Spawn(cardinals[1], new Vector3(_east, 0f, _north)); // NorthEast corner
+        // GameUtils.Spawn(cardinals[2], new Vector3(_east, 0f, _south)); // SouthEast corner
+        // GameUtils.Spawn(cardinals[3], new Vector3(_west, 0f, _south)); // SouthWest corner
 
         goalColour = Color.white;
-        // goalColour = GameUtils.AddColours(waypoints);
+        goalColour = GameUtils.ChangeColours(colourChangeOption, waypoints);
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
-        // goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = GameUtils.AddColours(waypoints);
         
 
         /* END Awake() */
@@ -160,6 +162,8 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         // Debug.Log("Trying to colour the goalBlip");
+        
+        groundPlane.gameObject.SetActive(false);
 
         MazeUI.PaintGoalBlip(goalColour);
         MazeUI.PaintPlayerBlipWhite();
@@ -183,7 +187,7 @@ public class GameManager : MonoBehaviour {
             count++;
         }
 
-        goalColour = new Color(1, 1, 1);
+        // goalColour = new Color(1, 1, 1);
 
         ResetCount();
 
@@ -230,7 +234,9 @@ public class GameManager : MonoBehaviour {
             drawnPath.Add(step);
         }
         
+        /* clearing Lists as they are no longer needed in memory */
         shortenedList.Clear();
+        midPoints.Clear();
 
         resetterPosition = GameUtils.ResetterPosition(drawnPath, destinations);
         
@@ -250,7 +256,7 @@ public class GameManager : MonoBehaviour {
         /* spawn the east/west walls */
         while (_firstRowNumber >= _lastRowNumber) {
             sortedList = GameUtils.SortRows(GameUtils.RemoveDuplicates(GameUtils.SliceRow(drawnPath, _firstRowNumber)));
-            GameUtils.SpawnEastWestWalls(sortedList, wallPanels, gypMaterial);
+            GameUtils.SpawnEastWestWalls(sortedList, wallPanels, wallMaterial);
             _firstRowNumber--;
         }
         
@@ -265,9 +271,12 @@ public class GameManager : MonoBehaviour {
         while (_firstColumnNumber >= _lastColumnNumber) {
             sortedList =
                 GameUtils.SortColumns(GameUtils.RemoveDuplicates(GameUtils.SliceColumn(drawnPath, _firstColumnNumber)));
-            GameUtils.SpawnNorthSouthWalls(sortedList, wallPanels, gypMaterial);
+            GameUtils.SpawnNorthSouthWalls(sortedList, wallPanels, wallMaterial);
             _firstColumnNumber--;
         }
+        
+        /* clearing the sortedList as it is no longer needed in memory */
+        sortedList.Clear();
         
         /* reposition the player, spawn the waypoints and goal */
         player.transform.position = destinations[0];
@@ -308,14 +317,7 @@ public class GameManager : MonoBehaviour {
     private void ResetCount() {
         count = 0;
     }
-
-    // private static List<Vector3> RemoveDuplicates(List<Vector3> list) {
-    //     var inputList = new HashSet<Vector3>(list);
-    //     var shortened = inputList.ToList();
-    //     shortListed = true;
-    //     return shortened.ToList();
-    // }
-
+    
 
     public void StartGame() {
         isGameActive = true;
