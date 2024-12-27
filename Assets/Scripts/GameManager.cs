@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 
 // ReSharper disable InvalidXmlDocComment
 // ReSharper disable PossibleLossOfFraction
-
 // ReSharper disable InconsistentNaming
 // ReSharper disable NotAccessedField.Local
 // ReSharper disable Unity.RedundantEventFunction
@@ -22,29 +21,31 @@ public class GameManager : MonoBehaviour {
     // public GameObject floorTile01;
     // public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
-    private GameObject groundPlane;
-    // private GameObject redWaypoint; // for testing the goal "unlocking"
-    // private GameObject greenWaypoint; // for testing the goal "unlocking"
-    // private GameObject blueWaypoint; // for testing the goal "unlocking"
-    // private GameObject yellowWaypoint; // for testing the goal "unlocking"
-    
-    public int gridHeight;
-    public int gridWidth;
+    public int gridHeight, gridWidth;
     public List<GameObject> waypoints;
     public TextMeshProUGUI winText, gameOverText;
     public bool isGameActive;
     public bool easyMode = true;
-    public static bool _easyMode;
-    public static bool goalFound;
     public Button restartButton;
     public GameObject titleScreen;
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
+    public GameObject uiGameView, uiGameMenu;
 
-    public static List<Vector3> selectableCoords;
-    private static Vector2 randVariance;
+    private GameObject groundPlane; 
+    private float xVal, zVal;
+    private int count, columnNumber, rowNumber, lastRowNumber;
+    private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition;
+    private List<Color> mixedColors;
+    private List<int> distances, lcms;
+    private List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
+    
+    public static bool _easyMode, goalFound;
+    public static bool _showMenu = false;
     public static bool shortListed = false;
     public static bool firstRowFound = false;
     public static bool firstColFound = false;
+    public static Color goalColour, hintColour01, hintColour02;
+    // public static GameObject _uiGameView, _uiGameMenu;
     public static int _firstRowNumber { get; private set; }
     public static int _firstColumnNumber { get; private set; }
     public static int _lastRowNumber { get; private set; }
@@ -53,22 +54,9 @@ public class GameManager : MonoBehaviour {
     public static int _east { get; private set; }
     public static int _south { get; private set; }
     public static int _west { get; private set; }
-
-
-    public static Color goalColour;
-    public static Color hintColour01;
-    public static Color hintColour02;
-    private float xVal, zVal;
-    private int count, columnNumber, rowNumber, lastRowNumber;
     
-    private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition;
-
-    private List<Color> mixedColors;
-    // private List<GameObject> cardinals;
-    private List<int> distances, lcms;
-    private List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
-
     private static Material wallMaterial;
+    private static Vector2 randVariance;
     // public static Material obsMaterial; // added for testing
     
     // private Material gypMaterial; // added for testing
@@ -93,28 +81,7 @@ public class GameManager : MonoBehaviour {
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2),
             new Vector3(0.75f, 2f, 0.75f)); // SouthWest corner
-
-        // visualize paths between 'intersections'
-        // Gizmos.color = Color.blue;
-        // for (int i = 0; i < intersections.Count - 1; i++) {
-        //     Gizmos.DrawLine(intersections[i], intersections[i + 1]);
-        // }
-
-        // Gizmos.color = Color.green;
-        // Gizmos.DrawLine(spawnPosition, pyramidPos);
-        // Gizmos.DrawLine(pyramidPos, destination01);
-        // if (intersections.Count > 0) {
-        //     Gizmos.DrawLine(intersections[0], intersections[1]);
-        //     Gizmos.DrawLine(intersections[1], intersections[2]);
-        //     Gizmos.DrawLine(intersections[2], intersections[3]);
-        //     Gizmos.DrawLine(intersections[3], intersections[4]);
-        //     Gizmos.DrawLine(intersections[4], intersections[5]);
-        //     Gizmos.DrawLine(intersections[5], intersections[6]);
-        //     Gizmos.DrawLine(intersections[6], intersections[7]);
-        //     Gizmos.DrawLine(intersections[7], intersections[8]);
-        //     Gizmos.DrawLine(intersections[8], intersections[9]);
-        //     Gizmos.DrawLine(intersections[9], intersections[10]);
-        // }
+        
     }
 
     private void Awake() {
@@ -122,8 +89,9 @@ public class GameManager : MonoBehaviour {
         hintColour01 = new Color();
         hintColour02 = new Color();
         groundPlane = GameObject.Find("GroundPlane");
+        // _uiGameView = uiGameView;
+        // _uiGameMenu = uiGameMenu;
         mixedColors = new List<Color>();
-        // cardinals = new List<GameObject>(Resources.LoadAll<GameObject>("Cardinals"));
         lcms = new List<int>();
         distances = new List<int>();
         destinations = new List<Vector3>();
@@ -151,13 +119,6 @@ public class GameManager : MonoBehaviour {
         // blueMaterial = Resources.Load<Material>("Materials/Plastic_Blue_Mat"); // added for testing
         // greenMaterial = Resources.Load<Material>("Materials/Matt_Green_Mat"); // added for testing
 
-        /* cardinals are the corners of the grid & used for boundary calculations */
-        // cardinals.Capacity = 4;
-        // GameUtils.Spawn(cardinals[0], new Vector3(_west, 0f, _north)); // NorthWest corner
-        // GameUtils.Spawn(cardinals[1], new Vector3(_east, 0f, _north)); // NorthEast corner
-        // GameUtils.Spawn(cardinals[2], new Vector3(_east, 0f, _south)); // SouthEast corner
-        // GameUtils.Spawn(cardinals[3], new Vector3(_west, 0f, _south)); // SouthWest corner
-
         goalColour = Color.white;
         goalColour = GameUtils.ChangeColours("add", waypoints);
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
@@ -173,8 +134,6 @@ public class GameManager : MonoBehaviour {
 
         MazeUI.PaintGoalBlip(goalColour);
         MazeUI.PaintPlayerBlipWhite();
-        // MazeUI.PaintHintBlips(hintColour01, hintColour02);
-        
 
         
         ResetCount();
@@ -194,7 +153,6 @@ public class GameManager : MonoBehaviour {
             count++;
         }
 
-        // goalColour = new Color(1, 1, 1);
 
         ResetCount();
 
@@ -291,16 +249,7 @@ public class GameManager : MonoBehaviour {
         for (count = 1; count <= destinations.Count - 2; count++) {
             GameUtils.Spawn(waypoints[count - 1], destinations[count]);
         }
-
-        // /* for testing the goal "unlocking" */
-        // redWaypoint = GameObject.Find("RedWaypoint(Clone)"); // for testing the goal "unlocking"
-        // redWaypoint.gameObject.SetActive(false); // for testing the goal "unlocking"
-        // greenWaypoint = GameObject.Find("GreenWaypoint(Clone)"); // for testing the goal "unlocking"
-        // greenWaypoint.gameObject.SetActive(false); // for testing the goal "unlocking"
-        // blueWaypoint = GameObject.Find("BlueWaypoint(Clone)"); // for testing the goal "unlocking"
-        // blueWaypoint.gameObject.SetActive(false); // for testing the goal "unlocking"
-        // yellowWaypoint = GameObject.Find("YellowWaypoint(Clone)"); // for testing the goal "unlocking"
-        // yellowWaypoint.gameObject.SetActive(false); // for testing the goal "unlocking"
+        
         
         GameUtils.Spawn(goalObject, destinations[^1]);
         
@@ -310,8 +259,16 @@ public class GameManager : MonoBehaviour {
         /* END Start() */
     }
 
-    void FixedUpdate() {
+    private void FixedUpdate() {
 
+        if (_showMenu) {
+            uiGameView.gameObject.SetActive(false);
+            uiGameMenu.gameObject.SetActive(true);
+        }
+        else {
+            uiGameView.gameObject.SetActive(true);
+            uiGameMenu.gameObject.SetActive(false);
+        }
 
         if (goalFound) {
             EndLevel();

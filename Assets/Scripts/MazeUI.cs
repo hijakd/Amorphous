@@ -11,8 +11,6 @@ public class MazeUI : MonoBehaviour {
     private static VisualElement playerBlip;
     private static VisualElement hintBlip01;
     private static VisualElement hintBlip02;
-    // private static Label telemetryText;
-    // private static string dataTmp = null;
     
     void OnEnable() {
         // timeText = System.DateTime.Now.ToString("hh:mm:ss");
@@ -25,29 +23,6 @@ public class MazeUI : MonoBehaviour {
         // telemetryText = uiDoc.rootVisualElement.Q("telemetry") as Label;
     }
 
-    // public static void DisplayTelemetry(String data) {
-    //     telemetryText.text = data;
-    //     Debug.Log("telemetry data:\n" + data);
-    // }
-    //
-    // public static void DisplayTelemetry(List<Vector3> data) {
-    //     
-    //     foreach (var vector in data) {
-    //         dataTmp += vector + "\n";
-    //     }
-    //     
-    //     Debug.Log("telemetry data:\n" + dataTmp);
-    // }
-    //
-    // public static void DisplayTelemetry(int data) {
-    //     telemetryText.text = data.ToString();
-    //     Debug.Log("telemetry data:\n" + data);
-    // }
-    //
-    // public static void DisplayTelemetry(float data) {
-    //     telemetryText.text = data.ToString();
-    //     Debug.Log("telemetry data:\n" + data);
-    // }
     
     public static void PaintGoalBlip(Color colour) {
         // Debug.Log("Getting colour");
@@ -59,6 +34,15 @@ public class MazeUI : MonoBehaviour {
     }
     
     public static void PaintHintBlips(Color color01, Color color02) {
+        if (color01 == Color.black && color02 == Color.black) {
+            hintBlip01.style.opacity = 0;
+            hintBlip02.style.opacity = 0;
+        }
+        else {
+            hintBlip01.style.opacity = 1;
+            hintBlip02.style.opacity = 1;
+            
+        }
         hintBlip01.style.backgroundColor = color01;
         hintBlip02.style.backgroundColor = color02;
         

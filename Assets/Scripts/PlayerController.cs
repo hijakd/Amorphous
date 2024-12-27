@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 // ReSharper disable UnusedParameter.Local
@@ -9,45 +10,33 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     public new GameObject camera;
-    public float speed = 10f;
+    public static float speed { get; set;}
     public float lookSpeed = 10f;
-
-    private static Color currentColour;
-
-    // public static float rotationSpeed;
-
-    private bool playerIsWhite;
+    
+    private bool playerIsWhite, showHint, showMenu;
     private Color currentPlayerColour = Color.white;
-    private Color previousPlayerColour;
-    private Color previousColour;
-    private Color otherColour;
-
+    private Color previousPlayerColour, previousColour, otherColour;
     private GameObject focalPoint;
     private PlayerControls controls;
     private Rigidbody playerRb;
-
-    private bool showHint;
-    private Vector2 move;
-    private Vector2 look;
-
-    private Vector3 cameraForward;
-    private Vector3 cameraRight;
-    private Vector3 forwardMovement;
-    private Vector3 rightMovement;
-    private Vector3 relativeMovement;
-    private Vector3 playerPos;
-    public static string playerColourChangeOption;
-
-
+    private Vector2 move, look;
+    private Vector3 cameraForward, cameraRight, forwardMovement, rightMovement, relativeMovement, playerPos;
+    
+    public float moveSpeed;
+    private static Color currentColour;
+    private static string playerColourChangeOption;
+    
+    
     private void Awake() {
-        // rotationSpeed = lookSpeed;
         controls = new PlayerControls();
         playerRb = GetComponent<Rigidbody>();
         camera = GameObject.Find("Main Camera");
         focalPoint = GameObject.Find("Focal Point");
         playerIsWhite = true;
         playerColourChangeOption = "add";
-
+        speed = 50;
+        moveSpeed = speed;
+        showMenu = false;
 
         /* set focalPoint to players position */
         focalPoint.transform.position = transform.position;
@@ -63,20 +52,25 @@ public class PlayerController : MonoBehaviour {
         cameraForward.y = cameraRight.y = 0;
         cameraForward = cameraForward.normalized;
         cameraRight = cameraRight.normalized;
+        
+        moveSpeed = speed;
 
         /* convert then combine directional vectors to local space */
         forwardMovement = move.y * cameraForward;
         rightMovement = move.x * cameraRight;
         relativeMovement = forwardMovement + rightMovement;
         playerPos = transform.position; // for testing
-        playerRb.AddForce(relativeMovement * speed * Time.deltaTime);
+        playerRb.AddForce(relativeMovement * (speed * Time.deltaTime));
         focalPoint.transform.position = transform.position;
+
+        
 
         if (showHint) {
             MazeUI.PaintHintBlips(GameManager.hintColour01, GameManager.hintColour02);
         }
         else {
-            MazeUI.PaintHintBlips(currentPlayerColour, GameManager.goalColour);
+            // MazeUI.PaintHintBlips(currentPlayerColour, GameManager.goalColour);
+            MazeUI.PaintHintBlips(Color.black, Color.black);
         }
 
         /* END FixedUpdate() */
@@ -103,6 +97,16 @@ public class PlayerController : MonoBehaviour {
     public void OnHint() {
         controls.Player.Hint.performed += context => showHint = true;
         controls.Player.Hint.canceled += context => showHint = false;
+    }
+
+    public void OnMenu() {
+        // controls.Player.Menu.performed += context => ShowMenu();
+        controls.Player.Menu.performed += context => GameManager._showMenu = !showMenu;
+        // controls.Player.Menu.canceled += context => GameManager._showMenu = showMenu;
+    }
+
+    public void OnCloseMenu() {
+        controls.Player.CloseMenu.performed += context => GameManager._showMenu = showMenu;
     }
 
     private void OnTriggerEnter(Collider other) {
