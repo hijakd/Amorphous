@@ -8,10 +8,10 @@
             </engine:VisualElement>
             <engine:VisualElement name="moveSpeed" style="flex-grow: 1; align-self: center; justify-content: center; min-width: 60%; align-items: stretch;">
                 <engine:Label text="Movement Speed" name="moveSpeedLbl" class="text" style="align-self: auto; align-content: auto; align-items: auto; justify-content: space-evenly;" />
-                <engine:Slider value="5" low-value="2.5" high-value="10" name="moveSpeedSlider" style="padding-right: 13px; padding-left: 13px; align-items: auto; align-content: auto; justify-content: space-evenly;" />
+                <engine:Slider value="5" low-value="2.5" high-value="10" name="moveSpeedSlider" fill="true" direction="Horizontal" page-size="0" style="padding-right: 13px; padding-left: 13px; align-items: auto; align-content: auto; justify-content: space-evenly;" />
             </engine:VisualElement>
             <engine:VisualElement name="hints" style="flex-grow: 1; justify-content: center; align-self: center; align-items: stretch;">
-                <engine:RadioButtonGroup label="Hints" choices="Show,Hide" name="hintsSelector" class="text" />
+                <engine:RadioButtonGroup label="Hints" choices="Enabled,Disabled" name="hintsSelector" value="-1" tabindex="0" class="text" />
             </engine:VisualElement>
         </engine:VisualElement>
         <engine:VisualElement name="right" style="flex-grow: 1; align-self: flex-end; max-width: none; min-width: auto; max-height: none; min-height: 100%; flex-direction: row;" />

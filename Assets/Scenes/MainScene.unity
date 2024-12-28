@@ -179,6 +179,8 @@ MonoBehaviour:
   restartButton: {fileID: 425114794}
   titleScreen: {fileID: 0}
   randomVariance: 0.42
+  uiGameView: {fileID: 395335930}
+  uiGameMenu: {fileID: 1594711569}
 --- !u!4 &103129383
 Transform:
   m_ObjectHideFlags: 0
@@ -742,7 +744,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &395335931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2978,13 +2980,14 @@ GameObject:
   m_Component:
   - component: {fileID: 1594711571}
   - component: {fileID: 1594711570}
+  - component: {fileID: 1594711572}
   m_Layer: 5
   m_Name: UIGameMenuView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1594711570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3020,6 +3023,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1594711572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594711569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a571fcc07c5a3f446a6ea46e9291faab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1744664629
 GameObject:
   m_ObjectHideFlags: 0
