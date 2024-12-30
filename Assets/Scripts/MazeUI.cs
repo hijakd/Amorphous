@@ -6,7 +6,9 @@ using UnityEngine.UIElements;
 
 public class MazeUI : MonoBehaviour {
 
+    private UIDocument uiDoc;
     private Label timeText;
+    private static VisualElement uiHeader;
     private static VisualElement goalBlip;
     private static VisualElement playerBlip;
     private static VisualElement hintBlip01;
@@ -14,7 +16,8 @@ public class MazeUI : MonoBehaviour {
     
     void OnEnable() {
         // timeText = System.DateTime.Now.ToString("hh:mm:ss");
-        var uiDoc = GetComponent<UIDocument>();
+        uiDoc = GetComponent<UIDocument>();
+        uiHeader = uiDoc.rootVisualElement.Q("header");
         timeText = uiDoc.rootVisualElement.Q("time") as Label;
         goalBlip = uiDoc.rootVisualElement.Q("goalColourBlip");
         playerBlip = uiDoc.rootVisualElement.Q("playerColourBlip");
@@ -54,6 +57,19 @@ public class MazeUI : MonoBehaviour {
     
     public static void PaintPlayerBlipBlack() {
         playerBlip.style.backgroundColor = Color.black;
+    }
+    
+    public static void ShowHideUI(bool show) {
+        if (!show) {
+            uiHeader.style.opacity = 0;
+            GameManager._showMenu = false;
+        }
+        else {
+            uiHeader.style.opacity = 1;
+            GameManager._showMenu = true;
+        }
+        
+        
     }
     
     void FixedUpdate() {

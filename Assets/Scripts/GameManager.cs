@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour {
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
     public GameObject uiGameView, uiGameMenu;
 
-    private GameObject groundPlane; 
+    private GameObject groundPlane, optionsMenu;
     private float xVal, zVal;
     private int count, columnNumber, rowNumber, lastRowNumber;
     private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition;
@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour {
         hintColour01 = new Color();
         hintColour02 = new Color();
         groundPlane = GameObject.Find("GroundPlane");
+        optionsMenu = GameObject.Find("OptionsMenu");
         // _uiGameView = uiGameView;
         // _uiGameMenu = uiGameMenu;
         mixedColors = new List<Color>();
@@ -262,13 +263,17 @@ public class GameManager : MonoBehaviour {
     private void FixedUpdate() {
 
         if (_showMenu) {
-            uiGameView.gameObject.SetActive(false);
-            uiGameMenu.gameObject.SetActive(true);
+            // uiGameView.gameObject.SetActive(false);
+            optionsMenu.gameObject.SetActive(true);
         }
         else {
-            uiGameView.gameObject.SetActive(true);
-            uiGameMenu.gameObject.SetActive(false);
+            // uiGameView.gameObject.SetActive(true);
+            optionsMenu.gameObject.SetActive(false);
         }
+
+        // if (_showMenu) {
+        //     
+        // }
 
         if (goalFound) {
             EndLevel();

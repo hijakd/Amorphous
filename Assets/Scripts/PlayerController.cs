@@ -100,8 +100,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnMenu() {
-        // controls.Player.Menu.performed += context => ShowMenu();
-        controls.Player.Menu.performed += context => GameManager._showMenu = !showMenu;
+        controls.Player.Menu.performed += context => MazeUI.ShowHideUI(false);
+        // controls.Player.Menu.performed += context => GameManager._showMenu = !showMenu;
         // controls.Player.Menu.canceled += context => GameManager._showMenu = showMenu;
     }
 

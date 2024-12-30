@@ -24,6 +24,7 @@ public class MazeMenu : MonoBehaviour {
 
     }
 
+    
 
     private void FixedUpdate() {
         // if (!Mathf.Approximately(moveSpeed.value, playerSpeed)) {
