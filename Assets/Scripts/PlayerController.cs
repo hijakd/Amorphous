@@ -73,6 +73,19 @@ public class PlayerController : MonoBehaviour {
             MazeUI.PaintHintBlips(Color.black, Color.black);
         }
 
+        if (showMenu) {
+            MazeUI.ShowHideUI(true);
+            // GameManager.optionsMenu.gameObject.SetActive(true);
+            // GameManager._showMenu = showMenu;
+            GameManager.ShowMenu();
+        }
+        else {
+            MazeUI.ShowHideUI(false);
+            // GameManager.optionsMenu.gameObject.SetActive(false);
+            // GameManager._showMenu = !showMenu;
+            GameManager.HideMenu();
+        }
+
         /* END FixedUpdate() */
     }
 
@@ -100,13 +113,16 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void OnMenu() {
-        controls.Player.Menu.performed += context => MazeUI.ShowHideUI(false);
+        // controls.Player.Menu.performed += context => MazeUI.ShowHideUI(true);
         // controls.Player.Menu.performed += context => GameManager._showMenu = !showMenu;
+        controls.Player.Menu.performed += context => showMenu = true;
         // controls.Player.Menu.canceled += context => GameManager._showMenu = showMenu;
     }
 
     public void OnCloseMenu() {
-        controls.Player.CloseMenu.performed += context => GameManager._showMenu = showMenu;
+        // controls.Player.CloseMenu.performed += context => GameManager._showMenu = showMenu;
+        controls.Player.CloseMenu.performed += context => showMenu = false;
+        // controls.Player.Menu.performed += context => MazeUI.ShowHideUI(false);
     }
 
     private void OnTriggerEnter(Collider other) {

@@ -25,6 +25,7 @@ TagManager:
   - Black
   - ColourResetter
   - OptionsMenu
+  - background
   layers:
   - Default
   - TransparentFX

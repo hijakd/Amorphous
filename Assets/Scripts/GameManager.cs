@@ -17,7 +17,11 @@ public class GameManager : MonoBehaviour {
     public GameObject goalObject;
     public GameObject player;
     public GameObject colourResetter;
+    public GameObject optionsMenu;
+    public CanvasGroup menuGroup;
+
     public GameObject[] floorTiles;
+
     // public GameObject floorTile01;
     // public GameObject floorTile02;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
@@ -31,20 +35,27 @@ public class GameManager : MonoBehaviour {
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
     public GameObject uiGameView, uiGameMenu;
 
-    private GameObject groundPlane, optionsMenu;
+    
+    public static GameObject _optionsMenu;
+    private static Color menuBgColour;
     private float xVal, zVal;
+    private GameObject groundPlane, menuPanel;
+    public static Image menuBackground;
+    // public Image bgImg;
     private int count, columnNumber, rowNumber, lastRowNumber;
     private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition;
     private List<Color> mixedColors;
     private List<int> distances, lcms;
     private List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
-    
+
     public static bool _easyMode, goalFound;
     public static bool _showMenu = false;
     public static bool shortListed = false;
     public static bool firstRowFound = false;
     public static bool firstColFound = false;
+
     public static Color goalColour, hintColour01, hintColour02;
+
     // public static GameObject _uiGameView, _uiGameMenu;
     public static int _firstRowNumber { get; private set; }
     public static int _firstColumnNumber { get; private set; }
@@ -54,11 +65,12 @@ public class GameManager : MonoBehaviour {
     public static int _east { get; private set; }
     public static int _south { get; private set; }
     public static int _west { get; private set; }
-    
+
     private static Material wallMaterial;
     private static Vector2 randVariance;
+
     // public static Material obsMaterial; // added for testing
-    
+
     // private Material gypMaterial; // added for testing
     // public static Material purpleMaterial; // added for testing
     // public static Material pinkMaterial; // added for testing
@@ -81,15 +93,19 @@ public class GameManager : MonoBehaviour {
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireCube(new Vector3(-gridWidth / 2, 1f, -gridHeight / 2),
             new Vector3(0.75f, 2f, 0.75f)); // SouthWest corner
-        
     }
 
     private void Awake() {
+        menuBgColour = new Color(0.1686275f, 0.5843138f, 0.2196078f, 0.8352941f);
         goalColour = new Color();
         hintColour01 = new Color();
         hintColour02 = new Color();
         groundPlane = GameObject.Find("GroundPlane");
-        optionsMenu = GameObject.Find("OptionsMenu");
+        menuPanel = GameObject.Find("OptionsMenu_Panel");
+        // menuBackground = gameObject.GetComponent<Image>().;
+        // bgImg = Image.();
+
+        // _optionsMenu = optionsMenu;
         // _uiGameView = uiGameView;
         // _uiGameMenu = uiGameMenu;
         mixedColors = new List<Color>();
@@ -112,7 +128,7 @@ public class GameManager : MonoBehaviour {
 
 
         wallMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
-        
+
         // gypMaterial = Resources.Load<Material>("Materials/DryWall_Mat"); // added for testing
         // obsMaterial = Resources.Load<Material>("Materials/OBS_Mat"); // added for testing
         // purpleMaterial = Resources.Load<Material>("Materials/Matt_Purple_Mat"); // added for testing
@@ -123,20 +139,42 @@ public class GameManager : MonoBehaviour {
         goalColour = Color.white;
         goalColour = GameUtils.ChangeColours("add", waypoints);
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
-        
+
+        // if (optionsMenu.gameObject.activeSelf) {
+        //     Debug.Log("options menu is active");
+        //     optionsMenu.gameObject.SetActive(false);
+        // }
+
+        menuPanel = GameObject.Find("OptionsMenu_Panel");
+
 
         /* END Awake() */
     }
 
     private void Start() {
         // Debug.Log("Trying to colour the goalBlip");
+
+        // HideMenu();
+
+        // bgImg.material.color = Color.clear;
+        // bgImg.gameObject.SetActive(false);
         
+        // Debug.Log("Options menu = " + optionsMenu.gameObject.GetType()/* + optionsMenu.gameObject.activeSelf*/);
+
         groundPlane.gameObject.SetActive(false);
+
+        // if (optionsMenu.gameObject.CompareTag("OptionsMenu")) {
+        //     Debug.Log("found options menu tag");
+        // }
+        // if (optionsMenu.gameObject.activeSelf) {
+        // optionsMenu.gameObject.SetActive(false);
+        // }
+
 
         MazeUI.PaintGoalBlip(goalColour);
         MazeUI.PaintPlayerBlipWhite();
 
-        
+
         ResetCount();
 
         /* populate the destinations List with random positions for the player, waypoints & goal */
@@ -174,7 +212,7 @@ public class GameManager : MonoBehaviour {
 
         /* then add the last destination which is for the goal */
         intersections.Add(destinations[count]);
-        
+
 
         /* plot the paths between the intersections */
         ResetCount();
@@ -194,42 +232,42 @@ public class GameManager : MonoBehaviour {
         /* remove duplicate values from the drawnPath list */
         shortenedList = GameUtils.RemoveDuplicates(drawnPath);
         drawnPath.Clear();
-        
+
         /* swap the values back to drawnPath then erase shortenedList */
         foreach (var step in shortenedList) {
             drawnPath.Add(step);
         }
-        
+
         /* clearing Lists as they are no longer needed in memory */
         shortenedList.Clear();
         midPoints.Clear();
 
         resetterPosition = GameUtils.ResetterPosition(drawnPath, destinations);
-        
-        
+
+
         ResetCount();
-        
+
         /* spawn the floor tiles for the maze path */
         while (count < drawnPath.Count) {
             // GameUtils.Spawn(floorTiles[1], drawnPath[count]);
             GameUtils.Spawn(floorTiles[Mathf.RoundToInt(Random.Range(0, floorTiles.Length))], drawnPath[count]);
             count++;
         }
-        
+
         /* find the value of the first and last rows of the maze grid */
         _firstRowNumber = GameUtils.FindLargestValue(GameUtils.FindTheZs(drawnPath));
         _lastRowNumber = GameUtils.FindSmallestValue(GameUtils.FindTheZs(drawnPath));
-        
+
         /* spawn the east/west walls */
         while (_firstRowNumber >= _lastRowNumber) {
             sortedList = GameUtils.SortRows(GameUtils.RemoveDuplicates(GameUtils.SliceRow(drawnPath, _firstRowNumber)));
             GameUtils.SpawnEastWestWalls(sortedList, wallPanels, wallMaterial);
             _firstRowNumber--;
         }
-        
+
         /* clearing the sortedList before parsing the North/South walls, to eliminate the chances of junk data */
         sortedList.Clear();
-        
+
         /* find the value of the first and last columns of the maze grid */
         _firstColumnNumber = GameUtils.FindLargestValue(GameUtils.FindTheXs(drawnPath));
         _lastColumnNumber = GameUtils.FindSmallestValue(GameUtils.FindTheXs(drawnPath));
@@ -241,35 +279,38 @@ public class GameManager : MonoBehaviour {
             GameUtils.SpawnNorthSouthWalls(sortedList, wallPanels, wallMaterial);
             _firstColumnNumber--;
         }
-        
+
         /* clearing the sortedList as it is no longer needed in memory */
         sortedList.Clear();
-        
+
         /* reposition the player, spawn the waypoints and goal */
         player.transform.position = destinations[0];
         for (count = 1; count <= destinations.Count - 2; count++) {
             GameUtils.Spawn(waypoints[count - 1], destinations[count]);
         }
-        
-        
+
+
         GameUtils.Spawn(goalObject, destinations[^1]);
-        
+
         GameUtils.SpawnColourResetter(colourResetter, resetterPosition);
-        
+
 
         /* END Start() */
     }
 
-    private void FixedUpdate() {
 
-        if (_showMenu) {
-            // uiGameView.gameObject.SetActive(false);
-            optionsMenu.gameObject.SetActive(true);
-        }
-        else {
-            // uiGameView.gameObject.SetActive(true);
-            optionsMenu.gameObject.SetActive(false);
-        }
+
+    private void FixedUpdate() {
+        // if (_showMenu) {
+        //     // uiGameView.gameObject.SetActive(false);
+        //     // optionsMenu.gameObject.SetActive(true);
+        //     ShowMenu();
+        // }
+        // else {
+        //     // uiGameView.gameObject.SetActive(true);
+        //     // optionsMenu.gameObject.SetActive(false);
+        //     HideMenu();
+        // }
 
         // if (_showMenu) {
         //     
@@ -287,8 +328,17 @@ public class GameManager : MonoBehaviour {
     private void ResetCount() {
         count = 0;
     }
-    
 
+    public static void HideMenu() {
+        menuBackground.gameObject.SetActive(false);
+        menuBackground.gameObject.GetComponent<Image>().material.color = Color.clear;
+    }
+
+    public static void ShowMenu() {
+        menuBackground.gameObject.SetActive(true);
+        menuBackground.gameObject.GetComponent<Image>().material.color = menuBgColour;
+    }
+    
     public void StartGame() {
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);

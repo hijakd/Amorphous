@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+// using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 // ReSharper disable InconsistentNaming
@@ -60,13 +60,13 @@ public class MazeUI : MonoBehaviour {
     }
     
     public static void ShowHideUI(bool show) {
-        if (!show) {
+        if (show) {
             uiHeader.style.opacity = 0;
-            GameManager._showMenu = false;
+            // GameManager.optionsMenu.gameObject.SetActive(true);
         }
         else {
             uiHeader.style.opacity = 1;
-            GameManager._showMenu = true;
+            // GameManager.optionsMenu.gameObject.SetActive(false);
         }
         
         
