@@ -65,26 +65,26 @@ public class PlayerController : MonoBehaviour {
 
         
 
-        if (showHint) {
-            MazeUI.PaintHintBlips(GameManager.hintColour01, GameManager.hintColour02);
-        }
-        else {
-            // MazeUI.PaintHintBlips(currentPlayerColour, GameManager.goalColour);
-            MazeUI.PaintHintBlips(Color.black, Color.black);
-        }
+        // if/* (showHint) {
+        //     MazeUI.PaintHintBlips(GameManager.hintColour01, GameManager.hintColour02);
+        // }
+        // else {
+        //     // MazeUI.PaintHintBlips(currentPlayerColour, GameManager.goalColour);
+        //     MazeUI.PaintHintBlips(Color.black, Color.black);
+        // }*/
 
-        if (showMenu) {
-            MazeUI.ShowHideUI(true);
-            // GameManager.optionsMenu.gameObject.SetActive(true);
-            // GameManager._showMenu = showMenu;
-            GameManager.ShowMenu();
-        }
-        else {
-            MazeUI.ShowHideUI(false);
-            // GameManager.optionsMenu.gameObject.SetActive(false);
-            // GameManager._showMenu = !showMenu;
-            GameManager.HideMenu();
-        }
+        // if (showMenu) {
+        //     MazeUI.ShowHideUI(true);
+        //     // GameManager.optionsMenu.gameObject.SetActive(true);
+        //     // GameManager._showMenu = showMenu;
+        //     GameManager.ShowMenu();
+        // }
+        // else {
+        //     MazeUI.ShowHideUI(false);
+        //     // GameManager.optionsMenu.gameObject.SetActive(false);
+        //     // GameManager._showMenu = !showMenu;
+        //     GameManager.HideMenu();
+        // }
 
         /* END FixedUpdate() */
     }
@@ -172,12 +172,12 @@ public class PlayerController : MonoBehaviour {
                 
             }
             previousColour = currentColour;
-            MazeUI.PaintPlayerBlip(currentPlayerColour);
+            // MazeUI.PaintPlayerBlip(currentPlayerColour);
         }
 
         if (other.gameObject.CompareTag("ColourResetter")) {
             // Debug.Log("Player collided with the resetter");
-            MazeUI.PaintPlayerBlipWhite();
+            // MazeUI.PaintPlayerBlipWhite();
         }
 
         // if (other.gameObject.CompareTag("White")) {

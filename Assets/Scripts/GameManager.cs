@@ -17,8 +17,8 @@ public class GameManager : MonoBehaviour {
     public GameObject goalObject;
     public GameObject player;
     public GameObject colourResetter;
-    public GameObject optionsMenu;
-    public CanvasGroup menuGroup;
+    // public GameObject optionsMenu;
+    // public CanvasGroup menuGroup;
 
     public GameObject[] floorTiles;
 
@@ -36,11 +36,11 @@ public class GameManager : MonoBehaviour {
     public GameObject uiGameView, uiGameMenu;
 
     
-    public static GameObject _optionsMenu;
+    // public static GameObject _optionsMenu;
     private static Color menuBgColour;
     private float xVal, zVal;
-    private GameObject groundPlane, menuPanel;
-    public static Image menuBackground;
+    private GameObject groundPlane/*, menuPanel*/;
+    // public static Image menuBackground;
     // public Image bgImg;
     private int count, columnNumber, rowNumber, lastRowNumber;
     private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition;
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour {
         hintColour01 = new Color();
         hintColour02 = new Color();
         groundPlane = GameObject.Find("GroundPlane");
-        menuPanel = GameObject.Find("OptionsMenu_Panel");
+        // menuPanel = GameObject.Find("OptionsMenu_Panel");
         // menuBackground = gameObject.GetComponent<Image>().;
         // bgImg = Image.();
 
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour {
         //     optionsMenu.gameObject.SetActive(false);
         // }
 
-        menuPanel = GameObject.Find("OptionsMenu_Panel");
+        // menuPanel = GameObject.Find("OptionsMenu_Panel");
 
 
         /* END Awake() */
@@ -171,8 +171,8 @@ public class GameManager : MonoBehaviour {
         // }
 
 
-        MazeUI.PaintGoalBlip(goalColour);
-        MazeUI.PaintPlayerBlipWhite();
+        // MazeUI.PaintGoalBlip(goalColour);
+        // MazeUI.PaintPlayerBlipWhite();
 
 
         ResetCount();
@@ -329,15 +329,15 @@ public class GameManager : MonoBehaviour {
         count = 0;
     }
 
-    public static void HideMenu() {
-        menuBackground.gameObject.SetActive(false);
-        menuBackground.gameObject.GetComponent<Image>().material.color = Color.clear;
-    }
-
-    public static void ShowMenu() {
-        menuBackground.gameObject.SetActive(true);
-        menuBackground.gameObject.GetComponent<Image>().material.color = menuBgColour;
-    }
+    // public static void HideMenu() {
+    //     menuBackground.gameObject.SetActive(false);
+    //     menuBackground.gameObject.GetComponent<Image>().material.color = Color.clear;
+    // }
+    //
+    // public static void ShowMenu() {
+    //     menuBackground.gameObject.SetActive(true);
+    //     menuBackground.gameObject.GetComponent<Image>().material.color = menuBgColour;
+    // }
     
     public void StartGame() {
         isGameActive = true;
