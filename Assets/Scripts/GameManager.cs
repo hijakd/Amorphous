@@ -154,6 +154,7 @@ public class GameManager : MonoBehaviour {
     private void Start() {
         // Debug.Log("Trying to colour the goalBlip");
 
+        MazeSettings.PaintGoalBlip(goalColour);
         // HideMenu();
 
         // bgImg.material.color = Color.clear;

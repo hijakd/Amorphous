@@ -26,6 +26,7 @@ TagManager:
   - ColourResetter
   - OptionsMenu
   - background
+  - GoalColourBlip
   layers:
   - Default
   - TransparentFX
