@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Unity.Properties;
 // ReSharper disable InconsistentNaming
+
+
 
 public class MazeUI : MonoBehaviour {
 
@@ -11,7 +14,10 @@ public class MazeUI : MonoBehaviour {
     private static VisualElement playerBlip;
     private static VisualElement hintBlip01;
     private static VisualElement hintBlip02;
-    
+    private static VisualElement menuCell;
+    private static StyleEnum<Visibility> visible;
+    private static bool _b;
+
     void OnEnable() {
         // timeText = System.DateTime.Now.ToString("hh:mm:ss");
         var uiDoc = GetComponent<UIDocument>();
@@ -20,10 +26,14 @@ public class MazeUI : MonoBehaviour {
         playerBlip = uiDoc.rootVisualElement.Q("playerColourBlip");
         hintBlip01 = uiDoc.rootVisualElement.Q("hintColourBlip01");
         hintBlip02 = uiDoc.rootVisualElement.Q("hintColourBlip02");
+        menuCell = uiDoc.rootVisualElement.Q("menuCell");
         // telemetryText = uiDoc.rootVisualElement.Q("telemetry") as Label;
     }
 
-    
+    public static void DisableMenu() {
+        _b = visible == Visibility.Hidden;
+        menuCell.style.visibility = visible;
+    }
     public static void PaintGoalBlip(Color colour) {
         // Debug.Log("Getting colour");
         goalBlip.style.backgroundColor = colour;
@@ -59,5 +69,12 @@ public class MazeUI : MonoBehaviour {
     void FixedUpdate() {
         timeText.text = DateTime.Now.ToString("HH:mm:ss");
     }
+
+}
+
+public class DataSource {
+
+    public Color hintColour01 { get; set; }
+    public bool hintsEnabled { get; set; }
 
 }

@@ -38,7 +38,8 @@ public class GameManager : MonoBehaviour {
     private List<Color> mixedColors;
     private List<int> distances, lcms;
     private List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
-    
+    [SerializeField] public static Color _playerColour { get; set; }
+
     public static bool _easyMode, goalFound;
     public static bool _showMenu = false;
     public static bool shortListed = false;
@@ -89,6 +90,8 @@ public class GameManager : MonoBehaviour {
         hintColour01 = new Color();
         hintColour02 = new Color();
         groundPlane = GameObject.Find("GroundPlane");
+        // _player = player;
+        // player = _player;
         // _uiGameView = uiGameView;
         // _uiGameMenu = uiGameMenu;
         mixedColors = new List<Color>();
@@ -129,7 +132,7 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         // Debug.Log("Trying to colour the goalBlip");
-        
+        MazeUI.DisableMenu();        
         groundPlane.gameObject.SetActive(false);
 
         MazeUI.PaintGoalBlip(goalColour);
@@ -273,6 +276,8 @@ public class GameManager : MonoBehaviour {
         if (goalFound) {
             EndLevel();
         }
+
+        player.gameObject.GetComponent<MeshRenderer>().material.color = _playerColour;
 
         /* END FixedUpdate() */
     }
