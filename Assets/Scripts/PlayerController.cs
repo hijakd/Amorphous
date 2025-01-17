@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour {
     private Color currentPlayerColour = Color.white;
     private Color previousPlayerColour, playerColour, previousColour, otherColour;
     private GameObject focalPoint;
-    // private Material playerMaterial;
     private PlayerControls controls;
     private Rigidbody playerRb;
     private Vector2 move, look;
@@ -30,8 +29,6 @@ public class PlayerController : MonoBehaviour {
     
     private void Awake() {
         controls = new PlayerControls();
-        // playerMaterial = GameManager._player.GetComponent<Material>();
-        
         playerRb = GetComponent<Rigidbody>();
         camera = GameObject.Find("Main Camera");
         focalPoint = GameObject.Find("Focal Point");
@@ -47,9 +44,6 @@ public class PlayerController : MonoBehaviour {
         /* END Awake() */
     }
 
-    private void Start() {
-        // playerColour = playerMaterial.color;
-    }
 
     // Update is called once per frame
     private void FixedUpdate() {
@@ -138,14 +132,12 @@ public class PlayerController : MonoBehaviour {
                     case "switch":
                         Debug.Log("player colour is switching");
                         currentPlayerColour = GameUtils.ChangeColours("switch", currentPlayerColour, currentColour);
-                        // playerMaterial.color = currentPlayerColour;
                         GameManager._playerColour = currentPlayerColour;
                         break;
                     case "add":
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is adding in _easyMode");
                             currentPlayerColour = GameUtils.ChangeColours("add", currentColour, previousColour);
-                            // playerMaterial.color = currentPlayerColour;
                             GameManager._playerColour = currentPlayerColour;
                             break;
                         }
@@ -158,7 +150,6 @@ public class PlayerController : MonoBehaviour {
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is blending in _easyMode");
                             currentPlayerColour = GameUtils.ChangeColours("blend", currentColour, previousColour);
-                            // playerMaterial.color = currentPlayerColour;
                             GameManager._playerColour = currentPlayerColour;
                             break;
                         }
