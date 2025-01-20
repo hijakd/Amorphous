@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e140e75bb8647045ad16bf05f92cabc, type: 3}
+  m_Name: Player_SO
+  m_EditorClassIdentifier: 
+  lookSpeed: 10
+  moveSpeed: 0
+  currentPlayerColour: {r: 1, g: 1, b: 1, a: 1}
+  previousPlayerColour: {r: 0, g: 0, b: 0, a: 0}
+  playerColour: {r: 0, g: 0, b: 0, a: 0}
+  previousColour: {r: 0, g: 0, b: 0, a: 0}
+  otherColour: {r: 0, g: 0, b: 0, a: 0}

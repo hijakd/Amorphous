@@ -1,16 +1,21 @@
 using System;
 using UnityEngine;
+using UnityEngine.Splines;
 
-[CreateAssetMenu(fileName = "Waypoint_SO", menuName = "Scriptable Objects/Waypoint Scriptable")]
-public class ScriptableWaypoint : ScriptableObject {
+[CreateAssetMenu(fileName = "Waypoint_SO", menuName = "ScriptableObjects/Waypoint Scriptable")]
+public class Waypoints : ScriptableObject {
 
     public GameObject waypointBase;
     public ParticleSystem hintParticle;
     public Material baseMaterial;
     public Color primaryColor;
     public Color secondaryColor;
+    [Tooltip("Is this waypoint the level Goal?")]
     public bool isGoal;
+    
     private Gradient gradient = new Gradient();
+    
+    public static Vector3 position { get; set; }
 
 
     private void OnAwake() {
@@ -38,6 +43,7 @@ public class ScriptableWaypoint : ScriptableObject {
         // set the material of the waypoint
         waypointBase.gameObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = baseMaterial;
     }
+
     
 
 }
