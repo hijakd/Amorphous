@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameDataScriptable")]
+[CreateAssetMenu(fileName = "GameData_scb", menuName = "Scriptable Objects/GameData Scriptable")]
 public class GameData : ScriptableObject {
 
     public string name;
