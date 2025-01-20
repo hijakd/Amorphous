@@ -64,6 +64,7 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -176,10 +177,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5907710679276863060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cf71f3f925034540854fc73991374e7, type: 3}
+  m_Script: {fileID: 11500000, guid: acfc378a1d553fc49b89e253ade2d946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
-  speed: 200
-  rotationSpeed: 10
-  lookSpeed: 50

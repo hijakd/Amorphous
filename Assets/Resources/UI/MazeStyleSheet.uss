@@ -1,0 +1,87 @@
+.custom-label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+.headerCells {
+    width: 25%;
+    height: auto;
+    max-height: none;
+    min-height: 80%;
+    justify-content: space-around;
+    align-self: center;
+    align-content: center;
+}
+
+.headerCellBorder {
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    border-radius: 5px;
+}
+
+.colourBlip {
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-radius: 15px;
+    background-color: rgb(0, 0, 0);
+    width: 25%;
+    height: 25%;
+    min-height: 25%;
+    min-width: 25%;
+    max-width: 25%;
+    max-height: 25%;
+    margin-top: 3px;
+    align-self: center;
+    justify-content: space-around;
+    align-content: center;
+    align-items: auto;
+    transform-origin: center;
+    top: auto;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    margin-bottom: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.text {
+    align-self: center;
+    margin: 1px;
+    padding-top: 1px;
+    padding-right: 1px;
+    padding-bottom: 1px;
+    -unity-text-align: middle-center;
+    font-size: 22px;
+    -unity-text-outline-width: 1px;
+    color: rgb(207, 198, 198);
+    -unity-font-style: bold;
+    -unity-font-definition: resource('UI/Fonts/Oswald-Bold');
+    -unity-text-outline-color: rgb(0, 0, 0);
+    text-shadow: 5px 5px 0 rgba(76, 54, 128, 0.91);
+    letter-spacing: 0;
+    word-spacing: 0;
+    -unity-paragraph-spacing: 0;
+}
+
+.colourBlipLabel {
+    font-size: 16px;
+    padding-top: 3px;
+    padding-right: 0;
+    padding-bottom: 3px;
+    padding-left: 0;
+    margin-top: 3px;
+    margin-right: 0;
+    margin-bottom: 3px;
+    margin-left: 0;
+}

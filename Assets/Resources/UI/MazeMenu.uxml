@@ -1,0 +1,19 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/UI/MazeStyleSheet.uss?fileID=7433441132597879392&amp;guid=6cf6d31f144ebe34bb743c984bd54ede&amp;type=3#MazeStyleSheet" />
+    <engine:VisualElement name="root" style="flex-grow: 1; align-items: center; justify-content: space-between; align-self: center; align-content: center; max-width: none; min-width: 100%; min-height: 100%; flex-direction: row; background-color: rgba(34, 43, 34, 0.95);">
+        <engine:VisualElement name="left" style="flex-grow: 1; align-items: auto; max-width: none; min-width: auto; max-height: none; align-self: flex-start; min-height: 100%;" />
+        <engine:VisualElement name="center" style="flex-grow: 1; min-width: 33%; max-width: none; align-self: auto; min-height: 100%; max-height: none; align-content: auto; align-items: center; flex-direction: column; flex-wrap: nowrap; justify-content: space-evenly;">
+            <engine:VisualElement name="difficulty" style="flex-grow: 1; min-width: 60%; justify-content: center; align-self: center; align-items: center;">
+                <engine:RadioButtonGroup label="Difficulty" choices="Easy,Normal,Hard" name="difficultySetting" class="text" style="align-self: center; align-content: center; align-items: center; width: auto;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="moveSpeed" style="flex-grow: 1; align-self: center; justify-content: center; min-width: 60%; align-items: stretch;">
+                <engine:Label text="Movement Speed" name="moveSpeedLbl" class="text" style="align-self: auto; align-content: auto; align-items: auto; justify-content: space-evenly;" />
+                <engine:Slider value="5" low-value="2.5" high-value="10" name="moveSpeedSlider" fill="true" direction="Horizontal" page-size="0" style="padding-right: 13px; padding-left: 13px; align-items: auto; align-content: auto; justify-content: space-evenly;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="hints" style="flex-grow: 1; justify-content: center; align-self: center; align-items: stretch;">
+                <engine:RadioButtonGroup label="Hints" choices="Enabled,Disabled" name="hintsSelector" value="-1" tabindex="0" class="text" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement name="right" style="flex-grow: 1; align-self: flex-end; max-width: none; min-width: auto; max-height: none; min-height: 100%; flex-direction: row;" />
+    </engine:VisualElement>
+</engine:UXML>
