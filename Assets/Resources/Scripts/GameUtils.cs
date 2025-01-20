@@ -51,18 +51,18 @@ public class GameUtils : MonoBehaviour {
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
                 /* spawn the first east wall of the row */
-                Spawn(walls[GameData.west], path[i], material);
+                Spawn(walls[GameData.WEST], path[i], material);
 
                 // Spawn(walls[west], path[i], GameManager.obsMaterial);
             }
             else if (path[i - 1].x < path[i].x - 1) {
                 /* spawn east wall at end of a break in the row */
-                Spawn(walls[GameData.west], path[i], material);
+                Spawn(walls[GameData.WEST], path[i], material);
             }
 
             else if (i == path.Count - 1) {
                 /* spawn the last west wall of the row if the list ends before the boundary */
-                Spawn(walls[GameData.east], path[i], material);
+                Spawn(walls[GameData.EAST], path[i], material);
 
                 // Spawn(walls[east], path[i], GameManager.blueMaterial);
             }
@@ -74,13 +74,13 @@ public class GameUtils : MonoBehaviour {
         for (int j = 0; j < path.Count; j++) {
             if (j == 0) {
                 /* spawn the last east wall of the row */
-                Spawn(walls[GameData.east], path[j], material);
+                Spawn(walls[GameData.EAST], path[j], material);
 
                 // Spawn(walls[east], path[j], GameManager.pinkMaterial);
             }
             else if (path[j - 1].x > path[j].x + 1) {
                 /* spawn east wall at end of a break in the row */
-                Spawn(walls[GameData.east], path[j], material);
+                Spawn(walls[GameData.EAST], path[j], material);
 
                 // Spawn(walls[east], path[j], GameManager.purpleMaterial);
             }
@@ -101,7 +101,7 @@ public class GameUtils : MonoBehaviour {
             }
             else if (i == path.Count - 1) {
                 /* spawn the last north wall of the row if the list ends before the boundary */
-                Spawn(walls[GameData.north], path[i], material);
+                Spawn(walls[GameData.NORTH], path[i], material);
             }
         }
 
@@ -111,11 +111,11 @@ public class GameUtils : MonoBehaviour {
         for (int j = 0; j < path.Count; j++) {
             if (j == 0) {
                 /* spawn the last north wall of the row */
-                Spawn(walls[GameData.north], path[j], material);
+                Spawn(walls[GameData.NORTH], path[j], material);
             }
             else if (path[j - 1].z > path[j].z + 1) {
                 /* spawn north wall at end of a break in the row */
-                Spawn(walls[GameData.north], path[j], material);
+                Spawn(walls[GameData.NORTH], path[j], material);
             }
         }
     }
