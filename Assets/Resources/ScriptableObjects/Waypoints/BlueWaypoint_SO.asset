@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5240fbc272c475c4f84318b31d2be75a, type: 3}
   m_Name: BlueWaypoint_SO
   m_EditorClassIdentifier: 
-  waypointBase: {fileID: 3807962569177706357, guid: 4909ac7b8c34fe2409fb488f1a7fd307,
+  waypoint: {fileID: 6568047840495694427, guid: 743a9f5a3a0e68a4b963c858376e2348,
     type: 3}
-  hintParticle: {fileID: 7880241676619437660, guid: 92d5f05d11d74ec43b8b068ba8430b64,
+  hintParticle: {fileID: 4633650019033654310, guid: 743a9f5a3a0e68a4b963c858376e2348,
     type: 3}
-  baseMaterial: {fileID: 2100000, guid: 23a5e1a5bc5240d438dffdefae3aeabd, type: 2}
+  baseMaterial: {fileID: 2100000, guid: 30ba049d08419bc47a8617ba10665da6, type: 2}
   primaryColor: {r: 0, g: 0, b: 1, a: 1}
   secondaryColor: {r: 0, g: 0.5019608, b: 1, a: 1}
   isGoal: 0
