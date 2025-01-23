@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GameData_SO", menuName = "ScriptableObjects/GameData Scriptable")]
-public class GameData : ScriptableObject {
+public class GameData_01 : ScriptableObject {
 
     public string dataName;
     public ScriptableObject player;

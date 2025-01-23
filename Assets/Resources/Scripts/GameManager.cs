@@ -56,8 +56,9 @@ public class GameManager : MonoBehaviour {
     private List<Color> mixedColors;
     private List<int> distances, lcms;
     private List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
-    
-    
+    [SerializeField] public static Color _playerColour;
+
+
     private void OnDrawGizmos() {
         // visualize the corners of the grid in the Editor
         Gizmos.color = Color.cyan;

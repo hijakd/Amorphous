@@ -145,7 +145,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 103129381}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 853c765da52fb624ebc28ca953f89032, type: 3}
+  m_Script: {fileID: 11500000, guid: 474e160f7731aa840897bdd8402f1469, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   goalObject: {fileID: 6557058403640767008, guid: a4b49dc5dfca8544e9050981753b91b7,
@@ -154,8 +154,8 @@ MonoBehaviour:
   colourResetter: {fileID: 2726987219958778442, guid: 33796c5761ebcd844811f653fc7f7b91,
     type: 3}
   floorTiles:
-  - {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1, type: 3}
   - {fileID: 4296829867440666908, guid: 6bf05f82252b718478bc86503fbafbf6, type: 3}
+  - {fileID: 4021059477416056825, guid: ae4964ea1a74ad346939abc36ed1eba1, type: 3}
   - {fileID: 1100889974241332231, guid: a4bf1846e41b88b4fb82be54985c5edf, type: 3}
   - {fileID: 4285910765798275317, guid: bdc1bd1988530fd41a746f334e46755f, type: 3}
   wallPanels:
@@ -170,15 +170,18 @@ MonoBehaviour:
   - {fileID: 7984704464491328934, guid: 6946421c02ac20941a7e4a38cfefeb0f, type: 3}
   - {fileID: 3284594783443129359, guid: 4d9743cee7a364b4198038c7929147f2, type: 3}
   - {fileID: 8211329622975452880, guid: 25caf6071e566f442bc7d16003c9b853, type: 3}
-  - {fileID: 3808023427255512795, guid: 44f93f87556194540bffea01332c17c1, type: 3}
   - {fileID: 8799614159243905661, guid: e4b68580bdef76041ab3e4a871c52bf7, type: 3}
+  - {fileID: 3808023427255512795, guid: 44f93f87556194540bffea01332c17c1, type: 3}
   winText: {fileID: 1744664631}
   gameOverText: {fileID: 144824136}
-  isGameActive: 0
-  easyMode: 1
   restartButton: {fileID: 425114794}
   titleScreen: {fileID: 0}
+  isGameActive: 0
+  easyMode: 1
   randomVariance: 0.42
+  shortListed: 0
+  firstRowFound: 0
+  firstColFound: 0
 --- !u!4 &103129383
 Transform:
   m_ObjectHideFlags: 0

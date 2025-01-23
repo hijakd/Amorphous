@@ -45,36 +45,34 @@ public class Player : ScriptableObject {
                 switch (playerColourChangeOption) {
                     case "switch":
                         Debug.Log("player colour is switching");
-                        currentColour = GameUtils.ChangeColours("switch", currentColour, thisColour);
+                        currentColour = GameManager.ChangeColours("switch", currentColour, thisColour);
                         GameManager._playerColour = currentColour;
                         break;
                     case "add":
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is adding in _easyMode");
-                            currentColour = GameUtils.ChangeColours("add", thisColour, previousColour);
+                            currentColour = GameManager.ChangeColours("add", thisColour, previousColour);
                             GameManager._playerColour = currentColour;
                             break;
                         }
 
                         Debug.Log("player colour is adding");
-                        currentColour = GameUtils.ChangeColours("add", currentColour, thisColour);
+                        currentColour = GameManager.ChangeColours("add", currentColour, thisColour);
                         break;
 
 
                     case "blend":
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is blending in _easyMode");
-                            currentColour = GameUtils.ChangeColours("blend", thisColour, previousColour);
+                            currentColour = GameManager.ChangeColours("blend", thisColour, previousColour);
                             GameManager._playerColour = currentColour;
                             break;
                         }
 
                         Debug.Log("player colour is blending");
-                        currentColour = GameUtils.ChangeColours("blend", currentColour, thisColour);
+                        currentColour = GameManager.ChangeColours("blend", currentColour, thisColour);
                         break;
                 }
-
-
             }
 
             previousColour = thisColour;
