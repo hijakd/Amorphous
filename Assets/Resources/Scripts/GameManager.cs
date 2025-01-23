@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 // using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
+// ReSharper disable InconsistentNaming
+// ReSharper disable ParameterHidesMember
 
 public class GameManager : MonoBehaviour {
 
@@ -23,7 +25,7 @@ public class GameManager : MonoBehaviour {
     // public Button restartButton;
     // public GameObject titleScreen;
     // public GameObject uiGameView, uiGameMenu;
-    public bool isGameActive;
+    public bool gameIsActive;
     public bool easyMode = true;
     
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
@@ -80,9 +82,6 @@ public class GameManager : MonoBehaviour {
             }
         }
         
-        if (drawnPath == null) {
-            mazeData.InitPath();
-        }
 
         // set the initial colour of the goal
         // mazeData.SetGoalColour(Color.white);
@@ -100,9 +99,6 @@ public class GameManager : MonoBehaviour {
         
         ResetCount();
         
-        // Debug.Log("grid height/width = " + mazeData.gridHeight + " / " + mazeData.gridWidth);
-        // Debug.Log("grid northernEdge/easternEdge = " + mazeData.northernEdge + " / " + mazeData.easternEdge);
-
         /* populate the destinations List with random positions for the player, waypoints & goal */
         while (count < waypoints.Count + 2) {
             destinations.Add(RandomPosition(mazeData.westernEdge, mazeData.easternEdge, mazeData.southernEdge, mazeData.northernEdge));
@@ -138,87 +134,89 @@ public class GameManager : MonoBehaviour {
         /* then add the last destination which is for the goal */
         intersections.Add(destinations[count]);
         
+        ResetCount();
         
-        // /* plot the paths between the intersections */
-        // ResetCount();
-        // while (count < intersections.Count) {
-        //     if (count + 1 < intersections.Count) {
-        //         PlotHorizontalPath(intersections[count], intersections[count + 1], drawnPath);
-        //         PlotVerticalPath(intersections[count], intersections[count + 1], drawnPath);
-        //     }
-        //     else {
-        //         PlotHorizontalPath(intersections[count], intersections[count], drawnPath);
-        //         PlotVerticalPath(intersections[count], intersections[count], drawnPath);
-        //     }
-        //
-        //     count++;
-        // }
-        //
-        // /* remove duplicate values from the drawnPath list */
-        // shortenedList = RemoveDuplicates(drawnPath);
-        // drawnPath.Clear();
-        //
-        // /* swap the values back to drawnPath then erase shortenedList */
-        // foreach (var step in shortenedList) {
-        //     drawnPath.Add(step);
-        // }
-        //
-        // /* clearing Lists as they are no longer needed in memory */
-        // shortenedList.Clear();
+        /* plot the paths between the intersections */
+        while (count < intersections.Count) {
+            if (count + 1 < intersections.Count) {
+                PlotHorizontalPath(intersections[count], intersections[count + 1], drawnPath);
+                PlotVerticalPath(intersections[count], intersections[count + 1], drawnPath);
+            }
+            else {
+                PlotHorizontalPath(intersections[count], intersections[count], drawnPath);
+                PlotVerticalPath(intersections[count], intersections[count], drawnPath);
+            }
+        
+            count++;
+        }
+        
+        /* remove duplicate values from the drawnPath list */
+        shortenedList = RemoveDuplicates(drawnPath);
+        drawnPath.Clear();
+        
+        /* swap the values back to drawnPath then erase shortenedList */
+        foreach (var step in shortenedList) {
+            drawnPath.Add(step);
+        }
+        
+        /* clearing Lists as they are no longer needed in memory */
+        shortenedList.Clear();
         // midPoints.Clear();
-        //
-        // resetterPosition = ResetterPosition(drawnPath, destinations);
-        //
-        //
-        // ResetCount();
-        //
-        // /* spawn the floor tiles for the maze path */
-        // while (count < drawnPath.Count) {
-        //     // Spawn(floorTiles[1], drawnPath[count]);
-        //     Spawn(floorTiles[Mathf.RoundToInt(Random.Range(0, floorTiles.Length))], drawnPath[count]);
-        //     count++;
-        // }
-        //
-        // /* find the value of the first and last rows of the maze grid */
-        // firstRowNumber = FindLargestValue(FindTheZs(drawnPath));
-        // lastRowNumber = FindSmallestValue(FindTheZs(drawnPath));
-        //
-        // /* spawn the east/west walls */
-        // while (firstRowNumber >= lastRowNumber) {
-        //     sortedList = SortRows(RemoveDuplicates(SliceRow(drawnPath, firstRowNumber)));
-        //     SpawnEastWestWalls(sortedList, wallPanels, wallMaterial);
-        //     firstRowNumber--;
-        // }
-        //
-        // /* clearing the sortedList before parsing the North/South walls, to eliminate the chances of junk data */
-        // sortedList.Clear();
-        //
-        // /* find the value of the first and last columns of the maze grid */
-        // firstColumnNumber = FindLargestValue(FindTheXs(drawnPath));
-        // lastColumnNumber = FindSmallestValue(FindTheXs(drawnPath));
-        //
-        // /* spawn the north/south walls */
-        // while (firstColumnNumber >= lastColumnNumber) {
-        //     sortedList =
-        //         SortColumns(RemoveDuplicates(SliceColumn(drawnPath, firstColumnNumber)));
-        //     SpawnNorthSouthWalls(sortedList, wallPanels, wallMaterial);
-        //     firstColumnNumber--;
-        // }
-        //
-        // /* clearing the sortedList as it is no longer needed in memory */
-        // sortedList.Clear();
-        //
-        // /* reposition the player, spawn the waypoints and goal */
-        // player.transform.position = destinations[0];
-        // for (count = 1; count <= destinations.Count - 2; count++) {
-        //     Spawn(waypoints[count - 1], destinations[count]);
-        // }
-        //
-        //
-        // Spawn(goal, destinations[^1]);
-        //
-        // SpawnColourResetter(colourResetter, resetterPosition);
-        //
+        
+        resetterPosition = ResetterPosition(drawnPath, destinations);
+        
+        
+        ResetCount();
+        
+        /* spawn the floor tiles for the maze path */
+        while (count < drawnPath.Count) {
+            /* select a specific floor tile to spawn */
+            // Spawn(floorTiles[1], drawnPath[count]);
+            /* select a random floor tile from the List to spawn */
+            Spawn(floorTiles[Mathf.RoundToInt(Random.Range(0, floorTiles.Length))], drawnPath[count]);
+            count++;
+        }
+        
+        /* find the value of the first and last rows of the maze grid */
+        firstRowNumber = FindLargestValue(FindTheZs(drawnPath));
+        lastRowNumber = FindSmallestValue(FindTheZs(drawnPath));
+        
+        /* spawn the east/west walls */
+        while (firstRowNumber >= lastRowNumber) {
+            sortedList = SortRows(RemoveDuplicates(SliceRow(drawnPath, firstRowNumber)));
+            SpawnEastWestWalls(sortedList, wallPanels, wallMaterial);
+            firstRowNumber--;
+        }
+        
+        /* clearing the sortedList before parsing the North/South walls, to eliminate the chances of junk data */
+        sortedList.Clear();
+        
+        /* find the value of the first and last columns of the maze grid */
+        firstColumnNumber = FindLargestValue(FindTheXs(drawnPath));
+        lastColumnNumber = FindSmallestValue(FindTheXs(drawnPath));
+        
+        /* spawn the north/south walls */
+        while (firstColumnNumber >= lastColumnNumber) {
+            sortedList =
+                SortColumns(RemoveDuplicates(SliceColumn(drawnPath, firstColumnNumber)));
+            SpawnNorthSouthWalls(sortedList, wallPanels, wallMaterial);
+            firstColumnNumber--;
+        }
+        
+        /* clearing the sortedList as it is no longer needed in memory */
+        sortedList.Clear();
+        
+        /* reposition the player, spawn the waypoints and goal */
+        player.transform.position = destinations[0];
+        for (count = 1; count <= destinations.Count - 2; count++) {
+            Spawn(waypoints[count - 1], destinations[count]);
+        }
+        
+        
+        Spawn(goal, destinations[^1]);
+        
+        SpawnColourResetter(colourResetter, resetterPosition);
+        
 
         /* END Start() */
     }
@@ -238,11 +236,11 @@ public class GameManager : MonoBehaviour {
         // }
 
         
-        // if (mazeData.goalFound) {
-            // EndLevel();
-        // }
+        if (mazeData.goalFound) {
+            EndLevel();
+        }
 
-        player.gameObject.GetComponent<MeshRenderer>().material.color = playerSo.playerColour;
+        // player.gameObject.GetComponent<MeshRenderer>().material.color = playerSo.playerColour;
         
         /* END FixedUpdate() */
     }
@@ -254,7 +252,7 @@ public class GameManager : MonoBehaviour {
     }
     
     // public void StartGame() {
-        // isGameActive = true;
+        // gameIsActive = true;
         // titleScreen.gameObject.SetActive(false);
     // }
     
@@ -263,42 +261,42 @@ public class GameManager : MonoBehaviour {
     }
 
     // public void GameOver() {
-        // isGameActive = false;
+        // gameIsActive = false;
         // restartButton.gameObject.SetActive(true);
         // gameOverText.gameObject.SetActive(true);
     // }
 
-    // private void EndLevel() {
-        // Debug.Log("display winText");
+    private static void EndLevel() {
+        Debug.Log("display winText");
         // winText.gameObject.SetActive(true);
         // restartButton.gameObject.SetActive(true);
-    // }
+    }
     
     
-    /* functions previously held in GameUtils */
     /** Object spawning functions **/
     /* spawn a given GameObject at a given position */
-    private void Spawn(GameObject gameObject, Vector3 position) {
-        gameObject.transform.position = position;
+    private void Spawn(GameObject gObject, Vector3 position) {
+        gObject.transform.position = position;
         Instantiate(gameObject);
     }
-
-    /* overloading Spawn function to set rotation */
-    private void Spawn(GameObject gameObject, Vector3 position, Quaternion rotation) {
-        gameObject.transform.position = position;
-        gameObject.transform.rotation = rotation;
+    
+    // ReSharper disable once UnusedMember.Local
+    /* overloading Spawn function to set rotation */ 
+    private void Spawn(GameObject gObject, Vector3 position, Quaternion rotation) {
+        gObject.transform.position = position;
+        gObject.transform.rotation = rotation;
         Instantiate(gameObject);
     }
 
     /* overloading Spawn function to set material */
-    private void Spawn(GameObject gameObject, Vector3 position, Material material) {
-        gameObject.transform.position = position;
-        gameObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = material;
+    private void Spawn(GameObject gObject, Vector3 position, Material material) {
+        gObject.transform.position = position;
+        gObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = material;
         Instantiate(gameObject);
     }
 
     /* Spawn the east & west walls across a given row of the maze path */
-    public void SpawnEastWestWalls(List<Vector3> path, GameObject[] walls, Material material) {
+    private void SpawnEastWestWalls(List<Vector3> path, GameObject[] walls, Material material) {
         // Debug.Log("Spawning East/West Walls");
         // var pathString = path.Aggregate("", (current, step) => current + (step.ToString() + "\n"));
         // Debug.Log("pathString\n" + pathString);
@@ -342,7 +340,7 @@ public class GameManager : MonoBehaviour {
     }
 
     /* Spawn the north & south walls along a given column of the maze path */
-    public void SpawnNorthSouthWalls(List<Vector3> path, GameObject[] walls, Material material) {
+    private void SpawnNorthSouthWalls(List<Vector3> path, GameObject[] walls, Material material) {
         // Debug.Log("Spawning North/South Walls");
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
@@ -374,11 +372,11 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void SpawnColourResetter(GameObject gameObject, Vector3 position) {
+    private void SpawnColourResetter(GameObject gObject, Vector3 position) {
         // position.y = 0.275f;
         position.y = 0.05f;
-        gameObject.transform.position = position;
-        Instantiate(gameObject);
+        gObject.transform.position = position;
+        Instantiate(gObject);
     }
 
     /** Math type functions **/
@@ -418,9 +416,6 @@ public class GameManager : MonoBehaviour {
     /* find the Lowest Common Multiple */
     private int LCM(int distance01, int distance02) {
         int lcmTmp = distance01 / GCD(distance01, distance02);
-
-        // int result = distance02 * lcmTmp;
-        // return result;
         return distance02 * lcmTmp;
     }
 
@@ -440,6 +435,7 @@ public class GameManager : MonoBehaviour {
         return tmp;
     }
 
+    /* the results of this function are used as a 'modifier' when triangulating additional positions */
     private int FindLcm(Vector3 midPoint, int distance, int mazeHeight, int mazeWidth) {
         Vector3 farCorner = FarthestCorner(midPoint, mazeHeight, mazeWidth);
         int farthestDistance = Mathf.RoundToInt(Vector3.Distance(midPoint, farCorner));
@@ -450,20 +446,22 @@ public class GameManager : MonoBehaviour {
         return lcm01 + lcm02 + lcm03;
     }
 
+    /* measure the horizontal distance between two points */
     private int MeasureHorizontal(Vector3 position01, Vector3 position02) {
         return Mathf.Abs(Mathf.RoundToInt(position01.x - position02.x));
     }
 
+    /* measure the vertical distance between two points */
     private int MeasureVertical(Vector3 position01, Vector3 position02) {
         return Mathf.Abs(Mathf.RoundToInt(position01.z - position02.z));
     }
 
-    public int FindLargestValue(List<int> values) {
+    private int FindLargestValue(List<int> values) {
         int tmpValue = mazeData.westernEdge < mazeData.southernEdge ? mazeData.southernEdge : mazeData.westernEdge;
         return values.Prepend(tmpValue).Max();
     }
 
-    public int FindSmallestValue(List<int> values) {
+    private int FindSmallestValue(List<int> values) {
         int tmpValue = mazeData.northernEdge < mazeData.easternEdge ? mazeData.easternEdge : mazeData.northernEdge;
         return values.Prepend(tmpValue).Min();
     }
@@ -476,11 +474,8 @@ public class GameManager : MonoBehaviour {
             Mathf.Round(Random.Range(minHeight, maxHeight)));
     }
 
-    public Vector3 ResetterPosition(List<Vector3> possiblePositions, List<Vector3> invalidPositions) {
+    private Vector3 ResetterPosition(List<Vector3> possiblePositions, List<Vector3> invalidPositions) {
         List<Vector3> allowedPositions = (from t in invalidPositions from pos in possiblePositions where pos != t select pos).ToList();
-
-        // Vector3 position = allowedPositions[Mathf.RoundToInt(Random.Range(0, allowedPositions.Count))];
-        // return position;
         return allowedPositions[Mathf.RoundToInt(Random.Range(0, allowedPositions.Count))];
     }
 
@@ -488,6 +483,7 @@ public class GameManager : MonoBehaviour {
     /* Slerp that is clamped within the maze boundaries, this is intended */
     /* to take a Random.Range() value to create a point close to center */
     /* within approx. 40/60 weighting */
+    // ReSharper disable once UnusedMember.Global
     public Vector3 TriangulateIntersection(Vector3 origin, Vector3 destination, float centreMargin) {
         Vector3 position = Vector3.Slerp(origin, destination, centreMargin);
 
@@ -513,9 +509,11 @@ public class GameManager : MonoBehaviour {
             decimalMultiplier = 100;
         }
 
-        /** TODO: possibly change this to randomly switch proportioning **/
+        /* TODO: possibly change this to randomly switch proportioning */
         /* split the modifier by the random variance to be used proportionally across the X & Z axis' */
+        // ReSharper disable once PossibleLossOfFraction
         modifierX = (modifier / decimalMultiplier) * centreMargin;
+        // ReSharper disable once PossibleLossOfFraction
         modifierY = (modifier / decimalMultiplier) * (1 - centreMargin);
 
         // normalizing the position
@@ -526,52 +524,37 @@ public class GameManager : MonoBehaviour {
         return ClampWithinBoundaries(position);
     }
 
-    public void PlotHorizontalPath(Vector3 origin, Vector3 destination, List<Vector3> pathToDraw) {
-        bool pDebug = false;
+    private void PlotHorizontalPath(Vector3 origin, Vector3 destination, List<Vector3> pathToDraw) {
+        int thisCount;
         int hDistance = MeasureHorizontal(origin, destination);
         if (IsOriginWest(origin, destination)) {
-            if (pDebug) {
-                Debug.Log("origin is to the west, the destination is: " + hDistance + " steps away");
-            }
-
-            for (count = 0; count <= hDistance; count++) {
-                pathToDraw.Add(new Vector3(origin.x + count, origin.y, origin.z));
+            for (thisCount = 0; count <= hDistance; thisCount++) {
+                pathToDraw.Add(new Vector3(origin.x + thisCount, origin.y, origin.z));
             }
         }
         else {
-            if (pDebug) {
-                Debug.Log("origin is to the east, the destination is: " + hDistance + " steps away");
-            }
-
-            for (count = hDistance; count >= 0; count--) {
-                pathToDraw.Add(new Vector3(origin.x - count, origin.y, origin.z));
+            for (thisCount = hDistance; thisCount >= 0; thisCount--) {
+                pathToDraw.Add(new Vector3(origin.x - thisCount, origin.y, origin.z));
             }
         }
     }
 
-    public void PlotVerticalPath(Vector3 origin, Vector3 destination, List<Vector3> pathToDraw) {
-        bool pDebug = false;
+    private void PlotVerticalPath(Vector3 origin, Vector3 destination, List<Vector3> pathToDraw) {
+        int thisCount;
         int vDistance = MeasureVertical(origin, destination);
         if (IsOriginSouth(origin, destination)) {
-            if (pDebug) {
-                Debug.Log("origin is to the north, the destination is: " + vDistance + " steps away");
-            }
-
-            for (count = vDistance; count >= 0; count--) {
-                pathToDraw.Add(new Vector3(destination.x, destination.y, destination.z - count));
+            for (thisCount = vDistance; thisCount >= 0; thisCount--) {
+                pathToDraw.Add(new Vector3(destination.x, destination.y, destination.z - thisCount));
             }
         }
         else {
-            if (pDebug) {
-                Debug.Log("origin is to the south, the destination is: " + vDistance + " steps away");
-            }
-
-            for (count = 0; count <= vDistance; count++) {
-                pathToDraw.Add(new Vector3(destination.x, destination.y, destination.z + count));
+            for (thisCount = 0; thisCount <= vDistance; thisCount++) {
+                pathToDraw.Add(new Vector3(destination.x, destination.y, destination.z + thisCount));
             }
         }
     }
 
+    /* determine if two points are horizontally aligned */
     private static bool HorizontalAlignment(Vector3 position01, Vector3 position02) {
         if (Mathf.Approximately(position01.z, position02.z) || Mathf.Approximately(position01.z, position02.z - 1) ||
             Mathf.Approximately(position01.z, position02.z + 1)) {
@@ -583,6 +566,7 @@ public class GameManager : MonoBehaviour {
         return horizAligned;
     }
 
+    /* determine if two points are vertically aligned */
     private static bool VerticalAlignment(Vector3 position01, Vector3 position02) {
         if (Mathf.Approximately(position01.x, position02.x) || Mathf.Approximately(position01.x, position02.x - 1) ||
             Mathf.Approximately(position01.x, position02.x + 1)) {
@@ -594,7 +578,7 @@ public class GameManager : MonoBehaviour {
         return vertAligned;
     }
 
-    /* check if positionB is ahead/north of positonA & by how far */
+    /* check if positionB is ahead/north of positionA & by how far */
     private bool IsItForward(Vector3 position01, Vector3 position02) {
         if (vertAligned) {
             if (position01.z < position02.z) {
@@ -621,7 +605,7 @@ public class GameManager : MonoBehaviour {
         return isForward;
     }
 
-    /* check if positionB is right/east of positonA & by how far */
+    /* check if positionB is right/east of positionA & by how far */
     private bool IsItRight(Vector3 position01, Vector3 position02) {
         if (horizAligned) {
             if (position01.x < position02.x) {
@@ -648,46 +632,34 @@ public class GameManager : MonoBehaviour {
         return isRight;
     }
 
+    /* determine if a point of origin is to the west of a destination */
     private static bool IsOriginWest(Vector3 position01, Vector3 position02) {
         bool isWest = position01.x < position02.x;
         return isWest;
     }
 
+    /* determine if a point of origin is to the south of a destination */
     private static bool IsOriginSouth(Vector3 position01, Vector3 position02) {
         bool isSouth = position01.z < position02.z;
         return isSouth;
     }
 
+    // ReSharper disable once UnusedMember.Global
     public void CheckHorizontal(Vector3 position01, Vector3 position02, List<Vector3> path) {
         tmpPosition = new Vector3(0, 0, 0);
-
-// #if DEBUGHORIZ
-//         Debug.Log("Checking alignment");
-// #endif
-        if (debugHoriz) Debug.Log("Checking alignment");
         if (HorizontalAlignment(position01, position02)) {
-            if (debugHoriz) Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(position01, position02));
             if (IsItRight(position01, position02)) {
-                if (debugHoriz)
-                    Debug.Log("Check if is right: " + IsItRight(position01, position02) + " Distance is: " +
-                              horizDistance);
                 for (count = 0; count <= horizDistance; count++) {
                     path.Add(new Vector3(position01.x + count, position01.y, position01.z));
-                    if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
                 }
             }
             else {
-                if (debugHoriz)
-                    Debug.Log("Check if is right: " + IsItRight(position01, position02) + " Distance is: " +
-                              horizDistance);
                 for (count = 0; count <= horizDistance; count++) {
                     path.Add(new Vector3(position01.x - count, position01.y, position01.z));
-                    if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
                 }
             }
         }
         else {
-            if (debugHoriz) Debug.Log("Skipped HorizAlign, creating a right angle position");
             if (position01.z < position02.z) {
                 tmpPosition.x = position02.x;
                 tmpPosition.z = position01.z;
@@ -701,24 +673,14 @@ public class GameManager : MonoBehaviour {
 
             if (xPosition == 1) {
                 if (HorizontalAlignment(tmpPosition, position02)) {
-                    if (debugHoriz)
-                        Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(tmpPosition, position02));
                     if (IsItRight(tmpPosition, position02)) {
-                        if (debugHoriz)
-                            Debug.Log("Check if is right: " + IsItRight(tmpPosition, position02) + " Distance is: " +
-                                      horizDistance);
                         for (count = 0; count <= horizDistance; count++) {
                             path.Add(new Vector3(tmpPosition.x + count, tmpPosition.y, tmpPosition.z));
-                            if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
                         }
                     }
                     else {
-                        if (debugHoriz)
-                            Debug.Log("Check if is right: " + IsItRight(tmpPosition, position02) + " Distance is: " +
-                                      horizDistance);
                         for (count = 0; count <= horizDistance; count++) {
                             path.Add(new Vector3(tmpPosition.x - count, tmpPosition.y, tmpPosition.z));
-                            if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
                         }
                     }
                 }
@@ -726,24 +688,14 @@ public class GameManager : MonoBehaviour {
 
             if (xPosition == 2) {
                 if (HorizontalAlignment(position01, tmpPosition)) {
-                    if (debugHoriz)
-                        Debug.Log("Checking horizontal alignment: " + HorizontalAlignment(position01, tmpPosition));
                     if (IsItRight(position01, tmpPosition)) {
-                        if (debugHoriz)
-                            Debug.Log("Check if is right: " + IsItRight(position01, tmpPosition) + " Distance is: " +
-                                      horizDistance);
                         for (count = 0; count <= horizDistance; count++) {
                             path.Add(new Vector3(position01.x + count, tmpPosition.y, tmpPosition.z));
-                            if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
                         }
                     }
                     else {
-                        if (debugHoriz)
-                            Debug.Log("Check if is right: " + IsItRight(position01, tmpPosition) + " Distance is: " +
-                                      horizDistance);
                         for (count = 0; count <= horizDistance; count++) {
                             path.Add(new Vector3(position01.x - count, tmpPosition.y, tmpPosition.z));
-                            if (debugHoriz) Debug.Log("populating horizontal path array: " + path[count]);
                         }
                     }
                 }
@@ -751,26 +703,18 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    // ReSharper disable once UnusedMember.Global
     public void CheckVertical(Vector3 position01, Vector3 position02, List<Vector3> path) {
         /* positions are within horizontal alignment margins */
         if (VerticalAlignment(position01, position02)) {
-            if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
             if (IsItForward(position01, position02)) {
-                if (debugVert)
-                    Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
-                              vertDistance);
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(position01.x, position01.y, position01.z + count));
-                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
                 }
             }
             else {
-                if (debugVert)
-                    Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
-                              vertDistance);
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(position01.x, position01.y, position01.z - count));
-                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
                 }
             }
         }
@@ -787,39 +731,27 @@ public class GameManager : MonoBehaviour {
         }
 
         if (VerticalAlignment(position01, tmpPosition)) {
-            if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
             if (IsItForward(position01, tmpPosition)) {
-                if (debugVert)
-                    Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
-                              vertDistance);
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, position01.z + count));
-                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
                 }
             }
             else {
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, position01.z - count));
-                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
                 }
             }
         }
 
         if (VerticalAlignment(tmpPosition, position02)) {
-            if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
             if (IsItForward(tmpPosition, position02)) {
-                if (debugVert)
-                    Debug.Log("Check if is forward: " + IsItForward(position01, position02) + " Distance is: " +
-                              vertDistance);
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, tmpPosition.z + count));
-                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
                 }
             }
             else {
                 for (count = 0; count <= vertDistance; count++) {
                     path.Add(new Vector3(tmpPosition.x, tmpPosition.y, tmpPosition.z - count));
-                    if (debugVert) Debug.Log("populating vertical path array: " + path[count]);
                 }
             }
         }
@@ -846,12 +778,12 @@ public class GameManager : MonoBehaviour {
 
 
     /** maze grid segment selection & sorting functions **/
-    public List<Vector3> SortRows(List<Vector3> pathList) {
+    private List<Vector3> SortRows(List<Vector3> pathList) {
         /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s */
         return pathList.OrderBy(v => v.x).ToList();
     }
 
-    public List<Vector3> SortColumns(List<Vector3> pathList) {
+    private List<Vector3> SortColumns(List<Vector3> pathList) {
         /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s */
         return pathList.OrderBy(v => v.z).ToList();
     }
@@ -873,7 +805,7 @@ public class GameManager : MonoBehaviour {
     }
 
     /* 'Slice' the list down to the specified column/X value */
-    public List<Vector3> SliceColumn(List<Vector3> sorted, int columnToSlice) {
+    private List<Vector3> SliceColumn(List<Vector3> sorted, int columnToSlice) {
         int counter = 0;
         List<Vector3> sliced = new();
 
@@ -888,6 +820,7 @@ public class GameManager : MonoBehaviour {
         return sliced.ToList();
     }
 
+    // ReSharper disable once UnusedMember.Global
     public List<Vector3> SortAndSliceRows(List<Vector3> pathList, int rowToSlice) {
         int counter = 0;
         int searchValue = rowToSlice;
@@ -912,14 +845,14 @@ public class GameManager : MonoBehaviour {
         return SliceRow(sorted, rowToSlice).ToList();
     }
 
-    public List<int> FindTheZs(List<Vector3> path) {
+    private List<int> FindTheZs(List<Vector3> path) {
         List<int> foundZs = path.Select(slice => Mathf.RoundToInt(slice.z)).ToList();
         HashSet<int> shortened = new(foundZs);
 
         return shortened.ToList();
     }
 
-    public List<int> FindTheXs(List<Vector3> path) {
+    private List<int> FindTheXs(List<Vector3> path) {
         List<int> foundXs = path.Select(slice => Mathf.RoundToInt(slice.x)).ToList();
         HashSet<int> shortened = new(foundXs);
 
@@ -930,6 +863,7 @@ public class GameManager : MonoBehaviour {
     /** Colour changing/blending functions **/
     
     /** TODO: modify Add & Blend func() so they can use just the current and last waypoint colours, while "discarding" the 2nd last waypoint colour **/
+    // ReSharper disable once UnusedMember.Global
     public Color ChangeColours(string AddOrBlend, List<GameObject> waypoints) {
         Color returningColour = new();
         switch (AddOrBlend) {
@@ -963,6 +897,7 @@ public class GameManager : MonoBehaviour {
         return returningColour;
     }
     
+    // ReSharper disable once UnusedMember.Global
     public Color ChangeColours(string switchAddOrBlend, Color playersColor, Color currentWaypointColor, Color previousWaypointColour) {
         Color returningColour = new();
         switch (switchAddOrBlend) {
@@ -1059,22 +994,28 @@ public class GameManager : MonoBehaviour {
 
     /** misc. functions **/
     /* by parsing a List through a HashSet duplicates are eliminated, as HashSets only contain unique values */
-    public List<Vector3> RemoveDuplicates(List<Vector3> pathList) {
+    private List<Vector3> RemoveDuplicates(List<Vector3> pathList) {
         HashSet<Vector3> inputList = new(pathList);
         List<Vector3> shortened = inputList.ToList();
 
         mazeData.shortListed = true;
         return shortened.ToList();
     }
-
+    
+    // ReSharper disable once RedundantBoolCompare
+    // ReSharper disable once UnusedMember.Global
     public IEnumerator WaitForRowSlice() {
         yield return new WaitUntil(() => mazeData.firstRowFound == true);
     }
 
+    // ReSharper disable once RedundantBoolCompare
+    // ReSharper disable once UnusedMember.Global
     public IEnumerator WaitForColSlice() {
         yield return new WaitUntil(() => mazeData.firstColFound == true);
     }
 
+    // ReSharper disable once RedundantBoolCompare
+    // ReSharper disable once UnusedMember.Global
     public IEnumerator WaitForListShortening() {
         yield return new WaitUntil(() => mazeData.shortListed == true);
     }

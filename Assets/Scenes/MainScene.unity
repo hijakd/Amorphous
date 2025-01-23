@@ -474,7 +474,7 @@ PrefabInstance:
     - target: {fileID: 8633637255975074103, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8633637255975074103, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
@@ -583,7 +583,7 @@ MonoBehaviour:
   - {fileID: 1511262170618073807, guid: 08d3f24be2e8e234fab83a347f15f8d2, type: 3}
   - {fileID: 5875420743216102770, guid: 35efbc4dee29f914cb1e8cb1ff2419d2, type: 3}
   - {fileID: 5875420743216102770, guid: 44b49304df8f224488b5d47d8d876b15, type: 3}
-  isGameActive: 0
+  gameIsActive: 0
   easyMode: 1
   randomVariance: 0.42
   gridSize: {x: 40, y: 40}
@@ -901,7 +901,7 @@ Transform:
   m_GameObject: {fileID: 1982667878}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2534014, y: 0, z: 0, w: 0.9673613}
-  m_LocalPosition: {x: -3.73, y: 15167.678, z: -29979.41}
+  m_LocalPosition: {x: -3.73, y: 16483.928, z: -32319.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1100,7 +1100,7 @@ Transform:
   m_GameObject: {fileID: 2061076909721251219}
   serializedVersion: 2
   m_LocalRotation: {x: 0.25340143, y: 0, z: 0, w: 0.9673612}
-  m_LocalPosition: {x: -14.92, y: 60670.71, z: -119917.64}
+  m_LocalPosition: {x: -14.92, y: 65935.71, z: -129277.64}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
