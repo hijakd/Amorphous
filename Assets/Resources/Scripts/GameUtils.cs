@@ -25,64 +25,65 @@ public class GameUtils : MonoBehaviour {
     // private static Color previousWaypointColour;
 
 
-    /** Object spawning functions **/
-    /* spawn a given GameObject at a given position */
+    /*
+    /** Object spawning functions *#1#
+    /* spawn a given GameObject at a given position #1#
     public static void Spawn(GameObject gameObject, Vector3 position) {
         gameObject.transform.position = position;
         Instantiate(gameObject);
     }
 
-    /* overloading Spawn function to set rotation */
+    /* overloading Spawn function to set rotation #1#
     public static void Spawn(GameObject gameObject, Vector3 position, Quaternion rotation) {
         gameObject.transform.position = position;
         gameObject.transform.rotation = rotation;
         Instantiate(gameObject);
     }
 
-    /* overloading Spawn function to set material */
+    /* overloading Spawn function to set material #1#
     public static void Spawn(GameObject gameObject, Vector3 position, Material material) {
         gameObject.transform.position = position;
         gameObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = material;
         Instantiate(gameObject);
     }
 
-    /* Spawn the east & west walls across a given row of the maze path */
+    /* Spawn the east & west walls across a given row of the maze path #1#
     public static void SpawnEastWestWalls(List<Vector3> path, GameObject[] walls, Material material) {
         // Debug.Log("Spawning East/West Walls");
         // var pathString = path.Aggregate("", (current, step) => current + (step.ToString() + "\n"));
         // Debug.Log("pathString\n" + pathString);
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
-                /* spawn the first east wall of the row */
+                /* spawn the first east wall of the row #1#
                 Spawn(walls[west], path[i], material);
 
                 // Spawn(walls[west], path[i], GameManager.obsMaterial);
             }
             else if (path[i - 1].x < path[i].x - 1) {
-                /* spawn east wall at end of a break in the row */
+                /* spawn east wall at end of a break in the row #1#
                 Spawn(walls[west], path[i], material);
             }
 
             else if (i == path.Count - 1) {
-                /* spawn the last west wall of the row if the list ends before the boundary */
+                /* spawn the last west wall of the row if the list ends before the boundary #1#
                 Spawn(walls[east], path[i], material);
 
                 // Spawn(walls[east], path[i], GameManager.blueMaterial);
             }
         }
 
-        /* reserving the List to spawn the east walls */
+        /* reserving the List to spawn the east walls #1#
         path.Reverse();
 
         for (int j = 0; j < path.Count; j++) {
             if (j == 0) {
-                /* spawn the last east wall of the row */
+                /* spawn the last east wall of the row #1#
                 Spawn(walls[east], path[j], material);
 
                 // Spawn(walls[east], path[j], GameManager.pinkMaterial);
             }
             else if (path[j - 1].x > path[j].x + 1) {
-                /* spawn east wall at end of a break in the row */
+                /* spawn east wall at end of a break in the row #1#
                 Spawn(walls[east], path[j], material);
 
                 // Spawn(walls[east], path[j], GameManager.purpleMaterial);
@@ -90,34 +91,34 @@ public class GameUtils : MonoBehaviour {
         }
     }
 
-    /* Spawn the north & south walls along a given column of the maze path */
+    /* Spawn the north & south walls along a given column of the maze path #1#
     public static void SpawnNorthSouthWalls(List<Vector3> path, GameObject[] walls, Material material) {
         // Debug.Log("Spawning North/South Walls");
         for (int i = 0; i < path.Count; i++) {
             if (i == 0) {
-                /* spawn the first south wall of the row */
+                /* spawn the first south wall of the row #1#
                 Spawn(walls[south], path[i], material);
             }
             else if (path[i - 1].z < path[i].z - 1) {
-                /* spawn south wall at end of a break in the row */
+                /* spawn south wall at end of a break in the row #1#
                 Spawn(walls[south], path[i], material);
             }
             else if (i == path.Count - 1) {
-                /* spawn the last north wall of the row if the list ends before the boundary */
+                /* spawn the last north wall of the row if the list ends before the boundary #1#
                 Spawn(walls[north], path[i], material);
             }
         }
 
-        /* reserving the List to spawn the east walls */
+        /* reserving the List to spawn the east walls #1#
         path.Reverse();
 
         for (int j = 0; j < path.Count; j++) {
             if (j == 0) {
-                /* spawn the last north wall of the row */
+                /* spawn the last north wall of the row #1#
                 Spawn(walls[north], path[j], material);
             }
             else if (path[j - 1].z > path[j].z + 1) {
-                /* spawn north wall at end of a break in the row */
+                /* spawn north wall at end of a break in the row #1#
                 Spawn(walls[north], path[j], material);
             }
         }
@@ -130,7 +131,7 @@ public class GameUtils : MonoBehaviour {
         Instantiate(gameObject);
     }
 
-    /** Math type functions **/
+    /** Math type functions *#1#
     private static Vector3 FarthestCorner(Vector3 inputPosition, int mazeHeight, int mazeWidth) {
         int xTmp, zTmp;
         if (inputPosition.x >= 0) {
@@ -150,7 +151,7 @@ public class GameUtils : MonoBehaviour {
         return new Vector3(xTmp, 0, zTmp);
     }
 
-    /* Find the Greatest Common Denominator/Divisor */
+    /* Find the Greatest Common Denominator/Divisor #1#
     private static int GCD(int int01, int int02) {
         int tmpA = int01;
         int tmpB = int02;
@@ -164,7 +165,7 @@ public class GameUtils : MonoBehaviour {
         return tmpA;
     }
 
-    /* find the Lowest Common Multiple */
+    /* find the Lowest Common Multiple #1#
     private static int LCM(int distance01, int distance02) {
         int lcmTmp = distance01 / GCD(distance01, distance02);
 
@@ -218,7 +219,7 @@ public class GameUtils : MonoBehaviour {
     }
 
 
-    /** maze position related functions **/
+    /** maze position related functions *#1#
     public static Vector3 RandomPosition(int minWidth, int maxWidth, int minHeight, int maxHeight) {
         // Debug.Log("Generating a random position");
         return new Vector3(Mathf.Round(Random.Range(minWidth, maxWidth)), 0,
@@ -233,10 +234,10 @@ public class GameUtils : MonoBehaviour {
         return allowedPositions[Mathf.RoundToInt(Random.Range(0, allowedPositions.Count))];
     }
 
-    /* create an approximately "center" position between two points using */
-    /* Slerp that is clamped within the maze boundaries, this is intended */
-    /* to take a Random.Range() value to create a point close to center */
-    /* within approx. 40/60 weighting */
+    /* create an approximately "center" position between two points using #1#
+    /* Slerp that is clamped within the maze boundaries, this is intended #1#
+    /* to take a Random.Range() value to create a point close to center #1#
+    /* within approx. 40/60 weighting #1#
     public static Vector3 TriangulateIntersection(Vector3 origin, Vector3 destination, float centreMargin) {
         Vector3 position = Vector3.Slerp(origin, destination, centreMargin);
 
@@ -248,7 +249,7 @@ public class GameUtils : MonoBehaviour {
         return ClampWithinBoundaries(position);
     }
 
-    /* overloading the function to use an LCM value as a position modifier */
+    /* overloading the function to use an LCM value as a position modifier #1#
     public static Vector3
         TriangulateIntersection(Vector3 origin, Vector3 destination, float centreMargin, int modifier) {
         Vector3 position = Vector3.Slerp(origin, destination, centreMargin);
@@ -263,8 +264,8 @@ public class GameUtils : MonoBehaviour {
             decimalMultiplier = 100;
         }
 
-        /** TODO: possibly change this to randomly switch proportioning **/
-        /* split the modifier by the random variance to be used proportionally across the X & Z axis' */
+        /** TODO: possibly change this to randomly switch proportioning *#1#
+        /* split the modifier by the random variance to be used proportionally across the X & Z axis' #1#
         modifierX = (modifier / decimalMultiplier) * centreMargin;
         modifierY = (modifier / decimalMultiplier) * (1 - centreMargin);
 
@@ -344,7 +345,7 @@ public class GameUtils : MonoBehaviour {
         return vertAligned;
     }
 
-    /* check if positionB is ahead/north of positonA & by how far */
+    /* check if positionB is ahead/north of positonA & by how far #1#
     private static bool IsItForward(Vector3 position01, Vector3 position02) {
         if (vertAligned) {
             if (position01.z < position02.z) {
@@ -371,7 +372,7 @@ public class GameUtils : MonoBehaviour {
         return isForward;
     }
 
-    /* check if positionB is right/east of positonA & by how far */
+    /* check if positionB is right/east of positonA & by how far #1#
     private static bool IsItRight(Vector3 position01, Vector3 position02) {
         if (horizAligned) {
             if (position01.x < position02.x) {
@@ -502,7 +503,7 @@ public class GameUtils : MonoBehaviour {
     }
 
     public static void CheckVertical(Vector3 position01, Vector3 position02, List<Vector3> path) {
-        /* positions are within horizontal alignment margins */
+        /* positions are within horizontal alignment margins #1#
         if (VerticalAlignment(position01, position02)) {
             if (debugVert) Debug.Log("Checking vertical alignment: " + VerticalAlignment(position01, position02));
             if (IsItForward(position01, position02)) {
@@ -575,7 +576,7 @@ public class GameUtils : MonoBehaviour {
         }
     }
 
-    /* check position is within the boundaries, if not clamp them in */
+    /* check position is within the boundaries, if not clamp them in #1#
     private static Vector3 ClampWithinBoundaries(Vector3 position) {
         if (position.x <= GameManager._west) {
             position.x = GameManager._west;
@@ -595,18 +596,18 @@ public class GameUtils : MonoBehaviour {
     }
 
 
-    /** maze grid segment selection & sorting functions **/
+    /** maze grid segment selection & sorting functions *#1#
     public static List<Vector3> SortRows(List<Vector3> pathList) {
-        /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s */
+        /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s #1#
         return pathList.OrderBy(v => v.x).ToList();
     }
 
     public static List<Vector3> SortColumns(List<Vector3> pathList) {
-        /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s */
+        /* https://stackoverflow.com/questions/36070425/simplest-way-to-sort-a-list-of-vector3s #1#
         return pathList.OrderBy(v => v.z).ToList();
     }
 
-    /* 'Slice' the list down to the specified row/Z value */
+    /* 'Slice' the list down to the specified row/Z value #1#
     public static List<Vector3> SliceRow(List<Vector3> sorted, int rowToSlice) {
         int counter = 0;
         List<Vector3> sliced = new();
@@ -622,7 +623,7 @@ public class GameUtils : MonoBehaviour {
         return sliced.ToList();
     }
 
-    /* 'Slice' the list down to the specified column/X value */
+    /* 'Slice' the list down to the specified column/X value #1#
     public static List<Vector3> SliceColumn(List<Vector3> sorted, int columnToSlice) {
         int counter = 0;
         List<Vector3> sliced = new();
@@ -677,9 +678,9 @@ public class GameUtils : MonoBehaviour {
     }
 
 
-    /** Colour changing/blending functions **/
+    /** Colour changing/blending functions *#1#
     
-    /** TODO: modify Add & Blend func() so they can use just the current and last waypoint colours, while "discarding" the 2nd last waypoint colour **/
+    /** TODO: modify Add & Blend func() so they can use just the current and last waypoint colours, while "discarding" the 2nd last waypoint colour *#1#
     public static Color ChangeColours(string AddOrBlend, List<GameObject> waypoints) {
         Color returningColour = new();
         switch (AddOrBlend) {
@@ -807,8 +808,8 @@ public class GameUtils : MonoBehaviour {
     //     return blendedColour;
     // }
 
-    /** misc. functions **/
-    /* by parsing a List through a HashSet duplicates are eliminated, as HashSets only contain unique values */
+    /** misc. functions *#1#
+    /* by parsing a List through a HashSet duplicates are eliminated, as HashSets only contain unique values #1#
     public static List<Vector3> RemoveDuplicates(List<Vector3> pathList) {
         HashSet<Vector3> inputList = new(pathList);
         List<Vector3> shortened = inputList.ToList();
@@ -829,7 +830,7 @@ public class GameUtils : MonoBehaviour {
         yield return new WaitUntil(() => GameManager.shortListed == true);
     }
 
-
+*/
 
 
 }

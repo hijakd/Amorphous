@@ -124,28 +124,28 @@ public class PlayerController : MonoBehaviour {
                 switch (playerColourChangeOption) {
                     case "switch":
                         Debug.Log("player colour is switching");
-                        currentPlayerColour = GameUtils.ChangeColours("switch", currentPlayerColour, currentColour);
+                        currentPlayerColour = GameManager.ChangeColours("switch", currentPlayerColour, currentColour);
                         break;
                     case "add":
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is adding in _easyMode");
-                            currentPlayerColour = GameUtils.ChangeColours("add", currentColour, previousColour);
+                            currentPlayerColour = GameManager.ChangeColours("add", currentColour, previousColour);
                             break;
                         }
                         Debug.Log("player colour is adding");
-                        currentPlayerColour = GameUtils.ChangeColours("add", currentPlayerColour, currentColour);
+                        currentPlayerColour = GameManager.ChangeColours("add", currentPlayerColour, currentColour);
                         break;
 
 
                     case "blend":
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is blending in _easyMode");
-                            currentPlayerColour = GameUtils.ChangeColours("blend", currentColour, previousColour);
+                            currentPlayerColour = GameManager.ChangeColours("blend", currentColour, previousColour);
                             break;
                         }
 
                         Debug.Log("player colour is blending");
-                        currentPlayerColour = GameUtils.ChangeColours("blend", currentPlayerColour, currentColour);
+                        currentPlayerColour = GameManager.ChangeColours("blend", currentPlayerColour, currentColour);
                         break;
                 }
 
