@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 60f05fcddfff18b4dada2f62b5a81d54, type: 3}
-  m_Name: GameData_SO
+  m_Name: GameData_SO_old
   m_EditorClassIdentifier: 
   dataName: maze
   player: {fileID: 11400000, guid: a6805fd32b52c1243b00b5d242e91106, type: 2}

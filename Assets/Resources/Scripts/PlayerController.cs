@@ -7,7 +7,8 @@ using UnityEngine;
 // ReSharper disable InconsistentNaming
 
 public class PlayerController : MonoBehaviour {
-
+    
+    public GameData mazeData;
     public new GameObject camera;
     public float speed = 10f;
     public float lookSpeed = 10f;
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour {
     private Vector3 rightMovement;
     private Vector3 relativeMovement;
     private Vector3 playerPos;
+    
     public static string playerColourChangeOption;
 
 
@@ -73,10 +75,10 @@ public class PlayerController : MonoBehaviour {
         focalPoint.transform.position = transform.position;
 
         if (showHint) {
-            MazeUI.PaintHintBlips(GameManager.hintColour01, GameManager.hintColour02);
+            MazeUI.PaintHintBlips(mazeData.hintColour01, mazeData.hintColour02);
         }
         else {
-            MazeUI.PaintHintBlips(currentPlayerColour, GameManager.goalColour);
+            MazeUI.PaintHintBlips(currentPlayerColour, mazeData.goalColour);
         }
 
         /* END FixedUpdate() */

@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474e160f7731aa840897bdd8402f1469, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mazeData: {fileID: 11400000, guid: 681e354b92dfa7c41bd1364c1f0f5178, type: 2}
   goalObject: {fileID: 6557058403640767008, guid: a4b49dc5dfca8544e9050981753b91b7,
     type: 3}
   player: {fileID: 921098113}
@@ -165,6 +166,7 @@ MonoBehaviour:
   - {fileID: 1428840922709220998, guid: 0d7d4116c7c29f94db40815268bfe935, type: 3}
   gridHeight: 30
   gridWidth: 30
+  gridSize: {x: 0, y: 0}
   waypoints:
   - {fileID: 838929982466017086, guid: 0e44c59dcb0a4c041a41c42d57067127, type: 3}
   - {fileID: 7984704464491328934, guid: 6946421c02ac20941a7e4a38cfefeb0f, type: 3}
@@ -1959,6 +1961,12 @@ PrefabInstance:
       propertyPath: camera
       value: 
       objectReference: {fileID: 4960613510451943363}
+    - target: {fileID: 3993035926326769355, guid: 20f7eff89049281498ab87b25e6ce7c7,
+        type: 3}
+      propertyPath: mazeData
+      value: 
+      objectReference: {fileID: 11400000, guid: 681e354b92dfa7c41bd1364c1f0f5178,
+        type: 2}
     - target: {fileID: 3993035926326769355, guid: 20f7eff89049281498ab87b25e6ce7c7,
         type: 3}
       propertyPath: lookSpeed

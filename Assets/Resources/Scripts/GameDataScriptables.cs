@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameDataSO", menuName = "Scriptable Objects/GameData")]
 public class GameData : ScriptableObject {
 
-    public string dataName;
+    public string dataName = "";
     public int gridHeight;
     public int gridWidth;
     public Color goalColour, hintColour01, hintColour02;

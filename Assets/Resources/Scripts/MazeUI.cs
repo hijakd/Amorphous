@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+
 // ReSharper disable InconsistentNaming
 
 public class MazeUI : MonoBehaviour {
@@ -11,46 +12,17 @@ public class MazeUI : MonoBehaviour {
     private static VisualElement playerBlip;
     private static VisualElement hintBlip01;
     private static VisualElement hintBlip02;
-    // private static Label telemetryText;
-    // private static string dataTmp = null;
     
     void OnEnable() {
-        // timeText = System.DateTime.Now.ToString("hh:mm:ss");
         var uiDoc = GetComponent<UIDocument>();
         timeText = uiDoc.rootVisualElement.Q("time") as Label;
         goalBlip = uiDoc.rootVisualElement.Q("goalColourBlip");
         playerBlip = uiDoc.rootVisualElement.Q("playerColourBlip");
         hintBlip01 = uiDoc.rootVisualElement.Q("hintColourBlip01");
         hintBlip02 = uiDoc.rootVisualElement.Q("hintColourBlip02");
-        // telemetryText = uiDoc.rootVisualElement.Q("telemetry") as Label;
     }
-
-    // public static void DisplayTelemetry(String data) {
-    //     telemetryText.text = data;
-    //     Debug.Log("telemetry data:\n" + data);
-    // }
-    //
-    // public static void DisplayTelemetry(List<Vector3> data) {
-    //     
-    //     foreach (var vector in data) {
-    //         dataTmp += vector + "\n";
-    //     }
-    //     
-    //     Debug.Log("telemetry data:\n" + dataTmp);
-    // }
-    //
-    // public static void DisplayTelemetry(int data) {
-    //     telemetryText.text = data.ToString();
-    //     Debug.Log("telemetry data:\n" + data);
-    // }
-    //
-    // public static void DisplayTelemetry(float data) {
-    //     telemetryText.text = data.ToString();
-    //     Debug.Log("telemetry data:\n" + data);
-    // }
     
     public static void PaintGoalBlip(Color colour) {
-        // Debug.Log("Getting colour");
         goalBlip.style.backgroundColor = colour;
     }
 

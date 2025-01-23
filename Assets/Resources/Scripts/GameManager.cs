@@ -14,6 +14,7 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour {
 
+    public GameData mazeData;
     public GameObject goalObject;
     public GameObject player;
     public GameObject colourResetter;
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour {
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     public int gridHeight;
     public int gridWidth;
+    public Vector2Int gridSize;
     public List<GameObject> waypoints;
     public TextMeshProUGUI winText, gameOverText;
     public Button restartButton;
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour {
     public bool firstColFound = false;
     
     public static bool _easyMode, goalFound;
-    public static Color goalColour, hintColour01, hintColour02;
+    // public static Color goalColour, hintColour01, hintColour02;
     
     /* -- private constants -- */
     private const int NORTH = 0;
@@ -46,8 +48,8 @@ public class GameManager : MonoBehaviour {
     private GameObject groundPlane;
     private bool horizAligned, vertAligned, isForward, isRight, debugHoriz, debugVert, firstRow, firstColumn;
     private float xVal, zVal;
-    private int count, columnNumber, rowNumber, lastRowNumber, horizDistance, vertDistance, xPosition, northernEdge;
-    private int easternEdge, southernEdge, westernEdge, _firstRowNumber, _firstColumnNumber, _lastRowNumber, _lastColumnNumber;
+    private int count, columnNumber, rowNumber, lastRowNumber, horizDistance, vertDistance, xPosition, thisNorthernEdge;
+    private int thisEasternEdge, thisSouthernEdge, thisWesternEdge, _firstRowNumber, _firstColumnNumber, _lastRowNumber, _lastColumnNumber;
     private Material wallMaterial;
     private Vector2 randVariance;
     private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition, tmpPosition;
@@ -98,9 +100,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Awake() {
-        goalColour = new Color();
-        hintColour01 = new Color();
-        hintColour02 = new Color();
+        
+        // goalColour = new Color();
+        // hintColour01 = new Color();
+        // hintColour02 = new Color();
         groundPlane = GameObject.Find("GroundPlane");
         mixedColors = new List<Color>();
         lcms = new List<int>();
@@ -114,38 +117,45 @@ public class GameManager : MonoBehaviour {
 
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
-        _lastRowNumber = northernEdge = gridHeight / 2;
-        _lastColumnNumber = easternEdge = gridWidth / 2;
-        _firstRowNumber = southernEdge = -northernEdge;
-        _firstColumnNumber = westernEdge = -easternEdge;
+        _lastRowNumber = thisNorthernEdge = gridHeight / 2;
+        _lastColumnNumber = thisEasternEdge = gridWidth / 2;
+        _firstRowNumber = thisSouthernEdge = -thisNorthernEdge;
+        _firstColumnNumber = thisWesternEdge = -thisEasternEdge;
         _easyMode = easyMode;
+
+        if (gridSize.x < 1) {
+            gridSize.x = gridWidth;
+        }
+        if (gridSize.y < 1) {
+            gridSize.y = gridHeight;
+        }
+
+        mazeData.InitData(gridSize);
         
         wallMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
 
-        goalColour = Color.white;
-        goalColour = ChangeColours("add", waypoints);
-        goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = goalColour;
+        mazeData.goalColour = Color.white;
+        // goalColour = ChangeColours("add", waypoints);
+        mazeData.goalColour = ChangeColours("add", waypoints);
+        goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = mazeData.goalColour;
         
 
         /* END Awake() */
     }
 
     private void Start() {
-        // Debug.Log("Trying to colour the goalBlip");
         
         groundPlane.gameObject.SetActive(false);
 
-        MazeUI.PaintGoalBlip(goalColour);
+        MazeUI.PaintGoalBlip(mazeData.goalColour);
         MazeUI.PaintPlayerBlipWhite();
         // MazeUI.PaintHintBlips(hintColour01, hintColour02);
-        
-
         
         ResetCount();
 
         /* populate the destinations List with random positions for the player, waypoints & goal */
         while (count < waypoints.Count + 2) {
-            destinations.Add(RandomPosition(westernEdge, easternEdge, southernEdge, northernEdge));
+            destinations.Add(RandomPosition(thisWesternEdge, thisEasternEdge, thisSouthernEdge, thisNorthernEdge));
             count++;
         }
 
@@ -158,12 +168,10 @@ public class GameManager : MonoBehaviour {
             count++;
         }
 
-        // goalColour = new Color(1, 1, 1);
-
         ResetCount();
 
         while (count < midPoints.Count) {
-            lcms.Add(FindLcm(midPoints[count], distances[count], northernEdge, easternEdge));
+            lcms.Add(FindLcm(midPoints[count], distances[count], thisNorthernEdge, thisEasternEdge));
             count++;
         }
 
@@ -478,12 +486,12 @@ public class GameManager : MonoBehaviour {
     }
 
     private int FindLargestValue(List<int> values) {
-        int tmpValue = westernEdge < southernEdge ? southernEdge : westernEdge;
+        int tmpValue = thisWesternEdge < thisSouthernEdge ? thisSouthernEdge : thisWesternEdge;
         return values.Prepend(tmpValue).Max();
     }
 
     private int FindSmallestValue(List<int> values) {
-        int tmpValue = northernEdge < easternEdge ? easternEdge : northernEdge;
+        int tmpValue = thisNorthernEdge < thisEasternEdge ? thisEasternEdge : thisNorthernEdge;
         return values.Prepend(tmpValue).Min();
     }
 
@@ -748,18 +756,18 @@ public class GameManager : MonoBehaviour {
 
     /* check position is within the boundaries, if not clamp them in */
     private Vector3 ClampWithinBoundaries(Vector3 position) {
-        if (position.x <= westernEdge) {
-            position.x = westernEdge;
+        if (position.x <= thisWesternEdge) {
+            position.x = thisWesternEdge;
         }
-        else if (position.x > easternEdge) {
-            position.x = easternEdge;
+        else if (position.x > thisEasternEdge) {
+            position.x = thisEasternEdge;
         }
 
-        if (position.z <= southernEdge) {
-            position.z = southernEdge;
+        if (position.z <= thisSouthernEdge) {
+            position.z = thisSouthernEdge;
         }
-        else if (position.z > northernEdge) {
-            position.z = northernEdge;
+        else if (position.z > thisNorthernEdge) {
+            position.z = thisNorthernEdge;
         }
 
         return position;
@@ -845,7 +853,7 @@ public class GameManager : MonoBehaviour {
     /** Colour changing/blending functions **/
     
     /** TODO: modify Add & Blend func() so they can use just the current and last waypoint colours, while "discarding" the 2nd last waypoint colour **/
-    public Color ChangeColours(string AddOrBlend, List<GameObject> waypoints) {
+    private Color ChangeColours(string AddOrBlend, List<GameObject> waypoints) {
         Color returningColour = new();
         switch (AddOrBlend) {
             case "add" :
@@ -899,9 +907,11 @@ public class GameManager : MonoBehaviour {
     private Color AddColoursTogether(List<GameObject> waypoints) {
         var waypoint01 = Random.Range(0, waypoints.Count);
         var waypoint02 = Random.Range(0, waypoints.Count);
-        hintColour01 = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-        hintColour02 = waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-        var tmpColour = hintColour01 + hintColour02;
+        // hintColour01 = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        mazeData.hintColour01 = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        // hintColour02 = waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        mazeData.hintColour02 = waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        var tmpColour = mazeData.hintColour01 + mazeData.hintColour02;
         return tmpColour;
     }
 
@@ -913,7 +923,6 @@ public class GameManager : MonoBehaviour {
         else {
             mixedColour = playersColour + waypointColor;
         }
-        
         return mixedColour;
     }
 
@@ -925,9 +934,14 @@ public class GameManager : MonoBehaviour {
     private Color BlendColoursTogether(List<GameObject> waypoints) {
         int index01 = Random.Range(0, waypoints.Count);
         int index02 = Random.Range(0, waypoints.Count);
-        Color blendedColour =
-            Color.Lerp(waypoints[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-                waypoints[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+        
+        mazeData.hintColour01 = waypoints[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        mazeData.hintColour02 = waypoints[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+
+        // Color blendedColour =
+        //     Color.Lerp(waypoints[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+        //         waypoints[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+        Color blendedColour = Color.Lerp(mazeData.hintColour01, mazeData.hintColour02, 0.5f);
         return blendedColour;
     }
 
