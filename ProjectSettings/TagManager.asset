@@ -4,13 +4,15 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Blue
   - Goal
   - Cardinals
   - FloorTile
   - Red
   - Green
+  - Blue
   - Yellow
+  - Black
+  - White
   - Tetrahedron
   - EastWall
   - WestWall
@@ -20,9 +22,6 @@ TagManager:
   - Ground
   - GroundPlane
   - Waypoint
-  - SliceTelemetryText
-  - White
-  - Black
   - ColourResetter
   layers:
   - Default

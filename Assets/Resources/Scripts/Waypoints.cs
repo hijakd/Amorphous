@@ -1,50 +1,38 @@
 using System;
+// using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Splines;
 
-[CreateAssetMenu(fileName = "Waypoint_SO", menuName = "ScriptableObjects/Waypoint Scriptable")]
-public class Waypoints : ScriptableObject {
+public class Waypoints : MonoBehaviour {
 
-    public GameObject waypointBase;
-    public ParticleSystem hintParticle;
-    public Material baseMaterial;
-    public Color primaryColor;
-    public Color secondaryColor;
-    [Tooltip("Is this waypoint the level Goal?")]
-    public bool isGoal;
-    
-    private Gradient gradient = new Gradient();
-    
-    public static Vector3 position { get; set; }
+    public WaypointsSO thisWaypoint;
+    public Vector3 waypointPos;
 
 
-    private void OnAwake() {
+    private void Awake() {
+        waypointPos = thisWaypoint.waypoint.gameObject.transform.position;
     }
+
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void FixedUpdate() {
+        
+    }
+
+    // public void ChangePosition(GameObject gObject) {
+    //     if (Mathf.Approximately(gObject.gameObject.transform.position.x, thisWaypoint.wpPos.x) &&
+    //         Mathf.Approximately(gObject.gameObject.transform.position.z, thisWaypoint.wpPos.z)) {
+    //         gObject.gameObject.transform.position = thisWaypoint.wpPos;
+    //     }
+    // }
     
-
-    private void OnEnable() {
-
-        // set gradient colour for the hint particle start & trail colour
-        gradient.SetKeys(new[] { new GradientColorKey(primaryColor, 0.0f), new GradientColorKey(secondaryColor, 1.0f) }, new[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(0.0f, 1.0f) } );
-        
-        var mainColour = hintParticle.GetComponent<ParticleSystem>().main;
-        mainColour.startColor = primaryColor;
-        
-        var col = hintParticle.GetComponent<ParticleSystem>().colorOverLifetime;
-        col.enabled = true;
-        col.color = gradient;
-        
-        var trail = hintParticle.GetComponent<ParticleSystem>().trails;
-        trail.enabled = true;
-        trail.colorOverTrail = gradient;
-        
+    public void SetGoalColour(Color inputColour) {
         // set the material colour of the waypoint
-        baseMaterial.color = primaryColor;
+        thisWaypoint.baseMaterial.color = inputColour;
         // set the material of the waypoint
-        waypointBase.gameObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = baseMaterial;
+        thisWaypoint.waypoint.gameObject.GetComponent<MeshRenderer>().sharedMaterial = thisWaypoint.baseMaterial;
     }
-
-    
-
 }
-

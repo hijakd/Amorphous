@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {
     
+    public static PlayerSO playerSO;
     public GameObject player;
     public Vector3 offset;
     private Vector3 looking;
     private Vector2 look;
-    PlayerControls playerControls;
+    private PlayerControls controls;
 
     
     void Awake() {
@@ -17,6 +16,7 @@ public class CameraController : MonoBehaviour {
         // playerControls.Player.Look.canceled += ctx => look = Vector2.zero;
 
     }
+    
 
     // Update is called once per frame
     void LateUpdate() {
@@ -31,10 +31,10 @@ public class CameraController : MonoBehaviour {
     }
     
     private void OnEnable() {
-        playerControls.Player.Enable();
+        controls.Player.Enable();
     }
     
     private void OnDisable() {
-        playerControls.Player.Disable();
+        controls.Player.Disable();
     }
 }
