@@ -12,6 +12,7 @@ public class MazeUI : MonoBehaviour {
     private static VisualElement playerBlip;
     private static VisualElement hintBlip01;
     private static VisualElement hintBlip02;
+    private static VisualElement settingsMenu;
     
     void OnEnable() {
         var uiDoc = GetComponent<UIDocument>();
@@ -20,6 +21,7 @@ public class MazeUI : MonoBehaviour {
         playerBlip = uiDoc.rootVisualElement.Q("playerColourBlip");
         hintBlip01 = uiDoc.rootVisualElement.Q("hintColourBlip01");
         hintBlip02 = uiDoc.rootVisualElement.Q("hintColourBlip02");
+        settingsMenu = uiDoc.rootVisualElement.Q("settingsMenu");
     }
     
     public static void PaintGoalBlip(Color colour) {

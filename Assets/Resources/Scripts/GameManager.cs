@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -46,19 +47,18 @@ public class GameManager : MonoBehaviour {
     
     /* -- private variables -- */
     private GameObject groundPlane;
-    private bool horizAligned, vertAligned, isForward, isRight, debugHoriz, debugVert, firstRow, firstColumn;
-    private float xVal, zVal;
-    private int count, columnNumber, rowNumber, lastRowNumber, horizDistance, vertDistance, xPosition, thisNorthernEdge;
-    private int thisEasternEdge, thisSouthernEdge, thisWesternEdge, _firstRowNumber, _firstColumnNumber, _lastRowNumber, _lastColumnNumber;
+    private bool horizAligned, vertAligned, isForward, isRight;
+    // private float xVal, zVal;
+    private int count, /*columnNumber, rowNumber, lastRowNumber,*/ horizDistance, vertDistance, xPosition;
+    private int _firstRowNumber, _firstColumnNumber, _lastRowNumber, _lastColumnNumber;
     private Material wallMaterial;
     private Vector2 randVariance;
     private Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition, tmpPosition;
     
     /* -- private Lists -- */
-    private List<Color> mixedColors;
+    // private List<Color> mixedColors;
     private List<int> distances, lcms;
     private List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
-    [SerializeField] public static Color _playerColour;
 
 
     private void OnDrawGizmos() {
@@ -101,11 +101,7 @@ public class GameManager : MonoBehaviour {
 
     private void Awake() {
         
-        // goalColour = new Color();
-        // hintColour01 = new Color();
-        // hintColour02 = new Color();
         groundPlane = GameObject.Find("GroundPlane");
-        mixedColors = new List<Color>();
         lcms = new List<int>();
         distances = new List<int>();
         destinations = new List<Vector3>();
@@ -117,10 +113,7 @@ public class GameManager : MonoBehaviour {
 
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
-        _lastRowNumber = thisNorthernEdge = gridHeight / 2;
-        _lastColumnNumber = thisEasternEdge = gridWidth / 2;
-        _firstRowNumber = thisSouthernEdge = -thisNorthernEdge;
-        _firstColumnNumber = thisWesternEdge = -thisEasternEdge;
+
         _easyMode = easyMode;
 
         if (gridSize.x < 1) {
@@ -135,11 +128,9 @@ public class GameManager : MonoBehaviour {
         wallMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
 
         mazeData.goalColour = Color.white;
-        // goalColour = ChangeColours("add", waypoints);
         mazeData.goalColour = ChangeColours("add", waypoints);
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = mazeData.goalColour;
         
-
         /* END Awake() */
     }
 
@@ -149,13 +140,12 @@ public class GameManager : MonoBehaviour {
 
         MazeUI.PaintGoalBlip(mazeData.goalColour);
         MazeUI.PaintPlayerBlipWhite();
-        // MazeUI.PaintHintBlips(hintColour01, hintColour02);
         
         ResetCount();
 
         /* populate the destinations List with random positions for the player, waypoints & goal */
         while (count < waypoints.Count + 2) {
-            destinations.Add(RandomPosition(thisWesternEdge, thisEasternEdge, thisSouthernEdge, thisNorthernEdge));
+            destinations.Add(RandomPosition(mazeData.westernEdge, mazeData.easternEdge, mazeData.southernEdge, mazeData.northernEdge));
             count++;
         }
 
@@ -171,7 +161,7 @@ public class GameManager : MonoBehaviour {
         ResetCount();
 
         while (count < midPoints.Count) {
-            lcms.Add(FindLcm(midPoints[count], distances[count], thisNorthernEdge, thisEasternEdge));
+            lcms.Add(FindLcm(midPoints[count], distances[count], mazeData.northernEdge, mazeData.easternEdge));
             count++;
         }
 
@@ -279,6 +269,7 @@ public class GameManager : MonoBehaviour {
             EndLevel();
         }
 
+        
         /* END FixedUpdate() */
     }
 
@@ -319,22 +310,22 @@ public class GameManager : MonoBehaviour {
     
     /** Object spawning functions **/
     /* spawn a given GameObject at a given position */
-    public void Spawn(GameObject gameObject, Vector3 position) {
-        gameObject.transform.position = position;
+    private void Spawn(GameObject gObject, Vector3 position) {
+        gObject.transform.position = position;
         Instantiate(gameObject);
     }
 
     /* overloading Spawn function to set rotation */
-    public void Spawn(GameObject gameObject, Vector3 position, Quaternion rotation) {
-        gameObject.transform.position = position;
-        gameObject.transform.rotation = rotation;
+    public void Spawn(GameObject gObject, Vector3 position, Quaternion rotation) {
+        gObject.transform.position = position;
+        gObject.transform.rotation = rotation;
         Instantiate(gameObject);
     }
 
     /* overloading Spawn function to set material */
-    public void Spawn(GameObject gameObject, Vector3 position, Material material) {
-        gameObject.transform.position = position;
-        gameObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = material;
+    private void Spawn(GameObject gObject, Vector3 position, Material material) {
+        gObject.transform.position = position;
+        gObject.GetComponentInChildren<MeshRenderer>().sharedMaterial = material;
         Instantiate(gameObject);
     }
 
@@ -404,10 +395,10 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void SpawnColourResetter(GameObject gameObject, Vector3 position) {
+    private void SpawnColourResetter(GameObject gObject, Vector3 position) {
         // position.y = 0.275f;
         position.y = 0.05f;
-        gameObject.transform.position = position;
+        gObject.transform.position = position;
         Instantiate(gameObject);
     }
 
@@ -486,12 +477,12 @@ public class GameManager : MonoBehaviour {
     }
 
     private int FindLargestValue(List<int> values) {
-        int tmpValue = thisWesternEdge < thisSouthernEdge ? thisSouthernEdge : thisWesternEdge;
+        int tmpValue = mazeData.westernEdge < mazeData.southernEdge ? mazeData.southernEdge : mazeData.westernEdge;
         return values.Prepend(tmpValue).Max();
     }
 
     private int FindSmallestValue(List<int> values) {
-        int tmpValue = thisNorthernEdge < thisEasternEdge ? thisEasternEdge : thisNorthernEdge;
+        int tmpValue = mazeData.northernEdge < mazeData.easternEdge ? mazeData.easternEdge : mazeData.northernEdge;
         return values.Prepend(tmpValue).Min();
     }
 
@@ -524,10 +515,8 @@ public class GameManager : MonoBehaviour {
 
     /* overloading the function to use an LCM value as a position modifier */
     private Vector3 TriangulateIntersection(Vector3 origin, Vector3 destination, float centreMargin, int modifier) {
-        Vector3 position = Vector3.Slerp(origin, destination, centreMargin);
-        float modifierX = 0f;
-        float modifierY = 0f;
-        int decimalMultiplier = 10;
+        var position = Vector3.Slerp(origin, destination, centreMargin);
+        var decimalMultiplier = 10;
 
         if (modifier > Mathf.Abs(1000) && modifier < Mathf.Abs(10000)) {
             decimalMultiplier = 1000;
@@ -538,8 +527,8 @@ public class GameManager : MonoBehaviour {
 
         /** TODO: possibly change this to randomly switch proportioning **/
         /* split the modifier by the random variance to be used proportionally across the X & Z axis' */
-        modifierX = (modifier / decimalMultiplier) * centreMargin;
-        modifierY = (modifier / decimalMultiplier) * (1 - centreMargin);
+        var modifierX = (modifier / decimalMultiplier) * centreMargin;
+        var modifierY = (modifier / decimalMultiplier) * (1 - centreMargin);
 
         /* normalizing the position */
         position.x = Mathf.RoundToInt(position.x * (modifierX));
@@ -756,18 +745,18 @@ public class GameManager : MonoBehaviour {
 
     /* check position is within the boundaries, if not clamp them in */
     private Vector3 ClampWithinBoundaries(Vector3 position) {
-        if (position.x <= thisWesternEdge) {
-            position.x = thisWesternEdge;
+        if (position.x <= mazeData.westernEdge) {
+            position.x = mazeData.westernEdge;
         }
-        else if (position.x > thisEasternEdge) {
-            position.x = thisEasternEdge;
+        else if (position.x > mazeData.easternEdge) {
+            position.x = mazeData.easternEdge;
         }
 
-        if (position.z <= thisSouthernEdge) {
-            position.z = thisSouthernEdge;
+        if (position.z <= mazeData.southernEdge) {
+            position.z = mazeData.southernEdge;
         }
-        else if (position.z > thisNorthernEdge) {
-            position.z = thisNorthernEdge;
+        else if (position.z > mazeData.northernEdge) {
+            position.z = mazeData.northernEdge;
         }
 
         return position;
@@ -853,14 +842,14 @@ public class GameManager : MonoBehaviour {
     /** Colour changing/blending functions **/
     
     /** TODO: modify Add & Blend func() so they can use just the current and last waypoint colours, while "discarding" the 2nd last waypoint colour **/
-    private Color ChangeColours(string AddOrBlend, List<GameObject> waypoints) {
+    private Color ChangeColours(string AddOrBlend, List<GameObject> waypointsList) {
         Color returningColour = new();
         switch (AddOrBlend) {
             case "add" :
-                returningColour = AddColoursTogether(waypoints);
+                returningColour = AddColoursTogether(waypointsList);
                 break;
             case "blend" :
-                returningColour = BlendColoursTogether(waypoints);
+                returningColour = BlendColoursTogether(waypointsList);
                 break;
             
         }
@@ -904,13 +893,13 @@ public class GameManager : MonoBehaviour {
         return returningColour;
     }
 
-    private Color AddColoursTogether(List<GameObject> waypoints) {
-        var waypoint01 = Random.Range(0, waypoints.Count);
-        var waypoint02 = Random.Range(0, waypoints.Count);
+    private Color AddColoursTogether(List<GameObject> waypointsList) {
+        var waypoint01 = Random.Range(0, waypointsList.Count);
+        var waypoint02 = Random.Range(0, waypointsList.Count);
         // hintColour01 = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-        mazeData.hintColour01 = waypoints[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        mazeData.hintColour01 = waypointsList[waypoint01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
         // hintColour02 = waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-        mazeData.hintColour02 = waypoints[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        mazeData.hintColour02 = waypointsList[waypoint02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
         var tmpColour = mazeData.hintColour01 + mazeData.hintColour02;
         return tmpColour;
     }
@@ -931,16 +920,16 @@ public class GameManager : MonoBehaviour {
         return mixedColour;
     }
 
-    private Color BlendColoursTogether(List<GameObject> waypoints) {
-        int index01 = Random.Range(0, waypoints.Count);
-        int index02 = Random.Range(0, waypoints.Count);
+    private Color BlendColoursTogether(List<GameObject> waypointsList) {
+        int index01 = Random.Range(0, waypointsList.Count);
+        int index02 = Random.Range(0, waypointsList.Count);
         
-        mazeData.hintColour01 = waypoints[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-        mazeData.hintColour02 = waypoints[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        mazeData.hintColour01 = waypointsList[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        mazeData.hintColour02 = waypointsList[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
 
         // Color blendedColour =
-        //     Color.Lerp(waypoints[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
-        //         waypoints[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
+        //     Color.Lerp(waypointsList[index01].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color,
+        //         waypointsList[index02].gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color, 0.5f);
         Color blendedColour = Color.Lerp(mazeData.hintColour01, mazeData.hintColour02, 0.5f);
         return blendedColour;
     }
@@ -966,17 +955,17 @@ public class GameManager : MonoBehaviour {
         return shortened.ToList();
     }
 
-    // public IEnumerator WaitForRowSlice() {
-    //     yield return new WaitUntil(() => firstRowFound == true);
-    // }
-    //
-    // public IEnumerator WaitForColSlice() {
-    //     yield return new WaitUntil(() => firstColFound == true);
-    // }
-    //
-    // public IEnumerator WaitForListShortening() {
-    //     yield return new WaitUntil(() => shortListed == true);
-    // }
+    public IEnumerator WaitForRowSlice() {
+        yield return new WaitUntil(() => firstRowFound == true);
+    }
+    
+    public IEnumerator WaitForColSlice() {
+        yield return new WaitUntil(() => firstColFound == true);
+    }
+    
+    public IEnumerator WaitForListShortening() {
+        yield return new WaitUntil(() => shortListed == true);
+    }
 
 
 

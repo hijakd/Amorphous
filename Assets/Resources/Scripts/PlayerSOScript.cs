@@ -46,13 +46,11 @@ public class Player : ScriptableObject {
                     case "switch":
                         Debug.Log("player colour is switching");
                         currentColour = GameManager.ChangeColours("switch", currentColour, thisColour);
-                        GameManager._playerColour = currentColour;
                         break;
                     case "add":
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is adding in _easyMode");
                             currentColour = GameManager.ChangeColours("add", thisColour, previousColour);
-                            GameManager._playerColour = currentColour;
                             break;
                         }
 
@@ -65,7 +63,6 @@ public class Player : ScriptableObject {
                         if (GameManager._easyMode) {
                             Debug.Log("player colour is blending in _easyMode");
                             currentColour = GameManager.ChangeColours("blend", thisColour, previousColour);
-                            GameManager._playerColour = currentColour;
                             break;
                         }
 
