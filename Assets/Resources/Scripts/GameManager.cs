@@ -66,8 +66,8 @@ public class GameManager : MonoBehaviour {
 
     /* -- private Lists -- */
     // private List<Color> mixedColors;
-    public List<int> distances, lcms;
-    public List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
+    List<int> distances, lcms;
+    List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
 
 
     void Awake() {
@@ -84,7 +84,8 @@ public class GameManager : MonoBehaviour {
         randVariance.x = randomVariance;
         randVariance.y = 1f - randomVariance;
 
-        wallMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
+        // wallMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
+        wallMaterial = Resources.Load<Material>("Materials/Dungeon_Ground");
 
 
         mazeData.goalColour = Color.white;

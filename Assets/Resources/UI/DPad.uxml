@@ -1,0 +1,28 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/UI/DpadStyles.uss?fileID=7433441132597879392&amp;guid=30361c1c9002ff247ba5ee8a4effd1e8&amp;type=3#DpadStyles" />
+    <engine:VisualElement name="dpadRoot" style="flex-grow: 1;">
+        <engine:VisualElement name="h_top" class="horizontals">
+            <engine:VisualElement name="topLeft" class="cellSize" />
+            <engine:VisualElement name="topCenter" class="cellSize">
+                <engine:Button text="W" name="w_button" class="buttonText" style="font-size: 50%;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="topRight" class="cellSize" />
+        </engine:VisualElement>
+        <engine:VisualElement name="h_middle" class="horizontals">
+            <engine:VisualElement name="middleLeft" class="cellSize">
+                <engine:Button text="A" name="a_button" class="buttonText" style="font-size: 50%;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="middleCenter" class="cellSize" />
+            <engine:VisualElement name="middleRight" class="cellSize">
+                <engine:Button text="D" name="d_button" class="buttonText" style="font-size: 50%;" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement name="h_bottom" class="horizontals">
+            <engine:VisualElement name="bottomLeft" class="cellSize" />
+            <engine:VisualElement name="bottomCenter" class="cellSize" style="padding-right: 0;">
+                <engine:Button text="S" name="s_button" class="buttonText" style="font-size: 50%;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="bottomRight" class="cellSize" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

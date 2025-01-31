@@ -1,0 +1,47 @@
+.horizontals {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    height: 33%;
+}
+
+.h_middle_bg {
+    background-color: rgba(0, 9, 200, 0.15);
+}
+
+.h_bottom_bg {
+    background-color: rgba(87, 108, 88, 0.28);
+}
+
+.h_top_bg {
+    background-color: rgba(77, 73, 73, 0.27);
+}
+
+.cellSize {
+    min-height: 100%;
+    max-width: 33%;
+    min-width: 33%;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttonText {
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Oswald-Bold.ttf?fileID=12800000&guid=c9f6d0e7bc8541498c9a4799ba184ede&type=3#Oswald-Bold");
+    border-top-left-radius: 21px;
+    border-top-right-radius: 21px;
+    border-bottom-right-radius: 21px;
+    border-bottom-left-radius: 21px;
+    width: 75%;
+    height: 95%;
+    border-left-color: rgb(140, 77, 77);
+    border-right-color: rgb(140, 77, 77);
+    border-top-color: rgb(140, 77, 77);
+    border-bottom-color: rgb(140, 77, 77);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    -unity-text-outline-color: rgba(117, 231, 126, 0.92);
+    -unity-text-outline-width: 1px;
+    text-shadow: 4px 4px 50px rgba(44, 53, 84, 0.58);
+}
