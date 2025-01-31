@@ -1,53 +1,73 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-
-// ReSharper disable InconsistentNaming
+using Unity.Properties;
+using AmorphousData;
 
 public class MazeUI : MonoBehaviour {
 
-    private Label timeText;
-    private static VisualElement goalBlip;
-    private static VisualElement playerBlip;
-    private static VisualElement hintBlip01;
-    private static VisualElement hintBlip02;
-    private static VisualElement settingsMenu;
-    
+    // GameManager mazeData;
+    UIDocument mainUiDoc;
+    Label timeText;
+    VisualElement settingsButton;
+    static VisualElement goalBlip;
+    static VisualElement playerBlip;
+    static VisualElement hintBlip01;
+    static VisualElement hintBlip02;
+    VisualElement uiHeader;
+    VisualElement settingsMenu;
+
+    string timeString { get; set; }
+
+
     void OnEnable() {
-        var uiDoc = GetComponent<UIDocument>();
-        timeText = uiDoc.rootVisualElement.Q("time") as Label;
-        goalBlip = uiDoc.rootVisualElement.Q("goalColourBlip");
-        playerBlip = uiDoc.rootVisualElement.Q("playerColourBlip");
-        hintBlip01 = uiDoc.rootVisualElement.Q("hintColourBlip01");
-        hintBlip02 = uiDoc.rootVisualElement.Q("hintColourBlip02");
-        settingsMenu = uiDoc.rootVisualElement.Q("settingsMenu");
-    }
-    
-    public static void PaintGoalBlip(Color colour) {
-        goalBlip.style.backgroundColor = colour;
+        // mazeData = ScriptableObject.CreateInstance<GameData>();
+        SetVisualElements();
+        GameManager.mazeData.SetTimeFormat(true);
+        timeString = GameManager.mazeData.GetTimeFormat();
     }
 
-    public static void PaintPlayerBlip(Color color) {
-        playerBlip.style.backgroundColor = color;
-    }
-    
-    public static void PaintHintBlips(Color color01, Color color02) {
-        hintBlip01.style.backgroundColor = color01;
-        hintBlip02.style.backgroundColor = color02;
-        
-    }
 
-    public static void PaintPlayerBlipWhite() {
-        playerBlip.style.backgroundColor = Color.white;
-    }
-    
-    public static void PaintPlayerBlipBlack() {
-        playerBlip.style.backgroundColor = Color.black;
-    }
-    
     void FixedUpdate() {
-        timeText.text = DateTime.Now.ToString("HH:mm:ss");
+        timeText.text = DateTime.Now.ToString(timeString);
     }
+
+
+    void SetVisualElements() {
+        mainUiDoc = GetComponent<UIDocument>();
+        VisualElement rootElement = mainUiDoc.rootVisualElement;
+        uiHeader = rootElement.Q("uiHeader");
+        timeText = rootElement.Q("time") as Label;
+        goalBlip = rootElement.Q("goalBlip");
+        playerBlip = rootElement.Q("playerBlip");
+        hintBlip01 = rootElement.Q("hint01Blip");
+        hintBlip02 = rootElement.Q("hint02Blip");
+    }
+
+
+    public static void PaintGoal(Color goalColour) {
+        goalBlip.style.backgroundColor = goalColour;
+    }
+
+    public static void PaintPlayer(Color playerColour) {
+        playerBlip.style.backgroundColor = playerColour;
+    }
+    
+    public static void PaintPlayerWhite() {
+        playerBlip.style.backgroundColor = Color.white;
+        GameManager.mazeData.playerIsWhite = true;
+    }
+    
+    public static void PaintPlayerBlack() {
+        playerBlip.style.backgroundColor = Color.black;
+        GameManager.mazeData.playerIsWhite = false;
+    }
+    
+    public static void PaintHints(Color hintColour01, Color hintColour02) {
+        hintBlip01.style.backgroundColor = hintColour01;
+        hintBlip02.style.backgroundColor = hintColour02;
+    }
+
+
 
 }

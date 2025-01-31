@@ -1,64 +1,37 @@
 using System;
 using UnityEngine;
+using AmorphousData;
 
-
-// ReSharper disable UnusedParameter.Local
-// ReSharper disable UnusedMember.Global
-// ReSharper disable InconsistentNaming
-
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour {
-    
-    public GameData mazeData;
+
     public new GameObject camera;
-    public float speed = 10f;
-    public float lookSpeed = 10f;
+    public float speed = 50f;
 
-    private static Color currentColour;
-
-    // public static float rotationSpeed;
-
-    private bool playerIsWhite;
-    private Color currentPlayerColour = Color.white;
-    private Color previousPlayerColour;
-    private Color previousColour;
-    private Color otherColour;
-
-    private GameObject focalPoint;
-    private PlayerControls controls;
-    private Rigidbody playerRb;
-
-    private bool showHint;
-    private Vector2 move;
-    private Vector2 look;
-
-    private Vector3 cameraForward;
-    private Vector3 cameraRight;
-    private Vector3 forwardMovement;
-    private Vector3 rightMovement;
-    private Vector3 relativeMovement;
-    private Vector3 playerPos;
-    
-    public static string playerColourChangeOption;
+    PlayerControls controls;
+    Rigidbody playerRb;
+    Vector2 move, look;
+    Vector3 cameraForward, cameraRight, forwardMovement, rightMovement, relativeMovement, playerPos;
+    bool playerIsWhite, showHint, easyMode;
+    Color currentWaypoint, playerColour, previousColour;
+    string playerColourChangeOption;
 
 
-    private void Awake() {
-        // rotationSpeed = lookSpeed;
+    void Awake() {
         controls = new PlayerControls();
         playerRb = GetComponent<Rigidbody>();
-        camera = GameObject.Find("Main Camera");
-        focalPoint = GameObject.Find("Focal Point");
-        playerIsWhite = true;
         playerColourChangeOption = "add";
-
-
-        /* set focalPoint to players position */
-        focalPoint.transform.position = transform.position;
-
-        /* END Awake() */
     }
 
-    // Update is called once per frame
-    private void FixedUpdate() {
+    void Start() {
+        //     hint01 = GameManager.mazeData.hintColour01;
+        //     hint02 = GameManager.mazeData.hintColour02;
+        if (GameManager.mazeData.difficulty == 1) {
+            easyMode = true;
+        }
+    }
+
+    void FixedUpdate() {
         /* get camera's directional vectors & normalize them */
         cameraForward = camera.transform.forward;
         cameraRight = camera.transform.right;
@@ -71,125 +44,109 @@ public class PlayerController : MonoBehaviour {
         rightMovement = move.x * cameraRight;
         relativeMovement = forwardMovement + rightMovement;
         playerPos = transform.position; // for testing
-        playerRb.AddForce(relativeMovement * speed * Time.deltaTime);
-        focalPoint.transform.position = transform.position;
+        playerRb.AddForce(relativeMovement * (speed * Time.deltaTime));
+
 
         if (showHint) {
-            MazeUI.PaintHintBlips(mazeData.hintColour01, mazeData.hintColour02);
+            MazeUI.PaintHints(GameManager.mazeData.hintColour01, GameManager.mazeData.hintColour02);
         }
         else {
-            MazeUI.PaintHintBlips(currentPlayerColour, mazeData.goalColour);
+            MazeUI.PaintHints(Color.clear, Color.clear);
         }
-
-        /* END FixedUpdate() */
     }
 
-    private void OnEnable() {
+    void OnEnable() {
         controls.Player.Enable();
     }
 
-    private void OnDisable() {
+    void OnDisable() {
         controls.Player.Disable();
     }
 
     public void OnMove() {
-        controls.Player.Move.performed += context => move = context.ReadValue<Vector2>();
-        controls.Player.Move.canceled += context => move = Vector2.zero;
+        controls.Player.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
+        controls.Player.Move.canceled += ctx => move = Vector2.zero;
     }
 
     public void OnLook() {
-        controls.Player.Look.performed += context => look = context.ReadValue<Vector2>();
-        controls.Player.Look.canceled += context => look = Vector2.zero;
+        controls.Player.Look.performed += ctx => look = ctx.ReadValue<Vector2>();
+        controls.Player.Look.canceled += ctx => look = Vector2.zero;
     }
 
     public void OnHint() {
-        controls.Player.Hint.performed += context => showHint = true;
-        controls.Player.Hint.canceled += context => showHint = false;
+        controls.Player.Hint.performed += ctx => showHint = true;
+        controls.Player.Hint.canceled += ctx => showHint = false;
     }
 
-    private void OnTriggerEnter(Collider other) {
-        previousPlayerColour = gameObject.GetComponentInChildren<Renderer>().material.color;
-        currentColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+    void OnCollisionEnter(Collision other) {
+        if (other.gameObject.CompareTag("Goal")) {
+            Debug.Log("Player collided with the goal");
+        }
+    }
 
-        
+    /** TODO: disable the given waypoint temporarily to limit repeated collisions **/
+    void OnTriggerEnter(Collider other) {
+        currentWaypoint = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        playerColour = GameManager.mazeData.playerColour;
 
         if (other.gameObject.CompareTag("Waypoint")) {
-            // Debug.Log("Player found a waypoint");
-            if (playerIsWhite) {
-                
-                // blendedColour = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-                currentPlayerColour = currentColour;
-                playerIsWhite = !playerIsWhite;
+            if (GameManager.mazeData.playerIsWhite) {
+                GameManager.mazeData.playerColour = currentWaypoint;
+                GameManager.mazeData.playerIsWhite = false;
             }
             else {
-                
                 switch (playerColourChangeOption) {
                     case "switch":
                         Debug.Log("player colour is switching");
-                        currentPlayerColour = GameManager.ChangeColours("switch", currentPlayerColour, currentColour);
+                        GameManager.mazeData.playerColour = GameManager.ChangeColours("switch",
+                            GameManager.mazeData.playerColour, currentWaypoint);
                         break;
                     case "add":
-                        if (GameManager._easyMode) {
+                        if (easyMode) {
                             Debug.Log("player colour is adding in _easyMode");
-                            currentPlayerColour = GameManager.ChangeColours("add", currentColour, previousColour);
+                            GameManager.mazeData.playerColour = GameManager.ChangeColours("add", previousColour, currentWaypoint);
                             break;
                         }
+
                         Debug.Log("player colour is adding");
-                        currentPlayerColour = GameManager.ChangeColours("add", currentPlayerColour, currentColour);
+                        GameManager.mazeData.playerColour = GameManager.ChangeColours("add", currentWaypoint, playerColour);
                         break;
-
-
                     case "blend":
-                        if (GameManager._easyMode) {
-                            Debug.Log("player colour is blending in _easyMode");
-                            currentPlayerColour = GameManager.ChangeColours("blend", currentColour, previousColour);
+                        if (easyMode) {
+                            Debug.Log("player colour is adding in _easyMode");
+                            GameManager.mazeData.playerColour = GameManager.ChangeColours("blend", previousColour, currentWaypoint);
                             break;
                         }
 
                         Debug.Log("player colour is blending");
-                        currentPlayerColour = GameManager.ChangeColours("blend", currentPlayerColour, currentColour);
+                        GameManager.mazeData.playerColour = GameManager.ChangeColours("blend", currentWaypoint, playerColour);
                         break;
                 }
-
-                
             }
-            previousColour = currentColour;
-            MazeUI.PaintPlayerBlip(currentPlayerColour);
+
+            MazeUI.PaintPlayer(GameManager.mazeData.playerColour);
+            previousColour = currentWaypoint;
+            
         }
 
         if (other.gameObject.CompareTag("ColourResetter")) {
-            // Debug.Log("Player collided with the resetter");
-            MazeUI.PaintPlayerBlipWhite();
+            MazeUI.PaintPlayerWhite();
         }
 
-        // if (other.gameObject.CompareTag("White")) {
-        //     // Debug.Log("Player found the white waypoint");
-        //     playerIsWhite = true;
-        //     MazeUI.PaintPlayerBlipWhite();
-        // }
-
-        // if (other.gameObject.CompareTag("Black")) {
-        //     // Debug.Log("Player found the black waypoint");
-        //     MazeUI.PaintPlayerBlipBlack();
-        // }
-        
         if (other.gameObject.CompareTag("Pick Up")) {
             other.gameObject.SetActive(false);
         }
 
         if (other.gameObject.CompareTag("Goal")) {
             // Debug.Log("Player found the goal");
-            if (currentPlayerColour == other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color) {
+            if (GameManager.mazeData.playerColour ==
+                other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color) {
                 // Debug.Log("Player found the goal unlocked");
-                GameManager.goalFound = true;
+                GameManager.mazeData.goalFound = true;
             }
         }
     }
 
-    private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.CompareTag("Goal")) {
-            Debug.Log("Player collided with the goal");
-        }
-    }
+    /* END PlayerController() */
 
 }

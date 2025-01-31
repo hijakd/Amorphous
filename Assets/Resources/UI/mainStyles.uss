@@ -1,0 +1,161 @@
+.headBackground {
+    background-color: rgba(36, 55, 140, 0.57);
+    visibility: hidden;
+}
+
+.bodyBackground {
+    flex-grow: 1;
+    background-color: rgba(154, 38, 38, 0.57);
+    display: flex;
+    visibility: hidden;
+}
+
+.footBackground {
+    background-color: rgba(48, 140, 55, 0.57);
+    visibility: hidden;
+}
+
+.farLeftCellBg {
+    background-color: rgba(89, 17, 142, 0.18);
+}
+
+.leftCellBg {
+    background-color: rgba(140, 55, 3, 0.18);
+}
+
+.centerCellBg {
+    background-color: rgba(105, 118, 16, 0.18);
+}
+
+.rightCellBg {
+    background-color: rgba(34, 135, 62, 0.18);
+}
+
+.farRightCellBg {
+    background-color: rgba(31, 109, 161, 0.18);
+}
+
+.flexGrow {
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.textBase {
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Oswald-Bold.ttf?fileID=12800000&guid=c9f6d0e7bc8541498c9a4799ba184ede&type=3#Oswald-Bold");
+    font-size: 18px;
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 1px;
+    -unity-font-style: bold;
+}
+
+.centeredCol {
+    align-items: center;
+    justify-content: center;
+    align-self: auto;
+    align-content: center;
+}
+
+.headSize {
+    flex-grow: 1;
+    height: auto;
+    min-height: 5%;
+    max-height: 13%;
+    flex-direction: row;
+}
+
+.footSize {
+    flex-grow: 1;
+    max-height: 10%;
+    min-height: 5%;
+}
+
+.textTime {
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Oswald-Bold.ttf?fileID=12800000&guid=c9f6d0e7bc8541498c9a4799ba184ede&type=3#Oswald-Bold");
+    font-size: 42px;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 3px;
+    color: rgb(255, 254, 254);
+    -unity-font-style: bold;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.blip {
+    min-width: 75%;
+    min-height: 75%;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    top: 10%;
+    margin-bottom: 5px;
+}
+
+.blipCell {
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.centeredCol {
+    align-items: center;
+    justify-content: center;
+    align-self: auto;
+    align-content: center;
+}
+
+.blipCell {
+    max-height: none;
+    min-height: 80%;
+    min-width: 50%;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 5%;
+    padding-right: 10%;
+    padding-bottom: 5%;
+    padding-left: 10%;
+    justify-content: center;
+    align-content: center;
+    flex-basis: auto;
+}
+
+.flexRowGrow {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.headerCell {
+    min-width: 20%;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.farRightBin {
+    align-items: center;
+    justify-content: space-around;
+    align-self: stretch;
+    align-content: center;
+    flex-direction: row;
+    flex-grow: 1;
+    min-width: 20%;
+}
+
+.farRightBinCell {
+    justify-content: center;
+    max-height: none;
+    min-height: 80%;
+    min-width: 50%;
+    align-items: center;
+    align-content: center;
+}
