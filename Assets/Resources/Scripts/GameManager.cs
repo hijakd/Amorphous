@@ -102,6 +102,8 @@ public class GameManager : MonoBehaviour {
         /* END Awake() */
     }
 
+    /* TODO: address colour changing BUG relating players colour being changed to/from white */
+
     void Start() {
         mazeData.InitData(gridWidth, gridHeight);
 
