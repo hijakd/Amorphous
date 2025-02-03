@@ -709,7 +709,9 @@ public class GameManager : MonoBehaviour {
         if (waypointColor == Color.white || waypointColor == Color.black) {
             mixedColour = BlendColoursTogether(playersColour, waypointColor);
         }
-        else {
+        else if (playersColour == Color.white) {
+            mixedColour = playersColour - waypointColor;
+        } else {
             mixedColour = playersColour + waypointColor;
         }
 

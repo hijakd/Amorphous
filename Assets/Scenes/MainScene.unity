@@ -1752,6 +1752,11 @@ MonoBehaviour:
   hintColour02: {r: 0, g: 0, b: 0, a: 0}
   playerColour: {r: 0, g: 0, b: 0, a: 0}
   previousColourFound: {r: 0, g: 0, b: 0, a: 0}
+  goalAddedColour: {r: 0, g: 0, b: 0, a: 0}
+  goalBlendedColour: {r: 0, g: 0, b: 0, a: 0}
+  goalAddColourV3: {x: 0, y: 0, z: 0}
+  goalBlendColourV3: {x: 0, y: 0, z: 0}
+  playerColourV3: {x: 0, y: 0, z: 0}
 --- !u!1 &1470816182 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1077668833706460010, guid: 3f30e8e512eb05b439b0f39dfad20b31,

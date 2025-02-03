@@ -8,7 +8,7 @@ public class ShowGameData : MonoBehaviour {
 
     public Color goalColour, hintColour01, hintColour02, playerColour, previousColourFound, goalAddedColour, goalBlendedColour;
 
-    public Vector3 goalAddColourV3, goalBlendColourV3;
+    public Vector3 goalAddColourV3, goalBlendColourV3, playerColourV3;
 
     void Start() {
         height = GameManager.mazeData.gridHeight;
@@ -36,6 +36,7 @@ public class ShowGameData : MonoBehaviour {
         
         goalAddColourV3 = new Vector3(goalAddedColour.r, goalAddedColour.g, goalAddedColour.b);
         goalBlendColourV3 = new Vector3(goalBlendedColour.r, goalBlendedColour.g, goalBlendedColour.b);
+        playerColourV3 = new Vector3(playerColour.r, playerColour.g, playerColour.b);
     }
 
     Color AddColours(Color colour01, Color colour02) {
