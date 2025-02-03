@@ -6,14 +6,15 @@ using AmorphousData;
 public class PlayerController : MonoBehaviour {
 
     public new GameObject camera;
-    public float speed = 50f;
+    public static float speed = 50f;
 
     PlayerControls controls;
     Rigidbody playerRb;
     Vector2 move, look;
     Vector3 cameraForward, cameraRight, forwardMovement, rightMovement, relativeMovement, playerPos;
-    bool playerIsWhite, showHint, easyMode;
-    Color currentWaypoint, playerColour, previousColour;
+    bool playerIsWhite, showHint /*easyMode, normalMode*/;
+    static bool isPaused /*easyMode, normalMode*/;
+    Color currentWaypoint, playerColour, previousColour, theColourBefore;
     string playerColourChangeOption;
 
 
@@ -21,14 +22,17 @@ public class PlayerController : MonoBehaviour {
         controls = new PlayerControls();
         playerRb = GetComponent<Rigidbody>();
         playerColourChangeOption = "add";
+        
     }
 
     void Start() {
         //     hint01 = GameManager.mazeData.hintColour01;
         //     hint02 = GameManager.mazeData.hintColour02;
-        if (GameManager.mazeData.difficulty == 1) {
-            easyMode = true;
-        }
+        // if (GameManager.mazeData.difficulty == 1) {
+        //     easyMode = true;
+        // }
+        speed = GameManager.mazeData.playerSpeed;
+        
     }
 
     void FixedUpdate() {
@@ -44,7 +48,8 @@ public class PlayerController : MonoBehaviour {
         rightMovement = move.x * cameraRight;
         relativeMovement = forwardMovement + rightMovement;
         playerPos = transform.position; // for testing
-        playerRb.AddForce(relativeMovement * (speed * Time.deltaTime));
+        // playerRb.AddForce(relativeMovement * (speed * Time.deltaTime));
+        playerRb.AddForce(relativeMovement * (GameManager.mazeData.playerSpeed * Time.deltaTime));
 
 
         if (showHint) {
@@ -78,6 +83,8 @@ public class PlayerController : MonoBehaviour {
         controls.Player.Hint.canceled += ctx => showHint = false;
     }
 
+    
+
     void OnCollisionEnter(Collision other) {
         if (other.gameObject.CompareTag("Goal")) {
             Debug.Log("Player collided with the goal");
@@ -87,7 +94,10 @@ public class PlayerController : MonoBehaviour {
     /** TODO: disable the given waypoint temporarily to limit repeated collisions **/
     void OnTriggerEnter(Collider other) {
         currentWaypoint = other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-        playerColour = GameManager.mazeData.playerColour;
+        previousColour = GameManager.mazeData.previousColour01;
+        theColourBefore = GameManager.mazeData.previousColour02;
+
+        // /* playerColour == GameManager.mazeData.playerColour; */
 
         if (other.gameObject.CompareTag("Waypoint")) {
             if (GameManager.mazeData.playerIsWhite) {
@@ -102,32 +112,72 @@ public class PlayerController : MonoBehaviour {
                             GameManager.mazeData.playerColour, currentWaypoint);
                         break;
                     case "add":
-                        if (easyMode) {
-                            Debug.Log("player colour is adding in _easyMode");
-                            GameManager.mazeData.playerColour = GameManager.ChangeColours("add", previousColour, currentWaypoint);
+                        /* easyMode */
+                        if (GameManager.mazeData.difficulty == 1) {
+                            /* combine the current and previous colours */
+                            Debug.Log("player colour is adding in easyMode: " + other.gameObject.name);
+                            GameManager.mazeData.playerColour =
+                                GameManager.ChangeColours("add", previousColour, currentWaypoint);
                             break;
                         }
 
-                        Debug.Log("player colour is adding");
-                        GameManager.mazeData.playerColour = GameManager.ChangeColours("add", currentWaypoint, playerColour);
+                        /* normalMode */
+                        if (GameManager.mazeData.difficulty == 2) {
+                            /* combine the previous two colours then combine with the current colour */
+                            Debug.Log("player colour is adding in normalMode: " + other.gameObject.name);
+                            Color previousBlend = GameManager.ChangeColours("add", theColourBefore, previousColour);
+                            GameManager.mazeData.playerColour =
+                                GameManager.ChangeColours("add", previousBlend, currentWaypoint);
+                            GameManager.mazeData.previousColour02 = previousColour;
+                            break;
+                        }
+
+                        /* hardMode */
+                        if (GameManager.mazeData.difficulty == 3) {
+                            /* combine the current colour with the previous resulting combination */
+                            Debug.Log("player colour is adding in hardMode: " + other.gameObject.name);
+                            GameManager.mazeData.playerColour =
+                                GameManager.ChangeColours("add", previousColour, currentWaypoint);
+                            currentWaypoint = GameManager.mazeData.playerColour;
+                        }
+
                         break;
                     case "blend":
-                        if (easyMode) {
-                            Debug.Log("player colour is adding in _easyMode");
-                            GameManager.mazeData.playerColour = GameManager.ChangeColours("blend", previousColour, currentWaypoint);
+                        /* easyMode */
+                        if (GameManager.mazeData.difficulty == 1) {
+                            Debug.Log("player colour is blending in easyMode: " + other.gameObject.name);
+                            GameManager.mazeData.playerColour =
+                                GameManager.ChangeColours("blend", previousColour, currentWaypoint);
                             break;
                         }
 
-                        Debug.Log("player colour is blending");
-                        GameManager.mazeData.playerColour = GameManager.ChangeColours("blend", currentWaypoint, playerColour);
+                        /* normalMode */
+                        if (GameManager.mazeData.difficulty == 2) {
+                            /* combine the previous two colours then combine with the current colour */
+                            Debug.Log("player colour is adding in normalMode: " + other.gameObject.name);
+                            Color previousBlend = GameManager.ChangeColours("add", theColourBefore, previousColour);
+                            GameManager.mazeData.playerColour =
+                                GameManager.ChangeColours("blend", previousBlend, currentWaypoint);
+                            GameManager.mazeData.previousColour02 = previousColour;
+                            break;
+                        }
+
+                        /* hardMode */
+                        if (GameManager.mazeData.difficulty == 3) {
+                            /* combine the current colour with the previous resulting combination */
+                            Debug.Log("player colour is adding in hardMode: " + other.gameObject.name);
+                            GameManager.mazeData.playerColour =
+                                GameManager.ChangeColours("blend", previousColour, currentWaypoint);
+                            currentWaypoint = GameManager.mazeData.playerColour;
+                        }
+
                         break;
                 }
             }
 
+            GameManager.mazeData.previousColour01 = currentWaypoint;
+
             MazeUI.PaintPlayer(GameManager.mazeData.playerColour);
-            // GameManager.mazeData.previousColourFound;
-            previousColour = currentWaypoint;
-            
         }
 
         if (other.gameObject.CompareTag("ColourResetter")) {

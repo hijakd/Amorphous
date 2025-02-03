@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour {
     public static GameData mazeData;
     public GameObject goalObject;
     public GameObject player;
+    public float playerMovementSpeed = 50f;
     public GameObject groundPlane;
     public GameObject colourResetter;
     public GameObject[] floorTiles;
@@ -39,11 +40,12 @@ public class GameManager : MonoBehaviour {
     public bool easyMode = true;
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
 
-    public bool shortListed = false;
-    public bool firstRowFound = false;
-    public bool firstColFound = false;
+    bool shortListed = false;
+    bool firstRowFound = false;
+    bool firstColFound = false;
 
     public static bool _easyMode, _goalFound;
+    bool isPaused;
 
     // public static Color goalColour, hintColour01, hintColour02;
 
@@ -92,6 +94,7 @@ public class GameManager : MonoBehaviour {
             _easyMode = easyMode;
         }
 
+        mazeData.playerSpeed = playerMovementSpeed;
         mazeData.goalColour = Color.white;
         mazeData.playerColour = Color.white;
         mazeData.playerIsWhite = true;
@@ -259,11 +262,10 @@ public class GameManager : MonoBehaviour {
 
 
     void FixedUpdate() {
-        
         if (mazeData.goalFound) {
             EndLevel();
         }
-        
+
         /* END FixedUpdate() */
     }
 
@@ -292,12 +294,20 @@ public class GameManager : MonoBehaviour {
 
     void EndLevel() {
         Debug.Log("display winText");
+        if (!isPaused) {
+            (mazeData.playerSpeed, mazeData.zeroSpeed) = (mazeData.zeroSpeed, mazeData.playerSpeed);
+            mazeData.isPaused = true;
+        }
+        else {
+            (mazeData.zeroSpeed, mazeData.playerSpeed) = (mazeData.playerSpeed, mazeData.zeroSpeed);
+            mazeData.isPaused = false;
+        }
+
         winText.gameObject.SetActive(true);
         restartButton.gameObject.SetActive(true);
     }
-    
-    
-    
+
+
     /** Object spawning functions **/
     /* spawn a given GameObject at a given position */
     void Spawn(GameObject gObject, Vector3 position) {
@@ -618,7 +628,7 @@ public class GameManager : MonoBehaviour {
 
         return sliced.ToList();
     }
-
+    
     /* 'Slice' the list down to the specified column/X value */
     List<Vector3> SliceColumn(List<Vector3> sorted, int columnToSlice) {
         int counter = 0;
@@ -711,7 +721,8 @@ public class GameManager : MonoBehaviour {
         }
         else if (playersColour == Color.white) {
             mixedColour = playersColour - waypointColor;
-        } else {
+        }
+        else {
             mixedColour = playersColour + waypointColor;
         }
 
@@ -765,6 +776,6 @@ public class GameManager : MonoBehaviour {
     }
 
 
-    /* END GameManager() */
+/* END GameManager() */
 
 }

@@ -1679,6 +1679,7 @@ MonoBehaviour:
   goalObject: {fileID: 1182505189637602497, guid: 2752ce3a1880c484d8c0c4ac860063b1,
     type: 3}
   player: {fileID: 1331233400154348718}
+  playerMovementSpeed: 50
   groundPlane: {fileID: 1470816182}
   colourResetter: {fileID: 2726987219958778442, guid: 8a6103d0ac0665f43a072926d2be41e2,
     type: 3}
@@ -1708,9 +1709,6 @@ MonoBehaviour:
   isGameActive: 0
   easyMode: 1
   randomVariance: 0.42
-  shortListed: 0
-  firstRowFound: 0
-  firstColFound: 0
 --- !u!4 &1389346759
 Transform:
   m_ObjectHideFlags: 0
@@ -1747,16 +1745,12 @@ MonoBehaviour:
   initialised: 0
   playerIsWhite: 0
   shortListed: 0
+  playerSpeed: 0
   goalColour: {r: 0, g: 0, b: 0, a: 0}
   hintColour01: {r: 0, g: 0, b: 0, a: 0}
   hintColour02: {r: 0, g: 0, b: 0, a: 0}
   playerColour: {r: 0, g: 0, b: 0, a: 0}
   previousColourFound: {r: 0, g: 0, b: 0, a: 0}
-  goalAddedColour: {r: 0, g: 0, b: 0, a: 0}
-  goalBlendedColour: {r: 0, g: 0, b: 0, a: 0}
-  goalAddColourV3: {x: 0, y: 0, z: 0}
-  goalBlendColourV3: {x: 0, y: 0, z: 0}
-  playerColourV3: {x: 0, y: 0, z: 0}
 --- !u!1 &1470816182 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1077668833706460010, guid: 3f30e8e512eb05b439b0f39dfad20b31,
@@ -2297,12 +2291,17 @@ PrefabInstance:
     - target: {fileID: 2270034866060566554, guid: a32a19c8e7905e243bba474f0ec6ddf7,
         type: 3}
       propertyPath: m_Drag
-      value: 0.25
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 2270034866060566554, guid: a32a19c8e7905e243bba474f0ec6ddf7,
+        type: 3}
+      propertyPath: m_Mass
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 2270034866060566554, guid: a32a19c8e7905e243bba474f0ec6ddf7,
         type: 3}
       propertyPath: m_AngularDrag
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5247882502152755328, guid: a32a19c8e7905e243bba474f0ec6ddf7,
         type: 3}

@@ -12,9 +12,15 @@ namespace AmorphousData {
     [CreateAssetMenu(fileName = "GameData_SO", menuName = "ScriptableObjects/GameData ScriptableObject")]
     public class GameData : ScriptableObject {
 
+        /* playerColour => the current colour blend */
+        /* previousColour01 => the colour of the last waypoint the player encountered */
+        /* previousColour02 => the colour of the waypoint the player encountered before previousColour01 */
+        
 
-        public Color goalColour, playerColour, hintColour01, hintColour02, previousColourFound;
+        public Color goalColour, playerColour, hintColour01, hintColour02, previousColour01, previousColour02;
         [Range(1, 3)] public int difficulty;
+        public float playerSpeed { get; set; }
+        public float zeroSpeed = 0f;
         public int gridHeight { get; private set; }
         public int gridWidth { get; private set; }
         public int northernEdge { get; private set; }
@@ -29,6 +35,7 @@ namespace AmorphousData {
         public bool playerIsWhite { get; set; }
         public bool shortListed { get; set; }
         public bool showMenu { get; set; }
+        public bool isPaused { get; set; }
         
         
         public List<Vector3> mazePath;

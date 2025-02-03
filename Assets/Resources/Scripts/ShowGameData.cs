@@ -10,6 +10,7 @@ public class ShowGameData : MonoBehaviour {
 
     public int height, width, north, south, east, west;
     public bool initialised, playerIsWhite, shortListed;
+    public float playerSpeed;
 
     public Color goalColour, hintColour01, hintColour02, playerColour, previousColourFound/*, goalAddedColour, goalBlendedColour*/;
 
@@ -25,6 +26,7 @@ public class ShowGameData : MonoBehaviour {
         goalColour = GameManager.mazeData.goalColour;
         hintColour01 = GameManager.mazeData.hintColour01;
         hintColour02 = GameManager.mazeData.hintColour02;
+        
 
     }
 
@@ -33,7 +35,8 @@ public class ShowGameData : MonoBehaviour {
         playerIsWhite = GameManager.mazeData.playerIsWhite;
         shortListed = GameManager.mazeData.shortListed;
         playerColour = GameManager.mazeData.playerColour;
-        previousColourFound = GameManager.mazeData.previousColourFound;
+        previousColourFound = GameManager.mazeData.previousColour01;
+        playerSpeed = GameManager.mazeData.playerSpeed;
         
         // goalAddedColour = AddColours(hintColour01, hintColour02);
         // goalBlendedColour = BlendColours(hintColour01, hintColour02);
