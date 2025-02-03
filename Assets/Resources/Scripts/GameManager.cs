@@ -87,6 +87,10 @@ public class GameManager : MonoBehaviour {
         // wallMaterial = Resources.Load<Material>("Materials/DryWall_Mat");
         wallMaterial = Resources.Load<Material>("Materials/Dungeon_Ground");
 
+        if (easyMode) {
+            mazeData.difficulty = 1;
+            _easyMode = easyMode;
+        }
 
         mazeData.goalColour = Color.white;
         mazeData.playerColour = Color.white;

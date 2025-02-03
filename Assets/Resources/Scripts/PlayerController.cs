@@ -125,6 +125,7 @@ public class PlayerController : MonoBehaviour {
             }
 
             MazeUI.PaintPlayer(GameManager.mazeData.playerColour);
+            // GameManager.mazeData.previousColourFound;
             previousColour = currentWaypoint;
             
         }

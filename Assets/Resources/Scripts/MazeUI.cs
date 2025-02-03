@@ -55,12 +55,12 @@ public class MazeUI : MonoBehaviour {
     
     public static void PaintPlayerWhite() {
         playerBlip.style.backgroundColor = Color.white;
-        GameManager.mazeData.playerIsWhite = true;
+        // GameManager.mazeData.playerIsWhite = true;
     }
     
     public static void PaintPlayerBlack() {
         playerBlip.style.backgroundColor = Color.black;
-        GameManager.mazeData.playerIsWhite = false;
+        // GameManager.mazeData.playerIsWhite = false;
     }
     
     public static void PaintHints(Color hintColour01, Color hintColour02) {

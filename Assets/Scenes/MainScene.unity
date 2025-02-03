@@ -1656,9 +1656,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1389346759}
   - component: {fileID: 1389346758}
+  - component: {fileID: 1389346760}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1698,8 +1699,8 @@ MonoBehaviour:
   - {fileID: 4820953567547964056, guid: 677057a4026ce4944abacae912e11389, type: 3}
   - {fileID: 5483481513593382275, guid: 39d21be92223c514cab322d3582fbca9, type: 3}
   - {fileID: 8399617296105217282, guid: 1ec110af136af5947ba637bdf3f91299, type: 3}
-  gridHeight: 30
-  gridWidth: 30
+  gridHeight: 20
+  gridWidth: 20
   winText: {fileID: 1744664631}
   gameOverText: {fileID: 144824136}
   restartButton: {fileID: 425114794}
@@ -1725,6 +1726,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1389346760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389346757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bf0a0f7a0b7cfe40bb2f8624aaba904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  height: 0
+  width: 0
+  north: 0
+  south: 0
+  east: 0
+  west: 0
+  initialised: 0
+  playerIsWhite: 0
+  shortListed: 0
+  goalColour: {r: 0, g: 0, b: 0, a: 0}
+  hintColour01: {r: 0, g: 0, b: 0, a: 0}
+  hintColour02: {r: 0, g: 0, b: 0, a: 0}
+  playerColour: {r: 0, g: 0, b: 0, a: 0}
+  previousColourFound: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1470816182 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1077668833706460010, guid: 3f30e8e512eb05b439b0f39dfad20b31,

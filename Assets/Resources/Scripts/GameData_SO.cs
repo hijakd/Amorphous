@@ -13,7 +13,7 @@ namespace AmorphousData {
     public class GameData : ScriptableObject {
 
 
-        public Color goalColour, playerColour, hintColour01, hintColour02;
+        public Color goalColour, playerColour, hintColour01, hintColour02, previousColourFound;
         [Range(1, 3)] public int difficulty;
         public int gridHeight { get; private set; }
         public int gridWidth { get; private set; }
