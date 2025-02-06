@@ -1,42 +1,42 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:Template name="DPad" src="project://database/Assets/Resources/UI/DPad.uxml?fileID=9197481963319205126&amp;guid=7c2b4af1e818c584898f8c5d46e96ef2&amp;type=3#DPad" />
     <engine:Template name="uiHeader" src="project://database/Assets/Resources/UI/uiHeader.uxml?fileID=9197481963319205126&amp;guid=abf1ef1a77d346341b0ce09455c01cf2&amp;type=3#uiHeader" />
+    <engine:Template name="DPad" src="project://database/Assets/Resources/UI/DPad.uxml?fileID=9197481963319205126&amp;guid=7c2b4af1e818c584898f8c5d46e96ef2&amp;type=3#DPad" />
     <Style src="project://database/Assets/Resources/UI/mainStyles.uss?fileID=7433441132597879392&amp;guid=216a9942b1e06c543b03fb96db029e38&amp;type=3#mainStyles" />
     <engine:VisualElement name="root" data-source="project://database/Assets/Resources/ScriptableObjects/GameData_SO.asset?fileID=11400000&amp;guid=819080be2a62f774381d038172d9656f&amp;type=2#GameData_SO" style="flex-grow: 1;">
         <engine:VisualElement name="uiHead" class="headSize">
-            <engine:VisualElement name="farLeftBin" class="headerCell">
-                <engine:VisualElement name="farLeftBinCell01" class="blipCell" style="padding-right: 10%; padding-left: 10%;" />
-                <engine:VisualElement name="farLeftBinCell02" class="blipCell" style="padding-right: 10%; padding-left: 10%;">
-                    <engine:VisualElement name="playerBlip" class="blip flexGrow" />
-                    <engine:Label text="Player" name="playerBlipLabel" class="textBase" />
+            <engine:VisualElement name="farLeftBin" picking-mode="Ignore" class="headerCell pickingIgnore">
+                <engine:VisualElement name="farLeftBinCell01" picking-mode="Ignore" class="blipCell" style="padding-right: 10%; padding-left: 10%;" />
+                <engine:VisualElement name="farLeftBinCell02" picking-mode="Ignore" class="blipCell" style="padding-right: 10%; padding-left: 10%;">
+                    <engine:VisualElement name="playerBlip" picking-mode="Ignore" class="blip flexGrow" />
+                    <engine:Label text="Player" name="playerBlipLabel" picking-mode="Ignore" class="textBase" />
                 </engine:VisualElement>
             </engine:VisualElement>
-            <engine:VisualElement name="leftBin" class="headerCell" style="flex-grow: 1;">
-                <engine:VisualElement name="leftBinCell01" class="blipCell" style="padding-right: 10%; padding-left: 10%;">
-                    <engine:VisualElement name="goalBlip" class="flexGrow blip" />
-                    <engine:Label text="Goal" name="goalBlipLabel" class="textBase" />
+            <engine:VisualElement name="leftBin" picking-mode="Ignore" class="headerCell" style="flex-grow: 1;">
+                <engine:VisualElement name="leftBinCell01" picking-mode="Ignore" class="blipCell" style="padding-right: 10%; padding-left: 10%;">
+                    <engine:VisualElement name="goalBlip" picking-mode="Ignore" class="flexGrow blip" />
+                    <engine:Label text="Goal" name="goalBlipLabel" picking-mode="Ignore" class="textBase" />
                 </engine:VisualElement>
-                <engine:VisualElement name="leftBinCell02" class="blipCell" style="flex-grow: 1; padding-top: 5%; padding-right: 5%; padding-bottom: 5%; padding-left: 5%;" />
+                <engine:VisualElement name="leftBinCell02" picking-mode="Ignore" class="blipCell" style="flex-grow: 1; padding-top: 5%; padding-right: 5%; padding-bottom: 5%; padding-left: 5%;" />
             </engine:VisualElement>
-            <engine:VisualElement name="centerBin" class="headerCell" style="flex-grow: 1;">
-                <engine:VisualElement name="centerBinCell01" class="blipCell" style="flex-grow: 1; padding-top: 5%; padding-right: 10%; padding-bottom: 5%; padding-left: 10%;" />
-                <engine:VisualElement name="centerBinCell02" class="blipCell" style="padding-right: 10%; padding-left: 10%;">
-                    <engine:VisualElement name="hint01Blip" class="flexGrow blip" />
-                    <engine:Label text="Hint 01" name="hint01BlipLabel" class="textBase" />
+            <engine:VisualElement name="centerBin" picking-mode="Ignore" class="headerCell" style="flex-grow: 1;">
+                <engine:VisualElement name="centerBinCell01" picking-mode="Ignore" class="blipCell" style="flex-grow: 1; padding-top: 5%; padding-right: 10%; padding-bottom: 5%; padding-left: 10%;" />
+                <engine:VisualElement name="centerBinCell02" picking-mode="Ignore" class="blipCell" style="padding-right: 10%; padding-left: 10%;">
+                    <engine:VisualElement name="hint01Blip" picking-mode="Ignore" class="flexGrow blip" />
+                    <engine:Label text="Hint 01" name="hint01BlipLabel" picking-mode="Ignore" class="textBase" />
                 </engine:VisualElement>
             </engine:VisualElement>
-            <engine:VisualElement name="rightBin" class="headerCell" style="flex-grow: 1;">
-                <engine:VisualElement name="rightBinCell01" class="blipCell" style="padding-top: 5%; padding-right: 10%; padding-bottom: 5%; padding-left: 10%;">
-                    <engine:VisualElement name="hint02Blip" class="flexGrow blip" />
-                    <engine:Label text="Hint 02" name="hint02BlipLabel" class="textBase" />
+            <engine:VisualElement name="rightBin" picking-mode="Ignore" class="headerCell" style="flex-grow: 1;">
+                <engine:VisualElement name="rightBinCell01" picking-mode="Ignore" class="blipCell" style="padding-top: 5%; padding-right: 10%; padding-bottom: 5%; padding-left: 10%;">
+                    <engine:VisualElement name="hint02Blip" picking-mode="Ignore" class="flexGrow blip" />
+                    <engine:Label text="Hint 02" name="hint02BlipLabel" picking-mode="Ignore" class="textBase" />
                 </engine:VisualElement>
-                <engine:VisualElement name="rightBinCell02" class="blipCell" style="padding-top: 5%; padding-right: 10%; padding-bottom: 5%; padding-left: 10%;" />
+                <engine:VisualElement name="rightBinCell02" picking-mode="Ignore" class="blipCell" style="padding-top: 5%; padding-right: 10%; padding-bottom: 5%; padding-left: 10%;" />
             </engine:VisualElement>
-            <engine:VisualElement name="farRightBin" class="farRightBin">
-                <engine:VisualElement name="farRightBin01" class="farRightBinCell">
-                    <engine:Label text="Time" name="time" class="textTime" />
+            <engine:VisualElement name="farRightBin" picking-mode="Ignore" class="farRightBin">
+                <engine:VisualElement name="farRightBin01" picking-mode="Ignore" class="farRightBinCell">
+                    <engine:Label text="Time" name="time" picking-mode="Ignore" class="textTime" />
                 </engine:VisualElement>
-                <engine:VisualElement name="farRightBin02" class="farRightBinCell">
+                <engine:VisualElement name="farRightBin02" picking-mode="Ignore" class="farRightBinCell">
                     <engine:Button text="Settings" name="settingsButton" class="textBase" style="border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-left-color: rgb(41, 41, 41); border-right-color: rgb(41, 41, 41); border-top-color: rgb(41, 41, 41); border-bottom-color: rgb(41, 41, 41); max-width: 75%; color: rgb(5, 5, 5);" />
                 </engine:VisualElement>
             </engine:VisualElement>
@@ -47,6 +47,6 @@
             <engine:VisualElement name="rightFoot" style="flex-grow: 1;" />
         </engine:VisualElement>
         <engine:Instance template="uiHeader" name="uiHeader" picking-mode="Ignore" />
-        <engine:Instance template="DPad" name="DPadTemplate" style="position: absolute; bottom: 5%; left: 5%; min-width: 21%; min-height: 21%;" />
+        <engine:Instance template="DPad" name="DPadTemplate" picking-mode="Ignore" style="position: absolute; bottom: 5%; left: 5%; min-width: 21%; min-height: 21%;" />
     </engine:VisualElement>
 </engine:UXML>

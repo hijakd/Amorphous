@@ -12,6 +12,19 @@ namespace AmorphousData {
     [CreateAssetMenu(fileName = "GameData_SO", menuName = "ScriptableObjects/GameData ScriptableObject")]
     public class GameData : ScriptableObject {
 
+        // static GameData instance;
+        // public static GameData Instance {
+        //     get {
+        //         if (!instance) {
+        //             instance = <GameData>();
+        //         }
+        //         if (!instance) {
+        //             instance = CreateInstance<GameData>();
+        //         }
+        //         return instance;
+        //     }
+        // }
+
         /* playerColour => the current colour blend */
         /* previousColour01 => the colour of the last waypoint the player encountered */
         /* previousColour02 => the colour of the waypoint the player encountered before previousColour01 */
@@ -42,6 +55,8 @@ namespace AmorphousData {
 
         bool twentyFourHrTime;
 
+
+        
 
         public void InitData(int mazeWidth, int mazeHeight) {
             gridWidth = mazeWidth;

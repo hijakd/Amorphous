@@ -12,5 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e952bdbebba17247b816434f6307209, type: 3}
   m_Name: GameData_SO
   m_EditorClassIdentifier: 
+  goalColour: {r: 0, g: 0, b: 0, a: 0}
+  playerColour: {r: 0, g: 0, b: 0, a: 0}
+  hintColour01: {r: 0, g: 0, b: 0, a: 0}
+  hintColour02: {r: 0, g: 0, b: 0, a: 0}
+  previousColour01: {r: 0, g: 0, b: 0, a: 0}
+  previousColour02: {r: 0, g: 0, b: 0, a: 0}
   difficulty: 1
+  zeroSpeed: 0
   mazePath: []

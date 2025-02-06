@@ -40,15 +40,12 @@ public class GameManager : MonoBehaviour {
     public bool easyMode = true;
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
 
-    bool shortListed = false;
-    bool firstRowFound = false;
-    bool firstColFound = false;
+    // bool shortListed = false;
+    // bool firstRowFound = false;
+    // bool firstColFound = false;
 
-    public static bool _easyMode, _goalFound;
-    bool isPaused;
-
-    // public static Color goalColour, hintColour01, hintColour02;
-
+    // public static bool /*_easyMode,*/ _goalFound;
+    
     /* -- private constants -- */
     const int NORTH = 0;
     const int EAST = 1;
@@ -57,8 +54,7 @@ public class GameManager : MonoBehaviour {
 
     /* -- private variables -- */
 
-    bool horizAligned, vertAligned, isForward, isRight;
-
+    bool horizAligned, vertAligned, isForward, isRight, isPaused;
     // private float xVal, zVal;
     int count, /*columnNumber, rowNumber, lastRowNumber,*/ horizDistance, vertDistance, xPosition;
     int firstRowNumber, firstColumnNumber, lastRowNumber, lastColumnNumber;
@@ -91,7 +87,7 @@ public class GameManager : MonoBehaviour {
 
         if (easyMode) {
             mazeData.difficulty = 1;
-            _easyMode = easyMode;
+            // _easyMode = easyMode;
         }
 
         mazeData.playerSpeed = playerMovementSpeed;
@@ -104,8 +100,6 @@ public class GameManager : MonoBehaviour {
 
         /* END Awake() */
     }
-
-    /* TODO: address colour changing BUG relating players colour being changed to/from white */
 
     void Start() {
         mazeData.InitData(gridWidth, gridHeight);
@@ -681,6 +675,7 @@ public class GameManager : MonoBehaviour {
 
     /** Colour changing/blending functions **/
     /** TODO: modify Add & Blend func() so they can use just the current and last waypoint colours, while "discarding" the 2nd last waypoint colour **/
+    /* hopefully this has been addressed with the switch/case function calls in the PlayerController OnTriggerEnter() */
     public static Color ChangeColours(string addOrBlend, List<GameObject> waypointsList) {
         Color returningColour = new();
 
@@ -771,7 +766,7 @@ public class GameManager : MonoBehaviour {
         HashSet<Vector3> inputList = new(pathList);
         List<Vector3> shortened = inputList.ToList();
 
-        shortListed = true;
+        mazeData.shortListed = true;
         return shortened.ToList();
     }
 
