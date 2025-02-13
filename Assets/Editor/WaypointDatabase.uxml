@@ -1,0 +1,16 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/WaypointDatabaseUSS.uss?fileID=7433441132597879392&amp;guid=b26e0d2a3959d0a4c88dfd082c435c9d&amp;type=3#WaypointDatabaseUSS" />
+    <engine:VisualElement name="dbRoot" style="flex-grow: 1;">
+        <engine:TextField label="Waypoint Name" placeholder-text="name" hide-placeholder-on-focus="true">
+            <Bindings>
+                <engine:DataBinding property="value" data-source-path="name" data-source-type="Waypoint, Assembly-CSharp" binding-mode="ToSource" />
+            </Bindings>
+        </engine:TextField>
+        <editor:ColorField label="Color" value="#00FFFFFF" />
+        <engine:TextField label="GUID" placeholder-text="..." hide-placeholder-on-focus="true">
+            <Bindings>
+                <engine:DataBinding property="value" data-source-path="ID" data-source-type="Waypoint, Assembly-CSharp" binding-mode="ToSource" />
+            </Bindings>
+        </engine:TextField>
+    </engine:VisualElement>
+</engine:UXML>

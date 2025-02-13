@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour {
     public GameObject[] floorTiles;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     public List<GameObject> waypoints;
-    public int gridHeight, gridWidth;
+    // public int gridHeight, gridWidth;
 
     public TextMeshProUGUI winText, gameOverText;
     public Button restartButton;
@@ -102,7 +102,9 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
-        mazeData.InitData(gridWidth, gridHeight);
+        
+        // mazeData.InitData(gridWidth, gridHeight);
+        // mazeData.InitData();
 
         MazeUI.PaintGoal(mazeData.goalColour);
         MazeUI.PaintPlayer(mazeData.playerColour);

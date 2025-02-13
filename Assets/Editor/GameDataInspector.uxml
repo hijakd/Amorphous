@@ -1,9 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:engine="UnityEngine.UIElements"
-    xmlns:editor="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
->
-    
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/GameDataInspectorUSS.uss?fileID=7433441132597879392&amp;guid=9cc08cb36e7a3734781cb6189eb971f7&amp;type=3#GameDataInspectorUSS" />
+    <engine:VisualElement name="gdiRoot" data-source="project://database/Assets/Resources/ScriptableObjects/GameData_SO.asset?fileID=11400000&amp;guid=819080be2a62f774381d038172d9656f&amp;type=2#GameData_SO" style="flex-grow: 1;">
+        <engine:VisualElement name="mazeDimensions" style="flex-grow: 1;">
+            <engine:IntegerField label="Maze Height" value="43" name="gdiHeight">
+                <Bindings>
+                    <engine:DataBinding property="value" data-source-path="gridHeight" binding-mode="TwoWay" update-trigger="EveryUpdate" />
+                </Bindings>
+            </engine:IntegerField>
+            <engine:IntegerField label="Maze Width" value="42" name="gdiWidth">
+                <Bindings>
+                    <engine:DataBinding property="value" data-source-path="gridWidth" binding-mode="TwoWay" update-trigger="EveryUpdate" />
+                </Bindings>
+            </engine:IntegerField>
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-grow: 1;">
+            <editor:ColorField label="Goal Colour" name="gdiGoalColour" show-eye-dropper="false" show-alpha="true">
+                <Bindings>
+                    <engine:DataBinding property="value" data-source-type="AmorphousData.GameData, Assembly-CSharp" binding-mode="TwoWay" data-source-path="goalWaypoint.waypointColour" update-trigger="WhenDirty" />
+                </Bindings>
+            </editor:ColorField>
+            <editor:ColorField label="Player Colour" name="gdiPlayerColour" show-eye-dropper="false">
+                <Bindings>
+                    <engine:DataBinding property="value" binding-mode="TwoWay" data-source-path="playerColour" />
+                </Bindings>
+            </editor:ColorField>
+            <editor:ColorField label="Hint Colour 01" name="gdiHintColour01" show-eye-dropper="false">
+                <Bindings>
+                    <engine:DataBinding property="value" binding-mode="ToTarget" data-source-path="hintColour01" />
+                </Bindings>
+            </editor:ColorField>
+            <editor:ColorField label="Hint Colour 02" name="gdiHintColour02" show-eye-dropper="false">
+                <Bindings>
+                    <engine:DataBinding property="value" binding-mode="ToTarget" data-source-path="hintColour02" />
+                </Bindings>
+            </editor:ColorField>
+        </engine:VisualElement>
+    </engine:VisualElement>
+    <engine:VisualElement style="flex-grow: 1;">
+        <engine:ListView data-source="project://database/Assets/Resources/ScriptableObjects/GameData_SO.asset?fileID=11400000&amp;guid=819080be2a62f774381d038172d9656f&amp;type=2#GameData_SO" name="ListView" header-title="blah" data-source-path="waypoints" item-template="project://database/Assets/Editor/WaypointDatabase.uxml?fileID=9197481963319205126&amp;guid=2c117f48caafa5244975634c7722e0df&amp;type=3#WaypointDatabase" />
+    </engine:VisualElement>
 </engine:UXML>

@@ -49,4 +49,9 @@
         <engine:Instance template="uiHeader" name="uiHeader" picking-mode="Ignore" />
         <engine:Instance template="DPad" name="DPadTemplate" picking-mode="Ignore" style="position: absolute; bottom: 5%; left: 5%; min-width: 21%; min-height: 21%;" />
     </engine:VisualElement>
+    <engine:VisualElement name="settingsMenu" data-source="project://database/Assets/Resources/ScriptableObjects/GameData_SO.asset?fileID=11400000&amp;guid=819080be2a62f774381d038172d9656f&amp;type=2#GameData_SO" style="flex-grow: 1; position: absolute; flex-basis: 100%; width: 100%; height: 100%; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.84);">
+        <engine:VisualElement class="textMenu" style="flex-grow: 1; min-width: 33%; justify-content: center;">
+            <engine:RadioButtonGroup label="Hints" choices="Enabled,Disabled" name="hints" enabled="true" style="align-items: stretch; justify-content: center; align-self: center;" />
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>

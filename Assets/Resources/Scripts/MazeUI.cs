@@ -6,7 +6,6 @@ using AmorphousData;
 
 public class MazeUI : MonoBehaviour {
 
-    // GameManager mazeData;
     UIDocument mainUiDoc;
     Label timeText;
     VisualElement settingsButton;
@@ -25,6 +24,7 @@ public class MazeUI : MonoBehaviour {
         SetVisualElements();
         GameManager.mazeData.SetTimeFormat(true);
         timeString = GameManager.mazeData.GetTimeFormat();
+        
     }
 
 
@@ -42,6 +42,14 @@ public class MazeUI : MonoBehaviour {
         playerBlip = rootElement.Q("playerBlip");
         hintBlip01 = rootElement.Q("hint01Blip");
         hintBlip02 = rootElement.Q("hint02Blip");
+        settingsButton = rootElement.Q<Button>("settingsButton");
+        settingsMenu = rootElement.Q("settingsMenu");
+        
+        // settingsButton.clicked += OnButtonClicked;
+    }
+
+    public void OnButtonClicked() {
+        
     }
 
 
@@ -69,5 +77,5 @@ public class MazeUI : MonoBehaviour {
     }
 
 
-
+    /* END MazeUI */
 }

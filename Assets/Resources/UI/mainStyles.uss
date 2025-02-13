@@ -40,15 +40,6 @@
     flex-direction: column;
 }
 
-.textBase {
-    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Oswald-Bold.ttf?fileID=12800000&guid=c9f6d0e7bc8541498c9a4799ba184ede&type=3#Oswald-Bold");
-    font-size: 18px;
-    -unity-text-align: middle-center;
-    color: rgb(255, 255, 255);
-    -unity-text-outline-width: 1px;
-    -unity-font-style: bold;
-}
-
 .centeredCol {
     align-items: center;
     justify-content: center;
@@ -158,4 +149,25 @@
     min-width: 50%;
     align-items: center;
     align-content: center;
+}
+
+.textBase {
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Oswald-Bold.ttf?fileID=12800000&guid=c9f6d0e7bc8541498c9a4799ba184ede&type=3#Oswald-Bold");
+    font-size: 18px;
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 1px;
+    -unity-font-style: bold;
+}
+
+#hints #unity-radio-button-group__container {
+}
+
+.textMenu {
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Oswald-Bold.ttf?fileID=12800000&guid=c9f6d0e7bc8541498c9a4799ba184ede&type=3#Oswald-Bold");
+    font-size: 28px;
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 1px;
+    -unity-font-style: bold;
 }

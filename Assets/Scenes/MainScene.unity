@@ -1700,8 +1700,6 @@ MonoBehaviour:
   - {fileID: 4820953567547964056, guid: 677057a4026ce4944abacae912e11389, type: 3}
   - {fileID: 5483481513593382275, guid: 39d21be92223c514cab322d3582fbca9, type: 3}
   - {fileID: 8399617296105217282, guid: 1ec110af136af5947ba637bdf3f91299, type: 3}
-  gridHeight: 20
-  gridWidth: 20
   winText: {fileID: 1744664631}
   gameOverText: {fileID: 144824136}
   restartButton: {fileID: 425114794}
