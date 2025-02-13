@@ -33,14 +33,26 @@ By collecting ColourBlobs the Players colour will change, this could be a swap o
 
 * change camera implementation to make use of CineMachine, as this should have more flexibility & be more efficient than the current implementation. It may also address the issue of the player moving without providing input.
 
-* add function to randomise the wall materials from a list.
+* add function to randomize the wall materials from a list.
  
+
+----------
+**31/01/2025** - Reconstructing the project due to Unity going into an apparent infinite loop, this time beginning with some of the UI (using UI Toolkit), then connecting the game mechanics to it.
+
+Previously had difficulties integrating the UI with the 'waypoint mechanics'.
+
+This approach also meant that some superfluous code segments were eliminated.
+
+
+**20/01/2025** - Stripped the project back of scripting to incorporate ScriptableObjects, earlier attempt at ScriptableObjects caused problems.
 
 ----------
 
 ## -- Known issues -- ##
-* Maze will occassionally generate and spawn with the player spawnPosition outside of the rest of the maze path, this could be a completely "disconnected island" or adjacent to a path wall.
+* ~~Maze will occasionally generate and spawn with the player spawnPosition outside of the rest of the maze path, this could be a completely "disconnected island" or adjacent to a path wall.~~
+  * Players transform.position is one of the last things set during the GameManager's ***Start()***
 
-* occassionally either some or all of the walls do not spawn, this has to do with an array Index out of range.
+* ~~Occasionally either some or all of the walls do not spawn, this has to do with an array Index out of range.~~
 
-* the player will begin to move without input, this may be caused by calculations of the relative position of the camera to the player. 
+* ~~The player will begin to move without input, this may be caused by calculations of the relative position of the camera to the player.~~
+  * This was attributed to a connected joystick (but forgotten about, out of sight out of mind), it would provide some small input as it had a coiled USB cable resting on it.
