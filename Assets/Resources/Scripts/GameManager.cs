@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
     public GameObject[] floorTiles;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     public List<GameObject> waypoints;
+
     // public int gridHeight, gridWidth;
 
     public TextMeshProUGUI winText, gameOverText;
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour {
     // bool firstColFound = false;
 
     // public static bool /*_easyMode,*/ _goalFound;
-    
+
     /* -- private constants -- */
     const int NORTH = 0;
     const int EAST = 1;
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour {
     /* -- private variables -- */
 
     bool horizAligned, vertAligned, isForward, isRight, isPaused;
+
     // private float xVal, zVal;
     int count, /*columnNumber, rowNumber, lastRowNumber,*/ horizDistance, vertDistance, xPosition;
     int firstRowNumber, firstColumnNumber, lastRowNumber, lastColumnNumber;
@@ -69,6 +71,7 @@ public class GameManager : MonoBehaviour {
 
 
     void Awake() {
+        
         mazeData = ScriptableObject.CreateInstance<GameData>();
         lcms = new List<int>();
         distances = new List<int>();
@@ -87,6 +90,7 @@ public class GameManager : MonoBehaviour {
 
         if (easyMode) {
             mazeData.difficulty = 1;
+
             // _easyMode = easyMode;
         }
 
@@ -94,6 +98,7 @@ public class GameManager : MonoBehaviour {
         mazeData.goalColour = Color.white;
         mazeData.playerColour = Color.white;
         mazeData.playerIsWhite = true;
+
         mazeData.goalColour = ChangeColours("add", waypoints);
         goalObject.GetComponentInChildren<Renderer>().sharedMaterial.color = mazeData.goalColour;
 
@@ -102,10 +107,6 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
-        
-        // mazeData.InitData(gridWidth, gridHeight);
-        // mazeData.InitData();
-
         MazeUI.PaintGoal(mazeData.goalColour);
         MazeUI.PaintPlayer(mazeData.playerColour);
 
@@ -115,6 +116,7 @@ public class GameManager : MonoBehaviour {
 
         /* populate the destinations List with random positions for the player, waypoints & goal */
         while (count < waypoints.Count + 2) {
+            // while (count < mazeData.waypoints.Count + 2) {
             destinations.Add(RandomPosition(mazeData.westernEdge, mazeData.easternEdge, mazeData.southernEdge,
                 mazeData.northernEdge));
             count++;
@@ -624,7 +626,7 @@ public class GameManager : MonoBehaviour {
 
         return sliced.ToList();
     }
-    
+
     /* 'Slice' the list down to the specified column/X value */
     List<Vector3> SliceColumn(List<Vector3> sorted, int columnToSlice) {
         int counter = 0;
@@ -694,6 +696,22 @@ public class GameManager : MonoBehaviour {
         return returningColour;
     }
 
+    public static Color ChangeColours(string addOrBlend, List<Waypoint> waypointsList) {
+        Color returningColour = new();
+
+        // ReSharper disable once ConvertSwitchStatementToSwitchExpression
+        switch (addOrBlend) {
+            case "add":
+                returningColour = AddColoursTogether(waypointsList);
+                break;
+            case "blend":
+                returningColour = BlendColoursTogether(waypointsList);
+                break;
+        }
+
+        return returningColour;
+    }
+
     public static Color ChangeColours(string switchAddOrBlend, Color playersColor, Color waypointColor) {
         Color returningColour = new();
         switch (switchAddOrBlend) {
@@ -739,6 +757,25 @@ public class GameManager : MonoBehaviour {
         return tmpColour;
     }
 
+    static Color AddColoursTogether(List<Waypoint> waypointsList) {
+        int waypoint01 = Random.Range(0, waypointsList.Count);
+        int waypoint02 = Random.Range(0, waypointsList.Count);
+
+        // mazeData.hintColour01 =
+        //     waypointsList[waypoint01].waypoint.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        // mazeData.hintColour02 =
+        //     waypointsList[waypoint02].waypoint.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+
+        // mazeData.hintColour01 = waypointsList[waypoint01].waypointColour;
+        mazeData.hintColour01 = waypointsList[waypoint01].GetColour();
+
+        // mazeData.hintColour02 = waypointsList[waypoint02].waypointColour;
+        mazeData.hintColour02 = waypointsList[waypoint02].GetColour();
+
+        Color tmpColour = mazeData.hintColour01 + mazeData.hintColour02;
+        return tmpColour;
+    }
+
     static Color BlendColoursTogether(Color playersColour, Color waypointColor) {
         Color blendedColour = Color.Lerp(playersColour, waypointColor, 0.5f);
         return blendedColour;
@@ -757,6 +794,24 @@ public class GameManager : MonoBehaviour {
         return blendedColour;
     }
 
+    static Color BlendColoursTogether(List<Waypoint> waypointsList) {
+        int index01 = Random.Range(0, waypointsList.Count);
+        int index02 = Random.Range(0, waypointsList.Count);
+
+        // mazeData.hintColour01 =
+        //     waypointsList[index01].waypoint.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+        // mazeData.hintColour02 =
+        //     waypointsList[index02].waypoint.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
+
+        // mazeData.hintColour01 = waypointsList[index01].waypointColour;
+        mazeData.hintColour01 = waypointsList[index01].GetColour();
+
+        // mazeData.hintColour02 = waypointsList[index02].waypointColour;
+        mazeData.hintColour02 = waypointsList[index02].GetColour();
+
+        Color blendedColour = Color.Lerp(mazeData.hintColour01, mazeData.hintColour02, 0.5f);
+        return blendedColour;
+    }
 
     /** misc. functions **/
     void ResetCount() {

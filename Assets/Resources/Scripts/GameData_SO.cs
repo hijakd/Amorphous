@@ -29,11 +29,16 @@ namespace AmorphousData {
         /* playerColour => the current colour blend */
         /* previousColour01 => the colour of the last waypoint the player encountered */
         /* previousColour02 => the colour of the waypoint the player encountered before previousColour01 */
-        
 
-        public Color goalColour, playerColour, hintColour01, hintColour02, previousColour01, previousColour02;
+
+        public Color goalColour;
+        public Color playerColour;
+        public Color hintColour01;
+        public Color hintColour02;
+        public Color previousColour01;
+        public Color previousColour02;
         [Range(1, 3)] public int difficulty;
-        public float playerSpeed;
+        public float playerSpeed = 50f;
         public float zeroSpeed = 0f;
         public int gridHeight = 20;
         public int gridWidth = 20;
@@ -56,10 +61,9 @@ namespace AmorphousData {
         public bool isPaused { get; set; }
 
         public Waypoint goalWaypoint;
-        // public GameObject player;
+        public Color goalWaypointColour;
         
         public List<Waypoint> waypoints;
-        
         
         public List<Vector3> mazePath;
 
@@ -70,18 +74,18 @@ namespace AmorphousData {
 
         // public void InitData(/*int mazeWidth, int mazeHeight*/) {
         public void OnEnable() {
-            // gridWidth = mazeWidth;
-            // gridHeight = mazeHeight;
             northernEdge = gridHeight / 2;
             easternEdge = gridWidth / 2;
             southernEdge = -northernEdge;
             westernEdge = -easternEdge;
+            waypoints ??= new List<Waypoint>();
             mazePath ??= new List<Vector3>();
             showMenu = false;
             shortListed = false;
             firstColFound = false;
             firstRowFound = false;
             dataInitialized = true;
+
         }
 
         public void SetTimeFormat(bool twentyFourHr) {
@@ -93,6 +97,18 @@ namespace AmorphousData {
             return time;
         }
 
+        public Waypoint GetWaypoint(int listPosition) {
+            return waypoints[listPosition];
+        }
+        
+        public List<Waypoint> GetWaypoints() {
+            return waypoints;
+        }
+
+
+        public int GetWaypointCount() {
+            return waypoints.Count;
+        }
 
         /* END GameData*/
     }

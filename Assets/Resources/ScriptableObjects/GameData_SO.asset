@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e952bdbebba17247b816434f6307209, type: 3}
   m_Name: GameData_SO
   m_EditorClassIdentifier: 
-  goalColour: {r: 0, g: 0, b: 0, a: 0}
+  goalColour: {r: 0.8324035, g: 1.4646497, b: 0.031372547, a: 2}
   playerColour: {r: 0, g: 0, b: 0, a: 0}
   hintColour01: {r: 0, g: 0, b: 0, a: 0}
   hintColour02: {r: 0, g: 0, b: 0, a: 0}
@@ -23,12 +23,11 @@ MonoBehaviour:
   zeroSpeed: 0
   gridHeight: 20
   gridWidth: 20
+  northernEdge: 10
+  easternEdge: 10
+  southernEdge: -10
+  westernEdge: -10
   goalWaypoint: {fileID: 11400000, guid: 9ef4aa3ce71af5843a4f7a3ae8049943, type: 2}
-  waypoints:
-  - {fileID: 11400000, guid: 3ff1c076cac77c04ab9bddc6ec09bd1a, type: 2}
-  - {fileID: 11400000, guid: 34f957c6c780b324da3de81f69fe3bbb, type: 2}
-  - {fileID: 11400000, guid: 9cbed6a19436afd4e9706a5a6f7536f6, type: 2}
-  - {fileID: 11400000, guid: d72fbd0edc4e98740af17340c3f1e6ac, type: 2}
-  - {fileID: 11400000, guid: 7a71a9e74a08b0149bfa2c1b7da2b92c, type: 2}
-  - {fileID: 11400000, guid: 03fd9b27e4d55964fbbe012289a17530, type: 2}
+  goalWaypointColour: {r: 0.8324035, g: 1.4646497, b: 0.031372547, a: 2}
+  waypoints: []
   mazePath: []
