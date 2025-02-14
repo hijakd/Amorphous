@@ -160,9 +160,6 @@
     -unity-font-style: bold;
 }
 
-#hints #unity-radio-button-group__container {
-}
-
 .textMenu {
     -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Oswald-Bold.ttf?fileID=12800000&guid=c9f6d0e7bc8541498c9a4799ba184ede&type=3#Oswald-Bold");
     font-size: 28px;
@@ -170,4 +167,121 @@
     color: rgb(255, 255, 255);
     -unity-text-outline-width: 1px;
     -unity-font-style: bold;
+}
+
+.centeredSettings {
+    align-items: center;
+    justify-content: space-around;
+    min-height: 33%;
+    align-self: center;
+    min-width: 100%;
+    align-content: center;
+}
+
+#settingsCenter > #enableHints #unity-checkmark {
+    min-width: 66%;
+    min-height: 66%;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+#settingsCenter > #enableHints > .unity-toggle__input {
+    align-items: stretch;
+    align-self: center;
+    justify-content: center;
+    flex-grow: 0;
+    min-width: 16%;
+    min-height: 27%;
+}
+
+#settingsCenter > #difficulty > .unity-base-field__input {
+    justify-content: center;
+    align-self: center;
+    flex-grow: 0;
+}
+
+#settingsMenu > #settingsCenter > #difficulty > .unity-base-field__input > #unity-radio-button-group__container > .unity-radio-button > .unity-radio-button__input > .unity-radio-button__checkmark-background {
+    margin-right: 21px;
+}
+
+#settingsMenu > #settingsCenter > #playerSpeed > .unity-slider__input {
+}
+
+#playerSpeed > .unity-slider__label {
+    top: 33%;
+    margin-bottom: 13%;
+}
+
+#playerSpeed > .unity-slider__input {
+    padding-right: 7%;
+    padding-left: 7%;
+}
+
+#playerSpeed > .unity-slider__input > #unity-drag-container {
+    flex-grow: 1;
+    border-left-color: rgba(168, 34, 34, 0.82);
+    border-right-color: rgba(168, 34, 34, 0.82);
+    border-top-color: rgba(168, 34, 34, 0.82);
+    border-bottom-color: rgba(168, 34, 34, 0.82);
+    align-self: center;
+}
+
+#playerSpeed > .unity-slider__input > #unity-drag-container > #unity-tracker {
+    min-height: 13px;
+    margin-top: 0;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    background-color: rgb(154, 166, 85);
+}
+
+#playerSpeed > .unity-slider__input > #unity-drag-container > #unity-dragger {
+    margin-top: -6px;
+    min-height: 13%;
+    min-width: 7%;
+    flex-grow: 1;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+#playerSpeed > .unity-slider__input > #unity-drag-container > #unity-tracker > #unity-fill {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    background-color: rgb(140, 18, 166);
+}
+
+.settingsButtons {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-left-color: rgb(41, 41, 41);
+    border-right-color: rgb(41, 41, 41);
+    border-top-color: rgb(41, 41, 41);
+    border-bottom-color: rgb(41, 41, 41);
+    max-width: 75%;
+    color: rgb(5, 5, 5);
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Examples%20&%20Extras/Fonts/Oswald-Bold.ttf?fileID=12800000&guid=c9f6d0e7bc8541498c9a4799ba184ede&type=3#Oswald-Bold");
+    font-size: 18px;
+    -unity-text-align: middle-center;
+}
+
+.settingsPanelAlignment {
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    align-content: center;
+    min-width: 33%;
+    min-height: 100%;
 }
