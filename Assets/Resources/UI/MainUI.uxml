@@ -49,7 +49,7 @@
         <engine:Instance template="uiHeader" name="uiHeader" picking-mode="Ignore" />
         <engine:Instance template="DPad" name="DPadTemplate" picking-mode="Ignore" style="position: absolute; bottom: 5%; left: 5%; min-width: 21%; min-height: 21%;" />
     </engine:VisualElement>
-    <engine:VisualElement name="settingsMenu" data-source="project://database/Assets/Resources/ScriptableObjects/GameData_SO.asset?fileID=11400000&amp;guid=819080be2a62f774381d038172d9656f&amp;type=2#GameData_SO" style="flex-grow: 1; position: absolute; flex-basis: 100%; width: 100%; height: 100%; align-items: stretch; justify-content: center; background-color: rgba(0, 0, 0, 0.84); flex-direction: row; align-self: center; align-content: center; flex-wrap: nowrap; display: none;">
+    <engine:VisualElement name="settingsMenu" style="flex-grow: 1; position: absolute; flex-basis: 100%; width: 100%; height: 100%; align-items: stretch; justify-content: center; background-color: rgba(0, 0, 0, 0.98); flex-direction: row; align-self: center; align-content: center; flex-wrap: nowrap; display: none;">
         <engine:VisualElement name="settingsLeft" class="settingsPanelAlignment" />
         <engine:VisualElement name="settingsCenter" class="textMenu settingsPanelAlignment">
             <engine:RadioButtonGroup label="Difficulty" name="difficulty" choices="easy,normal,hard" class="centeredSettings" style="align-self: center;" />
@@ -59,5 +59,9 @@
         <engine:VisualElement name="settingsRight" class="settingsPanelAlignment">
             <engine:Button text="Exit" name="exitSettings" class="settingsButtons" style="top: -43%; right: -36%; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0; min-width: 7%; min-height: 7%; font-size: 21px;" />
         </engine:VisualElement>
+    </engine:VisualElement>
+    <engine:VisualElement name="winScreen" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; align-items: center; justify-content: center; display: none; visibility: visible;">
+        <engine:Label text="You Win!!" name="winText" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Examples%20&amp;%20Extras/Fonts/Bangers.ttf?fileID=12800000&amp;guid=5dd49b3eacc540408c98eee0de38e0f1&amp;type=3#Bangers&quot;); font-size: 72px; -unity-text-outline-color: rgb(0, 0, 0); color: rgb(211, 255, 0); -unity-text-outline-width: 3px; text-shadow: 7px 7px 4.2px rgba(26, 25, 25, 0.9); letter-spacing: 4px; top: -13%;" />
+        <engine:Button text="Restart" name="restartButton" style="display: flex; top: -5%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Examples%20&amp;%20Extras/Fonts/Bangers.ttf?fileID=12800000&amp;guid=5dd49b3eacc540408c98eee0de38e0f1&amp;type=3#Bangers&quot;); font-size: 62px; color: rgb(211, 255, 0); -unity-text-outline-color: rgb(0, 0, 0); -unity-text-outline-width: 2px; text-shadow: 3px 3px 3px rgba(31, 31, 31, 0.86); padding-right: 21px; padding-left: 21px; border-top-left-radius: 13px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; border-bottom-left-radius: 13px; align-self: center; align-content: center; border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); background-color: rgb(77, 132, 68);" />
     </engine:VisualElement>
 </engine:UXML>

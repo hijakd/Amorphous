@@ -280,7 +280,7 @@ public class GameManager : MonoBehaviour {
         titleScreen.gameObject.SetActive(false);
     }*/
 
-    public void RestartGame() {
+    public static void RestartGame() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -301,8 +301,10 @@ public class GameManager : MonoBehaviour {
             mazeData.isPaused = false;
         }
 
-        winText.gameObject.SetActive(true);
-        restartButton.gameObject.SetActive(true);
+        // winText.gameObject.SetActive(true);
+        // restartButton.gameObject.SetActive(true);
+
+        MazeUI.EnableWinScreen();
     }
 
 

@@ -8,14 +8,19 @@ public class MazeUI : MonoBehaviour {
 
     UIDocument mainUiDoc;
     Label timeText;
-    VisualElement settingsButton;
+    Button settingsButton;
+    Button exitSettings;
+    Button restartButton;
+    VisualElement uiHeader;
+    VisualElement settingsMenu;
     static VisualElement goalBlip;
     static VisualElement playerBlip;
     static VisualElement hintBlip01;
     static VisualElement hintBlip02;
-    VisualElement uiHeader;
-    VisualElement settingsMenu;
+    static VisualElement winScreen;
 
+
+    bool showMenu = false;
     string timeString { get; set; }
 
 
@@ -44,14 +49,39 @@ public class MazeUI : MonoBehaviour {
         hintBlip02 = rootElement.Q("hint02Blip");
         settingsButton = rootElement.Q<Button>("settingsButton");
         settingsMenu = rootElement.Q("settingsMenu");
+        winScreen = rootElement.Q("winScreen");
+        restartButton = rootElement.Q<Button>("restartButton");
+        exitSettings = rootElement.Q<Button>("exitSettings");
         
-        // settingsButton.clicked += OnButtonClicked;
+        settingsButton.clicked += ShowSettings;
+        exitSettings.clicked += ShowSettings;
+
+        restartButton.clicked += OnRestartClicked;
     }
 
-    public void OnButtonClicked() {
-        
+    public static void EnableWinScreen() {
+        winScreen.style.display = DisplayStyle.Flex;
     }
 
+    void ShowSettings() {
+        if (!showMenu) {
+            settingsMenu.style.display = DisplayStyle.Flex;
+            showMenu = true;
+            
+        }
+        else {
+            settingsMenu.style.display = DisplayStyle.None;
+            showMenu = false;
+        }
+        
+        
+        
+    }
+    
+    
+    void OnRestartClicked() {
+        GameManager.RestartGame();
+    }
 
     public static void PaintGoal(Color goalColour) {
         goalBlip.style.backgroundColor = goalColour;
