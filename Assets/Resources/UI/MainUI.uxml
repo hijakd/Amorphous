@@ -59,7 +59,7 @@
             <engine:Toggle label="Hints Enabled" name="enableHints" value="true" class="centeredSettings" style="align-self: stretch;" />
         </engine:VisualElement>
         <engine:VisualElement name="settingsRight" class="settingsPanelAlignment">
-            <engine:Button text="Exit" name="exitSettings" class="settingsButtons" style="top: -43%; right: -36%; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0; min-width: 7%; min-height: 7%; font-size: 21px;" />
+            <engine:Button text="Exit" name="exitSettings" class="settingsButtons buttons" style="top: -43%; right: -36%; margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0; min-width: 7%; min-height: 7%; font-size: 21px;" />
         </engine:VisualElement>
     </engine:VisualElement>
     <engine:VisualElement name="winScreen" class="fullScreen flexGrow winQuitScreens" style="display: none;">
