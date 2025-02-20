@@ -292,19 +292,33 @@ public class GameManager : MonoBehaviour {
 
     void EndLevel() {
         Debug.Log("display winText");
-        if (!isPaused) {
-            (mazeData.playerSpeed, mazeData.zeroSpeed) = (mazeData.zeroSpeed, mazeData.playerSpeed);
-            mazeData.isPaused = true;
-        }
-        else {
-            (mazeData.zeroSpeed, mazeData.playerSpeed) = (mazeData.playerSpeed, mazeData.zeroSpeed);
-            mazeData.isPaused = false;
-        }
+        // if (!mazeData.isPaused) {
+        //     (mazeData.playerSpeed, mazeData.zeroSpeed) = (mazeData.zeroSpeed, mazeData.playerSpeed);
+        //     mazeData.isPaused = true;
+        // }
+        // else {
+        //     (mazeData.zeroSpeed, mazeData.playerSpeed) = (mazeData.playerSpeed, mazeData.zeroSpeed);
+        //     mazeData.isPaused = false;
+        // }
 
         // winText.gameObject.SetActive(true);
         // restartButton.gameObject.SetActive(true);
 
+        PauseGame();
+
         MazeUI.EnableWinScreen();
+    }
+
+    public static void PauseGame() {
+        // if (!mazeData.isPaused) {
+        //     (mazeData.playerSpeed, mazeData.zeroSpeed) = (mazeData.zeroSpeed, mazeData.playerSpeed);
+        //     mazeData.isPaused = true;
+        // }
+        // else {
+        //     (mazeData.zeroSpeed, mazeData.playerSpeed) = (mazeData.playerSpeed, mazeData.zeroSpeed);
+        //     mazeData.isPaused = false;
+        // }
+        mazeData.isPaused = !mazeData.isPaused;
     }
 
 

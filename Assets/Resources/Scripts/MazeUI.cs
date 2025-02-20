@@ -5,60 +5,99 @@ using Unity.Properties;
 using AmorphousData;
 
 public class MazeUI : MonoBehaviour {
-
     UIDocument mainUiDoc;
     Label timeText;
-    Button settingsButton;
+    Label hint01BlipLabel;
+    Label hint02BlipLabel;
+    
     Button exitSettings;
     Button restartButton;
+    Button settingsButton;
+    Button quitButton;
+    RadioButtonGroup difficulty;
+    Slider playerSpeed;
+    Toggle enableHints;
     VisualElement uiHeader;
     VisualElement settingsMenu;
     static VisualElement goalBlip;
     static VisualElement playerBlip;
     static VisualElement hintBlip01;
     static VisualElement hintBlip02;
+    static VisualElement quitScreen;
     static VisualElement winScreen;
 
-
+    bool showHints = true;
     bool showMenu = false;
     string timeString { get; set; }
 
 
     void OnEnable() {
-        // mazeData = ScriptableObject.CreateInstance<GameData>();
-        SetVisualElements();
-        GameManager.mazeData.SetTimeFormat(true);
-        timeString = GameManager.mazeData.GetTimeFormat();
-        
-    }
-
-
-    void FixedUpdate() {
-        timeText.text = DateTime.Now.ToString(timeString);
-    }
-
-
-    void SetVisualElements() {
         mainUiDoc = GetComponent<UIDocument>();
         VisualElement rootElement = mainUiDoc.rootVisualElement;
+        
         uiHeader = rootElement.Q("uiHeader");
         timeText = rootElement.Q("time") as Label;
         goalBlip = rootElement.Q("goalBlip");
         playerBlip = rootElement.Q("playerBlip");
         hintBlip01 = rootElement.Q("hint01Blip");
         hintBlip02 = rootElement.Q("hint02Blip");
-        settingsButton = rootElement.Q<Button>("settingsButton");
         settingsMenu = rootElement.Q("settingsMenu");
+        quitScreen = rootElement.Q("quitScreen");
         winScreen = rootElement.Q("winScreen");
-        restartButton = rootElement.Q<Button>("restartButton");
-        exitSettings = rootElement.Q<Button>("exitSettings");
         
-        settingsButton.clicked += ShowSettings;
-        exitSettings.clicked += ShowSettings;
+        exitSettings = rootElement.Q<Button>("exitSettings");
+        restartButton = rootElement.Q<Button>("restartButton");
+        settingsButton = rootElement.Q<Button>("settingsButton");
+        quitButton = rootElement.Q<Button>("quitButton");
+        
+        hint01BlipLabel = rootElement.Q<Label>("hint01BlipLabel");
+        hint02BlipLabel = rootElement.Q<Label>("hint02BlipLabel");
+        
+        difficulty = rootElement.Q<RadioButtonGroup>("difficulty");
+        
+        playerSpeed = rootElement.Q<Slider>("playerSpeed");
+        
+        enableHints = rootElement.Q<Toggle>("enableHints");
 
+        
+        GameManager.mazeData.SetTimeFormat(true);
+        timeString = GameManager.mazeData.GetTimeFormat();
+        
+        exitSettings.clicked += ShowSettings;
         restartButton.clicked += OnRestartClicked;
+        settingsButton.clicked += ShowSettings;
+        quitButton.clicked += QuitGame;
+
+        playerSpeed.RegisterCallback<ChangeEvent<float>>(evt => {
+            GameManager.mazeData.playerSpeed = evt.newValue;
+        });
+
+        difficulty.RegisterCallback<ChangeEvent<int>>(evt => {
+            GameManager.mazeData.difficulty = evt.newValue;
+        });
+
+        enableHints.RegisterCallback<ChangeEvent<bool>>(evt => {
+            showHints = evt.newValue;
+            if (showHints) {
+                hintBlip01.style.display = DisplayStyle.Flex;
+                hint01BlipLabel.style.display = DisplayStyle.Flex;
+                hintBlip02.style.display = DisplayStyle.Flex;
+                hint02BlipLabel.style.display = DisplayStyle.Flex;
+            }
+            else {
+                hintBlip01.style.display = DisplayStyle.None;
+                hint01BlipLabel.style.display = DisplayStyle.None;
+                hintBlip02.style.display = DisplayStyle.None;
+                hint02BlipLabel.style.display = DisplayStyle.None;
+            }
+        });
     }
 
+
+    void FixedUpdate() {
+        timeText.text = DateTime.Now.ToString(timeString);
+    }
+    
     public static void EnableWinScreen() {
         winScreen.style.display = DisplayStyle.Flex;
     }
@@ -67,18 +106,21 @@ public class MazeUI : MonoBehaviour {
         if (!showMenu) {
             settingsMenu.style.display = DisplayStyle.Flex;
             showMenu = true;
-            
         }
         else {
             settingsMenu.style.display = DisplayStyle.None;
             showMenu = false;
         }
-        
-        
-        
+
+        GameManager.PauseGame();
     }
-    
-    
+
+    void QuitGame() {
+        GameManager.PauseGame();
+        quitScreen.style.display = DisplayStyle.Flex;
+    }
+
+
     void OnRestartClicked() {
         GameManager.RestartGame();
     }
@@ -90,17 +132,17 @@ public class MazeUI : MonoBehaviour {
     public static void PaintPlayer(Color playerColour) {
         playerBlip.style.backgroundColor = playerColour;
     }
-    
+
     public static void PaintPlayerWhite() {
         playerBlip.style.backgroundColor = Color.white;
         // GameManager.mazeData.playerIsWhite = true;
     }
-    
+
     public static void PaintPlayerBlack() {
         playerBlip.style.backgroundColor = Color.black;
         // GameManager.mazeData.playerIsWhite = false;
     }
-    
+
     public static void PaintHints(Color hintColour01, Color hintColour02) {
         hintBlip01.style.backgroundColor = hintColour01;
         hintBlip02.style.backgroundColor = hintColour02;

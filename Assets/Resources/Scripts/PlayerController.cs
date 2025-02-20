@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour {
     public static float speed = 50f;
 
     PlayerControls controls;
-    Rigidbody playerRb;
+    static Rigidbody playerRb;
     Vector2 move, look;
     Vector3 cameraForward, cameraRight, forwardMovement, rightMovement, relativeMovement, playerPos;
     bool playerIsWhite, showHint /*easyMode, normalMode*/;
@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
         relativeMovement = forwardMovement + rightMovement;
         playerPos = transform.position; // for testing
         // playerRb.AddForce(relativeMovement * (speed * Time.deltaTime));
-        playerRb.AddForce(relativeMovement * (GameManager.mazeData.playerSpeed * Time.deltaTime));
+        PlayerMovement();
 
 
         if (showHint) {
@@ -83,7 +83,12 @@ public class PlayerController : MonoBehaviour {
         controls.Player.Hint.canceled += ctx => showHint = false;
     }
 
-    
+    void PlayerMovement() {
+        if (GameManager.mazeData.isPaused) {
+            relativeMovement = Vector3.zero;
+        }
+        playerRb.AddForce(relativeMovement * (GameManager.mazeData.playerSpeed * Time.deltaTime));
+    }
 
     void OnCollisionEnter(Collision other) {
         if (other.gameObject.CompareTag("Goal")) {
