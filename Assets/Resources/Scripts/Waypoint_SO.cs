@@ -5,9 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Waypoint_SO", menuName = "ScriptableObjects/Waypoint ScriptableObject")]
 public class Waypoint : ScriptableObject {
 
-    // public GameObject waypoint { get; private set;}
     public GameObject waypoint;
-    // public Color waypointColour {get; set;}
     public Color waypointColour;
     public bool isGoalWaypoint;
     public string ID = Guid.NewGuid().ToString().ToUpper();
@@ -19,7 +17,6 @@ public class Waypoint : ScriptableObject {
     }
 
     public Color GetColour() {
-        // return waypointColour;
         return waypoint.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
     }
 

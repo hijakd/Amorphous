@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using AmorphousData;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour {
@@ -12,8 +10,7 @@ public class PlayerController : MonoBehaviour {
     static Rigidbody playerRb;
     Vector2 move, look;
     Vector3 cameraForward, cameraRight, forwardMovement, rightMovement, relativeMovement, playerPos;
-    bool playerIsWhite, showHint /*easyMode, normalMode*/;
-    static bool isPaused /*easyMode, normalMode*/;
+    bool playerIsWhite, showHint;
     Color currentWaypoint, playerColour, previousColour, theColourBefore;
     string playerColourChangeOption;
 
@@ -22,17 +19,10 @@ public class PlayerController : MonoBehaviour {
         controls = new PlayerControls();
         playerRb = GetComponent<Rigidbody>();
         playerColourChangeOption = "add";
-        
     }
 
     void Start() {
-        //     hint01 = GameManager.mazeData.hintColour01;
-        //     hint02 = GameManager.mazeData.hintColour02;
-        // if (GameManager.mazeData.difficulty == 1) {
-        //     easyMode = true;
-        // }
         speed = GameManager.mazeData.playerSpeed;
-        
     }
 
     void FixedUpdate() {
@@ -48,7 +38,6 @@ public class PlayerController : MonoBehaviour {
         rightMovement = move.x * cameraRight;
         relativeMovement = forwardMovement + rightMovement;
         playerPos = transform.position; // for testing
-        // playerRb.AddForce(relativeMovement * (speed * Time.deltaTime));
         PlayerMovement();
 
 
@@ -194,10 +183,8 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (other.gameObject.CompareTag("Goal")) {
-            // Debug.Log("Player found the goal");
             if (GameManager.mazeData.playerColour ==
                 other.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color) {
-                // Debug.Log("Player found the goal unlocked");
                 GameManager.mazeData.goalFound = true;
             }
         }

@@ -1,15 +1,3 @@
-// ReSharper disable RedundantUsingDirective
-// ReSharper disable RedundantDefaultMemberInitializer
-// ReSharper disable UnusedMember.Local
-// ReSharper disable UnusedMember.Global
-
-// ReSharper disable InvalidXmlDocComment
-// ReSharper disable NotAccessedField.Local
-// ReSharper disable PossibleLossOfFraction
-// ReSharper disable Unity.RedundantEventFunction
-
-
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -31,22 +19,13 @@ public class GameManager : MonoBehaviour {
     public GameObject[] floorTiles;
     public GameObject[] wallPanels; // _N_ever _E_at _S_oggy _W_eetbix
     public List<GameObject> waypoints;
-
-    // public int gridHeight, gridWidth;
-
     public TextMeshProUGUI winText, gameOverText;
     public Button restartButton;
     public GameObject titleScreen;
     public bool isGameActive;
     public bool easyMode = true;
     [Range(0.24f, 0.76f)] public float randomVariance = 0.42f;
-
-    // bool shortListed = false;
-    // bool firstRowFound = false;
-    // bool firstColFound = false;
-
-    // public static bool /*_easyMode,*/ _goalFound;
-
+    
     /* -- private constants -- */
     const int NORTH = 0;
     const int EAST = 1;
@@ -57,15 +36,12 @@ public class GameManager : MonoBehaviour {
 
     bool horizAligned, vertAligned, isForward, isRight, isPaused;
 
-    // private float xVal, zVal;
-    int count, /*columnNumber, rowNumber, lastRowNumber,*/ horizDistance, vertDistance, xPosition;
-    int firstRowNumber, firstColumnNumber, lastRowNumber, lastColumnNumber;
+    int count, horizDistance, vertDistance, xPosition, firstRowNumber, firstColumnNumber, lastRowNumber, lastColumnNumber;
     Material wallMaterial;
     Vector2 randVariance;
     Vector3 goalPosition, resetterPosition, pyramidPos02, spawnPosition, tmpPosition;
 
     /* -- private Lists -- */
-    // private List<Color> mixedColors;
     List<int> distances, lcms;
     List<Vector3> intersections, destinations, midPoints, drawnPath, sortedList, shortenedList;
 
@@ -90,8 +66,6 @@ public class GameManager : MonoBehaviour {
 
         if (easyMode) {
             mazeData.difficulty = 1;
-
-            // _easyMode = easyMode;
         }
 
         mazeData.playerSpeed = playerMovementSpeed;
@@ -116,7 +90,6 @@ public class GameManager : MonoBehaviour {
 
         /* populate the destinations List with random positions for the player, waypoints & goal */
         while (count < waypoints.Count + 2) {
-            // while (count < mazeData.waypoints.Count + 2) {
             destinations.Add(RandomPosition(mazeData.westernEdge, mazeData.easternEdge, mazeData.southernEdge,
                 mazeData.northernEdge));
             count++;
@@ -291,33 +264,13 @@ public class GameManager : MonoBehaviour {
     }
 
     void EndLevel() {
-        Debug.Log("display winText");
-        // if (!mazeData.isPaused) {
-        //     (mazeData.playerSpeed, mazeData.zeroSpeed) = (mazeData.zeroSpeed, mazeData.playerSpeed);
-        //     mazeData.isPaused = true;
-        // }
-        // else {
-        //     (mazeData.zeroSpeed, mazeData.playerSpeed) = (mazeData.playerSpeed, mazeData.zeroSpeed);
-        //     mazeData.isPaused = false;
-        // }
-
-        // winText.gameObject.SetActive(true);
-        // restartButton.gameObject.SetActive(true);
-
+        // Debug.Log("display winText");
         PauseGame();
 
         MazeUI.EnableWinScreen();
     }
 
     public static void PauseGame() {
-        // if (!mazeData.isPaused) {
-        //     (mazeData.playerSpeed, mazeData.zeroSpeed) = (mazeData.zeroSpeed, mazeData.playerSpeed);
-        //     mazeData.isPaused = true;
-        // }
-        // else {
-        //     (mazeData.zeroSpeed, mazeData.playerSpeed) = (mazeData.playerSpeed, mazeData.zeroSpeed);
-        //     mazeData.isPaused = false;
-        // }
         mazeData.isPaused = !mazeData.isPaused;
     }
 
@@ -509,6 +462,7 @@ public class GameManager : MonoBehaviour {
         return isSouth;
     }
 
+    /* ensure that a given grid position is within the grid boundaries */
     Vector3 ClampWithinBoundaries(Vector3 position) {
         if (position.x <= mazeData.westernEdge) {
             position.x = mazeData.westernEdge;
@@ -577,7 +531,6 @@ public class GameManager : MonoBehaviour {
     }
 
     /* Find the Greatest Common Denominator/Divisor */
-    // ReSharper disable once InconsistentNaming
     int GCD(int int01, int int02) {
         int tmpA = int01;
         int tmpB = int02;
@@ -592,13 +545,11 @@ public class GameManager : MonoBehaviour {
     }
 
     /* find the Lowest Common Multiple */
-    // ReSharper disable once InconsistentNaming
     int LCM(int distance01, int distance02) {
         int lcmTmp = distance01 / GCD(distance01, distance02);
         return distance02 * lcmTmp;
     }
 
-    // ReSharper disable once InconsistentNaming
     int ReduceLCM(int lcm, int mazeNorthernEdge, int mazeEasternEdge) {
         int tmp = lcm;
         if (mazeNorthernEdge == mazeEasternEdge || mazeNorthernEdge > mazeEasternEdge) {
@@ -694,12 +645,9 @@ public class GameManager : MonoBehaviour {
 
 
     /** Colour changing/blending functions **/
-    /** TODO: modify Add & Blend func() so they can use just the current and last waypoint colours, while "discarding" the 2nd last waypoint colour **/
-    /* hopefully this has been addressed with the switch/case function calls in the PlayerController OnTriggerEnter() */
     public static Color ChangeColours(string addOrBlend, List<GameObject> waypointsList) {
         Color returningColour = new();
 
-        // ReSharper disable once ConvertSwitchStatementToSwitchExpression
         switch (addOrBlend) {
             case "add":
                 returningColour = AddColoursTogether(waypointsList);
@@ -715,7 +663,6 @@ public class GameManager : MonoBehaviour {
     public static Color ChangeColours(string addOrBlend, List<Waypoint> waypointsList) {
         Color returningColour = new();
 
-        // ReSharper disable once ConvertSwitchStatementToSwitchExpression
         switch (addOrBlend) {
             case "add":
                 returningColour = AddColoursTogether(waypointsList);
@@ -776,16 +723,8 @@ public class GameManager : MonoBehaviour {
     static Color AddColoursTogether(List<Waypoint> waypointsList) {
         int waypoint01 = Random.Range(0, waypointsList.Count);
         int waypoint02 = Random.Range(0, waypointsList.Count);
-
-        // mazeData.hintColour01 =
-        //     waypointsList[waypoint01].waypoint.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-        // mazeData.hintColour02 =
-        //     waypointsList[waypoint02].waypoint.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-
-        // mazeData.hintColour01 = waypointsList[waypoint01].waypointColour;
+        
         mazeData.hintColour01 = waypointsList[waypoint01].GetColour();
-
-        // mazeData.hintColour02 = waypointsList[waypoint02].waypointColour;
         mazeData.hintColour02 = waypointsList[waypoint02].GetColour();
 
         Color tmpColour = mazeData.hintColour01 + mazeData.hintColour02;
@@ -813,16 +752,8 @@ public class GameManager : MonoBehaviour {
     static Color BlendColoursTogether(List<Waypoint> waypointsList) {
         int index01 = Random.Range(0, waypointsList.Count);
         int index02 = Random.Range(0, waypointsList.Count);
-
-        // mazeData.hintColour01 =
-        //     waypointsList[index01].waypoint.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-        // mazeData.hintColour02 =
-        //     waypointsList[index02].waypoint.gameObject.GetComponentInChildren<Renderer>().sharedMaterial.color;
-
-        // mazeData.hintColour01 = waypointsList[index01].waypointColour;
+        
         mazeData.hintColour01 = waypointsList[index01].GetColour();
-
-        // mazeData.hintColour02 = waypointsList[index02].waypointColour;
         mazeData.hintColour02 = waypointsList[index02].GetColour();
 
         Color blendedColour = Color.Lerp(mazeData.hintColour01, mazeData.hintColour02, 0.5f);

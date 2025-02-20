@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Unity.Properties;
-using AmorphousData;
 
 public class MazeUI : MonoBehaviour {
     UIDocument mainUiDoc;
@@ -27,7 +25,7 @@ public class MazeUI : MonoBehaviour {
     static VisualElement winScreen;
 
     bool showHints = true;
-    bool showMenu = false;
+    bool showMenu;
     string timeString { get; set; }
 
 
@@ -44,25 +42,18 @@ public class MazeUI : MonoBehaviour {
         settingsMenu = rootElement.Q("settingsMenu");
         quitScreen = rootElement.Q("quitScreen");
         winScreen = rootElement.Q("winScreen");
-        
         exitSettings = rootElement.Q<Button>("exitSettings");
         restartButton = rootElement.Q<Button>("restartButton");
         settingsButton = rootElement.Q<Button>("settingsButton");
         quitButton = rootElement.Q<Button>("quitButton");
-        
         hint01BlipLabel = rootElement.Q<Label>("hint01BlipLabel");
         hint02BlipLabel = rootElement.Q<Label>("hint02BlipLabel");
-        
         difficulty = rootElement.Q<RadioButtonGroup>("difficulty");
-        
         playerSpeed = rootElement.Q<Slider>("playerSpeed");
-        
         enableHints = rootElement.Q<Toggle>("enableHints");
-
         
         GameManager.mazeData.SetTimeFormat(true);
         timeString = GameManager.mazeData.GetTimeFormat();
-        
         exitSettings.clicked += ShowSettings;
         restartButton.clicked += OnRestartClicked;
         settingsButton.clicked += ShowSettings;
@@ -92,8 +83,7 @@ public class MazeUI : MonoBehaviour {
             }
         });
     }
-
-
+    
     void FixedUpdate() {
         timeText.text = DateTime.Now.ToString(timeString);
     }
@@ -135,12 +125,10 @@ public class MazeUI : MonoBehaviour {
 
     public static void PaintPlayerWhite() {
         playerBlip.style.backgroundColor = Color.white;
-        // GameManager.mazeData.playerIsWhite = true;
     }
 
     public static void PaintPlayerBlack() {
         playerBlip.style.backgroundColor = Color.black;
-        // GameManager.mazeData.playerIsWhite = false;
     }
 
     public static void PaintHints(Color hintColour01, Color hintColour02) {
