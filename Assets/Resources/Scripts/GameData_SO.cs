@@ -1,11 +1,5 @@
-// ReSharper disable RedundantUsingDirective
-// ReSharper disable RedundantDefaultMemberInitializer
-// ReSharper disable UnusedMember.Global
-
-
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Properties;
 
 namespace AmorphousData {
 
@@ -13,23 +7,9 @@ namespace AmorphousData {
     [CreateAssetMenu(fileName = "GameData_SO", menuName = "ScriptableObjects/GameData ScriptableObject")]
     public class GameData : ScriptableObject {
 
-        // static GameData instance;
-        // public static GameData Instance {
-        //     get {
-        //         if (!instance) {
-        //             instance = <GameData>();
-        //         }
-        //         if (!instance) {
-        //             instance = CreateInstance<GameData>();
-        //         }
-        //         return instance;
-        //     }
-        // }
-
         /* playerColour => the current colour blend */
         /* previousColour01 => the colour of the last waypoint the player encountered */
         /* previousColour02 => the colour of the waypoint the player encountered before previousColour01 */
-
 
         public Color goalColour;
         public Color playerColour;
@@ -42,13 +22,9 @@ namespace AmorphousData {
         public float zeroSpeed = 0f;
         public int gridHeight = 20;
         public int gridWidth = 20;
-        // public int northernEdge { get; private set; }
         public int northernEdge;
-        // public int easternEdge { get; private set; }
         public int easternEdge;
-        // public int southernEdge { get; private set; }
         public int southernEdge;
-        // public int westernEdge { get; private set; }
         public int westernEdge;
 
         public bool dataInitialized { get; set; }
@@ -72,7 +48,6 @@ namespace AmorphousData {
 
         /* END vars */
 
-        // public void InitData(/*int mazeWidth, int mazeHeight*/) {
         public void OnEnable() {
             northernEdge = gridHeight / 2;
             easternEdge = gridWidth / 2;

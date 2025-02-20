@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class ShowGameData : MonoBehaviour {
@@ -12,9 +11,8 @@ public class ShowGameData : MonoBehaviour {
     public bool initialised, playerIsWhite, shortListed;
     public float playerSpeed;
 
-    public Color goalColour, hintColour01, hintColour02, playerColour, previousColourFound/*, goalAddedColour, goalBlendedColour*/;
+    public Color goalColour, hintColour01, hintColour02, playerColour, previousColourFound;
 
-    // public Vector3 goalAddColourV3, goalBlendColourV3, playerColourV3;
 
     void Start() {
         height = GameManager.mazeData.gridHeight;
@@ -26,8 +24,6 @@ public class ShowGameData : MonoBehaviour {
         goalColour = GameManager.mazeData.goalColour;
         hintColour01 = GameManager.mazeData.hintColour01;
         hintColour02 = GameManager.mazeData.hintColour02;
-        
-
     }
 
     void FixedUpdate() {
@@ -37,22 +33,5 @@ public class ShowGameData : MonoBehaviour {
         playerColour = GameManager.mazeData.playerColour;
         previousColourFound = GameManager.mazeData.previousColour01;
         playerSpeed = GameManager.mazeData.playerSpeed;
-        
-        // goalAddedColour = AddColours(hintColour01, hintColour02);
-        // goalBlendedColour = BlendColours(hintColour01, hintColour02);
-        
-        // goalAddColourV3 = new Vector3(goalAddedColour.r, goalAddedColour.g, goalAddedColour.b);
-        // goalBlendColourV3 = new Vector3(goalBlendedColour.r, goalBlendedColour.g, goalBlendedColour.b);
-        // playerColourV3 = new Vector3(playerColour.r, playerColour.g, playerColour.b);
     }
-
-    // Color AddColours(Color colour01, Color colour02) {
-    //     return colour01 + colour02;
-    // }
-    //
-    // Color BlendColours(Color playersColour, Color waypointColor) {
-    //     Color blendedColour = Color.Lerp(playersColour, waypointColor, 0.5f);
-    //     return blendedColour;
-    // }
-
 }
